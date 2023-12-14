@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-Black.woff") format("woff");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-BlackItalic.woff") format("woff");
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-Bold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-Italic.woff") format("woff");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-LightItalic.woff") format("woff");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-Light.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-BoldItalic.woff") format("woff");
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-ExtraLight.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-Medium.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "WorkSans";
+    src: url("../fonts/worksans/WorkSans-ExtraLightItalic.woff") format("woff");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Fluxisch";
+    src: url("../fonts/fluxisch/FluxischElse-Bold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Fluxisch";
+    src: url("../fonts/fluxisch/FluxischElse-Light.woff") format("woff");
+    font-weight: light;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Fluxisch";
+    src: url("../fonts/fluxisch/FluxischElse-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+}
+
+@layer components {
+  h1 {
+    @apply text-2xl lg:text-3xl xl:text-4xl;
+  }
+
+  h2 {
+    @apply text-xl lg:text-2xl xl:text-3xl;
+  }
+
+  h3 {
+    @apply text-lg lg:text-xl xl:text-2xl;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: WorkSans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  border-color: #1D170C;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
