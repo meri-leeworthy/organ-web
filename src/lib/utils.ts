@@ -1,4 +1,5 @@
 import { Room, Event } from "simple-matrix-sdk"
+const { NEXT_PUBLIC_MATRIX_BASE_URL } = process.env
 
 export const noCacheFetch = (input: RequestInfo, init?: RequestInit) =>
   fetch(input, { ...init, cache: "no-store" })
@@ -136,4 +137,11 @@ export function getContextualDate(ts: number) {
     : `${dateString}, ${timeString}`
 
   return contextualDate
+}
+
+export function getMxcUrl(mxc: string) {
+  const serverName = mxc.split("://")[1].split("/")[0]
+  const mediaId = mxc.split("://")[1].split("/")[1]
+
+  return `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
 }

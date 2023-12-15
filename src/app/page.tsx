@@ -84,7 +84,6 @@ export default async function Orgs() {
           </li>
         ))}
       </ul>
-      <Footer />
     </>
   )
 }

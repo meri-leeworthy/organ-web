@@ -66,14 +66,10 @@ export function SelectAuthor({
     <div className="flex">
       {isClient && room && client && adminRooms && (
         <>
-          <label
-            htmlFor="author"
-            className="block text-sm font-medium text-gray-700 w-16">
-            Post as
-          </label>
           <select
             id="author"
             name="author"
+            aria-label="author"
             autoComplete="author"
             value={author ? author[0].useID() : ""}
             onChange={e => {

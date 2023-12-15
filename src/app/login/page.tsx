@@ -5,6 +5,7 @@ const MATRIX_BASE_URL = "https://matrix.radical.directory"
 import React, { useState } from "react"
 import { Client } from "simple-matrix-sdk"
 import { useRouter } from "next/navigation"
+import { Button } from "@/components/Button"
 
 const LoginPage = () => {
   const [username, setUsername] = useState("")
@@ -48,9 +49,9 @@ const LoginPage = () => {
           onChange={event => setPassword(event.target.value)}
         />
       </label>
-      <button type="submit" className="self-start">
-        Login
-      </button>
+      <Button type="submit" className="self-start">
+        login
+      </Button>
     </form>
   )
 }

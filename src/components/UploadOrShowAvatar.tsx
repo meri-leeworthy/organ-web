@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { useClient } from "@/lib/useClient"
 import { IconPhotoFilled } from "@tabler/icons-react"
 import { useRoom } from "@/lib/useRoom"
+import { getMxcUrl } from "@/lib/utils"
 
 export function UploadOrShowAvatar({
   slug,
@@ -13,12 +15,7 @@ export function UploadOrShowAvatar({
 }) {
   console.log("imageUri", imageUri)
   if (imageUri) {
-    const serverName = imageUri.split("://")[1].split("/")[0]
-    const mediaId = imageUri.split("://")[1].split("/")[1]
-
-    const avatarUrl = `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
-
-    // eslint-disable-next-line @next/next/no-img-element
+    const avatarUrl = getMxcUrl(imageUri)
     return <img src={avatarUrl} alt="avatar" width="120" />
   }
 

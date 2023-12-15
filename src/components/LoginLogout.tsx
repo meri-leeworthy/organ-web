@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Suspense } from "react"
+import { Button } from "./Button"
 
 const LoginLogout = () => {
   const router = useRouter()
@@ -19,9 +20,9 @@ const LoginLogout = () => {
   }
 
   return (
-    <button onClick={handleLogout}>
+    <Button onClick={handleLogout}>
       <Suspense fallback="login">{accessToken ? "logout" : "login"}</Suspense>
-    </button>
+    </Button>
   )
 }
 

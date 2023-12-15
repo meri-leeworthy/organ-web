@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 // export const dynamic = "force-dynamic"
@@ -10,7 +11,6 @@ import {
 } from "@/lib/utils"
 import { Contact } from "./Contact"
 import { fetchContactKVs } from "@/components/fetchContactKVs"
-import { IconButton } from "@/components/IconButton"
 import { IconSettings } from "@tabler/icons-react"
 import Link from "next/link"
 import { IfLoggedIn } from "@/components/IfLoggedIn"
@@ -18,6 +18,7 @@ import { NewPost } from "@/components/NewPost"
 import { directoryRadicalPostUnstable } from "@/lib/types"
 import { OrgPosts } from "./OrgPosts"
 import { Suspense } from "react"
+import { Button } from "@/components/Button"
 
 function deleteEditedMessages(messages: Event[]) {
   // const editMessages = messages.filter(
@@ -43,7 +44,7 @@ function deleteEditedMessages(messages: Event[]) {
       }
       return acc
     })
-    console.log("finalEdit", finalEdit)
+    // console.log("finalEdit", finalEdit)
     rootEvents.set(id, [finalEdit])
   })
 
@@ -74,55 +75,51 @@ export default async function OrgSlugPage({
   const messages = messagesChunk.filter(
     message => message.type === "m.room.message"
   )
-
   const messagesWithoutDeleted = deleteEditedMessages(messages)
-
-  // console.log("messagesWithoutDeleted", messagesWithoutDeleted)
-
   const posts = messagesWithoutDeleted.filter(
     message => message.content?.msgtype === directoryRadicalPostUnstable
   )
-
-  // console.log("posts", posts)
-
   const avatar = messagesChunk.find(
     (message: Event) => message.type === "m.room.avatar"
   )
-
   const imageUri: string | undefined = avatar?.content?.url
   const serverName = imageUri && imageUri.split("://")[1].split("/")[0]
   const mediaId = imageUri && imageUri.split("://")[1].split("/")[1]
   const avatarUrl = `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
-
   const contactKVs = await fetchContactKVs(room)
-
   const topic = messagesChunk.find(message => message.type === "m.room.topic")
 
   return (
     <>
-      <main className="flex flex-col lg:flex-row-reverse gap-4">
-        <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
-          <p className="py-4 font-body lg:font-sans lg:opacity-80 whitespace-pre-line lg:text-xs">
-            {topic?.content?.topic}
-          </p>
-          <Contact contactKVs={contactKVs} />
-          {avatar?.content?.url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="avatar" width="120" />
-          )}
-        </section>
-
-        <section className="w-full">
-          <div className="flex justify-between items-center">
-            <h2 className="font-body">{room.useName()?.name}</h2>
+      <div className="flex gap-4 my-6 mb-10">
+        <Suspense fallback={<div>loading...</div>}>
+          <Avatar url={avatarUrl} />
+        </Suspense>
+        <div className="flex flex-col gap-2 grow justify-between">
+          <div className="flex justify-self-start self-end gap-2 justify-between items-end ml-auto">
             <IfLoggedIn>
               <Link href={`/orgs/${slug}/edit`}>
-                <IconButton alt="edit page">
-                  <IconSettings size={16} />
-                </IconButton>
+                <Button className="gap-1 flex text-xs opacity-60 items-center border-0">
+                  Edit Page <IconSettings size={16} />
+                </Button>
               </Link>
             </IfLoggedIn>
           </div>
+          <h2 className="font-bold w-72 text-3xl lg:text-4xl">
+            {room.useName()?.name}
+          </h2>
+          <div />
+        </div>
+      </div>
+      <main className="flex flex-col lg:flex-row-reverse gap-4">
+        <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
+          <p className="py-3 lg:font-sans lg:opacity-80 whitespace-pre-line lg:text-xs">
+            {topic?.content?.topic}
+          </p>
+          <Contact contactKVs={contactKVs} />
+        </section>
+
+        <section className="w-full">
           <Suspense fallback={<div>loading...</div>}>
             <IfLoggedIn>
               <NewPost slug={slug} />
@@ -147,7 +144,9 @@ export async function generateMetadata({
   const room = new Room(
     roomId,
     new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-      userId: "@_relay_bot:radical.directory",
+      params: {
+        user_id: "@_relay_bot:radical.directory",
+      },
       fetch,
     })
   )
@@ -160,4 +159,16 @@ export async function generateMetadata({
     title: room.useName()?.name,
     description: topic?.content?.topic,
   }
+}
+
+function Avatar({ url }: { url: string }) {
+  return (
+    <div className="relative">
+      <div className="absolute w-full h-full bg-[#1D170C33]" />
+      <img src={url} alt="avatar" className="w-20 lg:w-40" />
+      {/* {avatar?.content?.url && (
+          <img src={avatarUrl} alt="avatar" width="150" />
+        )} */}
+    </div>
+  )
 }

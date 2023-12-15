@@ -1,8 +1,8 @@
 "use client"
 
 import { Room, Client, Event } from "simple-matrix-sdk"
-import { getRoomMessagesIterator, getMessagesChunk } from "lib/utils"
-import { useClient } from "lib/useClient"
+import { getRoomMessagesIterator, getMessagesChunk } from "@/lib/utils"
+import { useClient } from "@/lib/useClient"
 import { useEffect, useRef, useState } from "react"
 import { EditableDescription } from "./EditableDescription"
 import { EditableTitle } from "./EditableTitle"
@@ -12,11 +12,11 @@ import {
   ContactType,
   DirectoryRadicalContactMetaUnstable,
   directoryRadicalMetaContactUnstable,
-} from "lib/types"
-import { fetchContactKVs } from "components/fetchContactKVs"
-import Redirect from "components/Redirect"
-import { Back } from "components/old/Back"
-import { UploadOrShowAvatar } from "components/UploadOrShowAvatar"
+} from "@/lib/types"
+import { fetchContactKVs } from "@/components/fetchContactKVs"
+import Redirect from "@/components/Redirect"
+import { Back } from "@/components/Back"
+import { UploadOrShowAvatar } from "@/components/UploadOrShowAvatar"
 
 //TODO: add a loading state for when we're mutating data
 

@@ -14,7 +14,7 @@ const Username: React.FC = () => {
     })
   }
 
-  return <div>{username}</div>
+  return <div className="text-sm">{username}</div>
 }
 
 export default Username

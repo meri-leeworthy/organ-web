@@ -1,10 +1,11 @@
 import Link from "next/link"
 import "@/styles/globals.css"
 import Username from "@/components/Username"
+import { Footer } from "@/components/Footer"
 
 export const metadata = {
-  title: "Radical Directory",
-  description: "Grassroots organising in Naarm",
+  title: "Organ",
+  description: "Platform for grassroots organising",
 }
 
 // bg-[#edd0b366] bg-[#ebcdb066]
@@ -17,18 +18,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="w-screen flex justify-center min-h-screen">
-        <div className="max-w-xl lg:max-w-3xl w-full p-2">
+        <div className="max-w-xl lg:max-w-3xl w-full p-2 lg:p-4">
           <header className="pb-4 mb-4 flex justify-between">
-            <h1 className="text-lg font-black leading-4">
-              <Link href="/">
-                Radical
-                <br />
-                Directory
-              </Link>
-            </h1>
+            <Link href="/">
+              <h1 className="text-lg lg:text-xl border border-black px-2 font-black leading-4">
+                organ
+              </h1>
+            </Link>
             <Username />
           </header>
           {children}
+          <Footer />
         </div>
       </body>
     </html>
