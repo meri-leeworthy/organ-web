@@ -27,6 +27,7 @@ export type DirectoryRadicalPostUnstable = {
   tags: string[]
   msgtype: typeof directoryRadicalPostUnstable
   author: string
+  media: string[]
 }
 
 export type Chunk = {
