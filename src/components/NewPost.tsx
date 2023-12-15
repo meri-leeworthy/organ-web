@@ -75,7 +75,17 @@ export const NewPost = ({ slug }: { slug: string }) => {
   }
 
   return (
-    <div className="rounded bg-[#fff3] flex gap-2">
+    <div className="rounded bg-[#fff3] flex flex-col gap-2">
+      {imageSrcs[0] && (
+        <div className="flex items-center grow justify-center">
+          <img
+            src={imageSrcs[0]}
+            alt="post"
+            key={imageSrcs[0]}
+            className="h-72"
+          />
+        </div>
+      )}
       <form onSubmit={handlePostSubmit} className="flex flex-col grow gap-2">
         <div className="flex gap-1">
           <PostTypeButton type={type} thisType="post" setType={setType}>
@@ -147,16 +157,6 @@ export const NewPost = ({ slug }: { slug: string }) => {
               more options
             </Link> */}
       </form>
-      {imageSrcs[0] && (
-        <div className="flex items-center grow justify-center">
-          <img
-            src={imageSrcs[0]}
-            alt="post"
-            key={imageSrcs[0]}
-            className="w-52"
-          />
-        </div>
-      )}
     </div>
   )
 }
