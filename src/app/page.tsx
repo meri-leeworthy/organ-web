@@ -1,4 +1,4 @@
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
 
 // export const dynamic = "force-dynamic"
 
@@ -7,18 +7,8 @@ import Link from "next/link"
 import { Org } from "./orgs/[slug]/Org"
 import { Suspense } from "react"
 import { noCacheFetch } from "@/lib/utils"
-import { Footer } from "@/components/Footer"
-
-const SPACE_ID = "!LYcDqbaOzMrwVZsVRJ:radical.directory"
 
 async function getSpaceChildIds() {
-  // const accessToken = await getServerAccessToken()
-
-  // const client = new Client(MATRIX_BASE_URL!, accessToken, {
-  //   userId: RD_PUBLIC_USERID!,
-  //   fetch,
-  // })
-
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
@@ -26,7 +16,7 @@ async function getSpaceChildIds() {
     },
   })
 
-  const space = new Room(SPACE_ID, client)
+  const space = new Room(HOME_SPACE!, client)
   const state = await space.getState()
   const sortedState = Room.sortEvents(state)
   const filteredChildren = sortedState["m.space.child"].filter(
