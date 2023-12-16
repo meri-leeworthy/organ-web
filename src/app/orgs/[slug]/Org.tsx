@@ -1,8 +1,8 @@
 import { Room, Event } from "simple-matrix-sdk"
-import { getRoomMessagesIterator, getMessagesChunk } from "@/lib/utils"
+import { getMessagesChunk } from "@/lib/utils"
 
 export async function Org({ room }: { room: Room }) {
-  const messagesIterator = await getRoomMessagesIterator(room)
+  const messagesIterator = await room.getMessagesAsyncGenerator()
   const messagesChunk: Event[] = await getMessagesChunk(messagesIterator)
   // const messageTypes = messagesChunk.map(message => message.type)
   const topic = messagesChunk.find(message => message.type === "m.room.topic")
