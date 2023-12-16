@@ -156,7 +156,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
           </Button>
         </div>
         {/* <Link
-              href={`/orgs/${slug}/post/new`}
+              href={`/id/${slug}/post/new`}
               className="text-xs text-[#a284ff] border border-[#ddd2ff] border-dashed px-1">
               more options
             </Link> */}

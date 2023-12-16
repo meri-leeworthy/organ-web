@@ -22,7 +22,7 @@ export function PostEditMenu({
   return (
     <Dropdown>
       <Link
-        href={`/orgs/${slug}/post/${event_id.split("$")[1]}/edit`}
+        href={`/id/${slug}/post/${event_id.split("$")[1]}/edit`}
         className="right-0">
         Edit Post
       </Link>

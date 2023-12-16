@@ -97,7 +97,7 @@ export default async function OrgSlugPage({
         <div className="flex flex-col gap-2 grow justify-between">
           <div className="flex justify-self-start self-end gap-2 justify-between items-end ml-auto">
             <IfModerator roomId={room.useID()}>
-              <Link href={`/orgs/${slug}/edit`}>
+              <Link href={`/id/${slug}/edit`}>
                 <Button className="gap-1 flex text-xs opacity-60 items-center border-0">
                   Edit Page <IconSettings size={16} />
                 </Button>

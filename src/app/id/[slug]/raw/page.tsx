@@ -15,7 +15,7 @@ export default function RawOrgRoomEvents({
     if (!client) return
     const room = new Room(`!${slug}:radical.directory`, client)
     console.log("room", room)
-    const iterator = room?.getMessagesAsyncGenerator()()
+    const iterator = room?.getMessagesAsyncGenerator()
 
     iterator?.next().then(result => {
       const events = result.value.chunk.filter(isEvent)
