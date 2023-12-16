@@ -26,7 +26,7 @@ export type DirectoryRadicalPostUnstable = {
   body: string
   tags: string[]
   msgtype: typeof directoryRadicalPostUnstable
-  author: string
+  author: { name: string; id: string }
   media: string[]
 }
 

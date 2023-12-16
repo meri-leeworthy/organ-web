@@ -3,7 +3,10 @@
 
 import { useEffect, useState } from "react"
 import { useClient } from "@/lib/useClient"
-import { directoryRadicalPostUnstable } from "@/lib/types"
+import {
+  DirectoryRadicalPostUnstable,
+  directoryRadicalPostUnstable,
+} from "@/lib/types"
 import { Room } from "simple-matrix-sdk"
 import {
   IconCalendarEvent,
@@ -61,15 +64,16 @@ export const NewPost = ({ slug }: { slug: string }) => {
     const [authorRoom, authorName] = author
     const roomId = authorRoom.useID()
     const authorKV = { name: authorName, id: roomId }
-    const messageEvent = {
+    const messageEvent: DirectoryRadicalPostUnstable = {
       msgtype: directoryRadicalPostUnstable,
       title,
       body: content,
       author: authorKV,
       tags: [],
+      media: imageSrcs,
     }
-    await room.sendMessage(messageEvent)
-
+    const result = await room.sendMessage(messageEvent)
+    console.log("result", result)
     location.reload()
     // redirect(`/orgs/${params.slug}`)
   }
