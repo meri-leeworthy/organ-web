@@ -20,11 +20,6 @@ export async function getMessagesChunk(messagesIterator: AsyncGenerator) {
   return value?.chunk
 }
 
-export async function getRoomMessagesIterator(room: Room) {
-  const messagesIterator = room.getMessagesAsyncGenerator()()
-  return messagesIterator
-}
-
 export function parseContactKVs(
   messages: Event[]
 ): Record<string, string | undefined> {
