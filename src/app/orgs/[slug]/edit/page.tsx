@@ -1,7 +1,7 @@
 "use client"
 
 import { Room, Client, Event } from "simple-matrix-sdk"
-import { getRoomMessagesIterator, getMessagesChunk } from "@/lib/utils"
+import { getMessagesChunk } from "@/lib/utils"
 import { useClient } from "@/lib/useClient"
 import { useEffect, useRef, useState } from "react"
 import { EditableDescription } from "./EditableDescription"
@@ -78,29 +78,28 @@ function HydratedOrgDashboard({
       setContactKVs(contactKVs)
     })
 
-    getRoomMessagesIterator(room).then(messagesIterator => {
-      getMessagesChunk(messagesIterator).then(messagesChunk => {
-        const messages = messagesChunk.filter(
-          (message: Event) => message.type === "m.room.message"
-        )
-        const replacedMessages = Room.replaceEditedMessages(messages)
+    const messagesIterator = room.getMessagesAsyncGenerator()
 
-        console.log("replacedMessages", replacedMessages)
+    getMessagesChunk(messagesIterator).then(messagesChunk => {
+      const messages = messagesChunk.filter(
+        (message: Event) => message.type === "m.room.message"
+      )
+      const replacedMessages = Room.replaceEditedMessages(messages)
 
-        // setFaqKVs(parseFaqKVs(replacedMessages))
-        setDescription(
-          messagesChunk.find(
-            (message: Event) => message.type === "m.room.topic"
-          ).content.topic
-        )
+      console.log("replacedMessages", replacedMessages)
 
-        const avatar = messagesChunk.find(
-          (message: Event) => message.type === "m.room.avatar"
-        )
-        console.log("avatar", avatar)
+      // setFaqKVs(parseFaqKVs(replacedMessages))
+      setDescription(
+        messagesChunk.find((message: Event) => message.type === "m.room.topic")
+          .content.topic
+      )
 
-        setImageUri(avatar.content.url)
-      })
+      const avatar = messagesChunk.find(
+        (message: Event) => message.type === "m.room.avatar"
+      )
+      console.log("avatar", avatar)
+
+      setImageUri(avatar.content.url)
     })
   }, [])
 

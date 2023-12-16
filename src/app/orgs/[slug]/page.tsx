@@ -150,7 +150,7 @@ export async function generateMetadata({
     })
   )
   console.log(await room.getName())
-  const messagesIterator = await getRoomMessagesIterator(room)
+  const messagesIterator = await room.getMessagesAsyncGenerator()
   const messagesChunk: Event[] = await getMessagesChunk(messagesIterator)
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
@@ -165,9 +165,6 @@ function Avatar({ url }: { url: string | undefined }) {
     <div className="relative">
       <div className="absolute w-full h-full bg-[#1D170C33]" />
       {url && <img src={url} alt="avatar" className="w-20 lg:w-40" />}
-      {/* {avatar?.content?.url && (
-          <img src={avatarUrl} alt="avatar" width="150" />
-        )} */}
     </div>
   )
 }

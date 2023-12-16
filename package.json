@@ -13,7 +13,7 @@
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "simple-matrix-sdk": "^0.2.5"
+    "simple-matrix-sdk": "^0.2.7"
   },
   "devDependencies": {
     "@types/node": "^20",
