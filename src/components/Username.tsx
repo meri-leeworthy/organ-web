@@ -8,7 +8,7 @@ const Username: React.FC = () => {
   const client = useClient()
 
   if (client) {
-    client.getProfile(client.useUserId()).then(profile => {
+    client.getProfile(client.userId).then(profile => {
       console.log(profile)
       setUsername(profile.displayname)
     })

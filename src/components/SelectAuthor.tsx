@@ -36,7 +36,7 @@ export function SelectAuthor({
     )
     Promise.all(promises).then(powerLevels => {
       const adminRooms = powerLevels
-        .filter(([_, room]) => room.users[client.useUserId()] === 100)
+        .filter(([_, room]) => room.users[client.userId] === 100)
         .map(([roomId, _]) => roomId)
       const rooms = adminRooms.map(roomId => new Room(roomId, client))
 
