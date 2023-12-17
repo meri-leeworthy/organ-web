@@ -18,8 +18,8 @@ dependencies:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
   simple-matrix-sdk:
-    specifier: ^0.2.7
-    version: 0.2.7
+    specifier: ^0.2.8
+    version: 0.2.8
 
 devDependencies:
   '@types/node':
@@ -2269,8 +2269,8 @@ packages:
       object-inspect: 1.13.1
     dev: true
 
-  /simple-matrix-sdk@0.2.7:
-    resolution: {integrity: sha512-HPG907RgHeTCalSnJnqh11NwVKsCJ+GrBsziTZX++rHs3uDurLTTLxsBhCkkeyrnrnB7kO7uV8sZzJJ2qHGT2g==}
+  /simple-matrix-sdk@0.2.8:
+    resolution: {integrity: sha512-QvWse08PgWy0G0h22mmfLxWAWOLZiwMzMuV8Ya6T9tG7AK+xeQ7qbM28+skzrb+DPts6nisLDdhNA7euUzfYRQ==}
     dev: false
 
   /slash@3.0.0:
