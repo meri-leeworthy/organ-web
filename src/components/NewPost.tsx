@@ -18,6 +18,8 @@ import {
 import { Button } from "./Button"
 import { Spinner } from "./Spinner"
 import { getMxcUrl } from "@/lib/utils"
+import { Input } from "./Input"
+import { Textarea } from "./Textarea"
 
 type PostType = "post" | "event"
 
@@ -99,19 +101,18 @@ export const NewPost = ({ slug }: { slug: string }) => {
             <IconCalendarEvent size={16} /> Event
           </PostTypeButton>
           {type === "event" && (
-            <input
+            <Input
               type="text"
               id="title"
               placeholder="Title"
               aria-label="title"
               value={title}
-              onChange={e => setTitle(e.target.value)}
-              className="w-full ml-1 font-medium px-1 placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"
+              onChange={e => setTitle((e.target as HTMLInputElement).value)}
             />
           )}
         </div>
         <div className="flex grow">
-          <textarea
+          <Textarea
             id="content"
             aria-label="content"
             placeholder={
@@ -119,8 +120,15 @@ export const NewPost = ({ slug }: { slug: string }) => {
             }
             rows={3}
             value={content}
-            onChange={e => setContent(e.target.value)}
-            className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"></textarea>
+            onChange={e =>
+              setContent(
+                typeof e === "object" && e !== null && "target" in e
+                  ? (e.target as HTMLTextAreaElement).value
+                  : ""
+              )
+            }
+            className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"
+          />
         </div>
         {type === "event" && (
           <div className="flex gap-2">
@@ -132,14 +140,13 @@ export const NewPost = ({ slug }: { slug: string }) => {
               }
               className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"
             />
-            <input
+            <Input
               type="text"
               id="location"
               placeholder="Location"
               aria-label="location"
               value={place}
-              onChange={e => setPlace(e.target.value)}
-              className="grow font-medium px-1 placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"
+              onChange={e => setPlace((e.target as HTMLInputElement).value)}
             />
           </div>
         )}
