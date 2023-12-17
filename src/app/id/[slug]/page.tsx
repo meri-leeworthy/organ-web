@@ -96,7 +96,7 @@ export default async function OrgSlugPage({
         </Suspense>
         <div className="flex flex-col gap-2 grow justify-between">
           <div className="flex justify-self-start self-end gap-2 justify-between items-end ml-auto">
-            <IfModerator roomId={room.useID()}>
+            <IfModerator slug={slug}>
               <Link href={`/id/${slug}/edit`}>
                 <Button className="gap-1 flex text-xs opacity-60 items-center border-0">
                   Edit Page <IconSettings size={16} />
@@ -120,7 +120,7 @@ export default async function OrgSlugPage({
 
         <section className="w-full">
           <Suspense fallback={<div>loading...</div>}>
-            <IfModerator roomId={room.useID()}>
+            <IfModerator slug={slug}>
               <NewPost slug={slug} />
             </IfModerator>
           </Suspense>
