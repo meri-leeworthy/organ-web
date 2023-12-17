@@ -3,27 +3,33 @@
 import { useRoom } from "@/lib/useRoom"
 import { useState, useEffect } from "react"
 
-export async function IfModerator({
-  roomId,
+export function IfModerator({
+  slug,
   children,
 }: {
-  roomId: string
+  slug: string
   children: React.ReactNode
 }) {
-  const [isClient, setIsClient] = useState(false)
-  const room = useRoom(roomId)
+  const [isModerator, setIsModerator] = useState(false)
+  const room = useRoom(slug)
+
+  console.log("room", room, "slug", slug, "isModerator", isModerator)
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    if (!room) return
+    room
+      .isUserModerator()
+      .then(result => {
+        console.log("result", result)
+        setIsModerator(result)
+      })
+      .catch(() => setIsModerator(false))
+  }, [room])
 
   if (typeof window === "undefined") return
   const accessToken = localStorage?.getItem("accessToken")
   const userId = localStorage?.getItem("userId")
 
-  const userIsModerator = await room?.isUserModerator()
-
-  if (isClient && accessToken && userId && userIsModerator)
-    return <>{children}</>
+  if (isModerator && accessToken && userId) return <>{children}</>
   return null
 }
