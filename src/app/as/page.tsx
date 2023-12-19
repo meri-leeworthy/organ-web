@@ -1,6 +1,6 @@
 import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { JoinRoom, Register, GetRooms } from "./Forms"
-const { NODE_ENV } = process.env
+const { NODE_ENV, HOME_SPACE } = process.env
 
 export default async function ApplicationServiceTest() {
   console.log("NODE_ENV", NODE_ENV)
@@ -10,6 +10,8 @@ export default async function ApplicationServiceTest() {
       {NODE_ENV === "development" && (
         <>
           <h1>Application Service Test</h1>
+
+          <p>Home space: {HOME_SPACE}</p>
 
           <h2>Get Rooms</h2>
           <GetRooms />

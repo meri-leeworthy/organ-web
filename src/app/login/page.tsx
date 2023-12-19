@@ -5,7 +5,7 @@ const MATRIX_BASE_URL = "https://matrix.radical.directory"
 import React, { useState } from "react"
 import { Client } from "simple-matrix-sdk"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/Button"
+import { Button } from "@/components/styled/Button"
 
 const LoginPage = () => {
   const [username, setUsername] = useState("")

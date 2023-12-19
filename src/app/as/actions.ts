@@ -1,6 +1,7 @@
 "use server"
 
-import { Client } from "simple-matrix-sdk"
+import { Client, Room } from "simple-matrix-sdk"
+import { RoomDebug } from "./Forms"
 const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 export async function register(formData: FormData) {
@@ -42,15 +43,44 @@ export async function joinRoom(formData: FormData) {
   return join
 }
 
-export async function getRooms(formData: FormData) {
+export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
   const user = formData.get("user") as string
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, { fetch })
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch,
+    params: { user_id: `@_relay_${user}:radical.directory` },
+  })
 
-  const rooms = await client.get("joined_rooms", {
+  const { joined_rooms: roomIds } = await client.get("joined_rooms", {
     user_id: `@_relay_${user}:radical.directory`,
   })
 
-  console.log("rooms", rooms)
+  const rooms = roomIds.map((roomId: string) => {
+    const room = new Room(roomId, client)
+    return room
+  })
 
-  return rooms
+  console.log("rooms", rooms, "user", user)
+
+  const roomsWithData: RoomDebug[] = await Promise.all(
+    rooms.map(async (room: Room) => {
+      const roomData = await room.getHierarchy()
+      console.log("roomData", roomData)
+      return roomData
+    })
+  )
+
+  console.log("roomsWithData", roomsWithData)
+
+  return roomsWithData
+}
+
+export async function getSpaceChildren(formData: FormData) {
+  const space = formData.get("space") as string
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, { fetch })
+
+  const children = await client.get(`rooms/${space}/children`)
+
+  console.log("children", children)
+
+  return children
 }

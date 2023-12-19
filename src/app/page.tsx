@@ -56,7 +56,7 @@ export default async function Orgs() {
   )
 
   rooms.forEach(room => {
-    console.log("room name", room.useName())
+    console.log("room name", room.name)
   })
 
   // const asyncComponent: JSX.Element = await (async (org: Room) => await Org({ room: org }))

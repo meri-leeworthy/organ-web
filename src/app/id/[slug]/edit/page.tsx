@@ -10,13 +10,12 @@ import { SectionType } from "./SectionType"
 import { EditableContactSection } from "./EditableContactSection"
 import {
   ContactType,
-  DirectoryRadicalContactMetaUnstable,
-  directoryRadicalMetaContactUnstable,
+  OrganMetaContactUnstable,
+  organMetaContactUnstable,
 } from "@/lib/types"
-import { fetchContactKVs } from "@/components/fetchContactKVs"
+import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import Redirect from "@/components/Redirect"
-import { Back } from "@/components/Back"
-import { UploadOrShowAvatar } from "@/components/UploadOrShowAvatar"
+import { Back, UploadOrShowAvatar } from "@/components/ui"
 
 //TODO: add a loading state for when we're mutating data
 
@@ -115,7 +114,7 @@ function HydratedOrgDashboard({
 
   // mutate contact state events
   function updateContact(contactType: ContactType, contactValue: string) {
-    const content: DirectoryRadicalContactMetaUnstable = {
+    const content: OrganMetaContactUnstable = {
       type: contactType,
       value: contactValue,
     }
@@ -132,11 +131,7 @@ function HydratedOrgDashboard({
       // console.log("actually sending request with contactValue:", contactValue)
       // console.log("contactKVs[contactType]:", contactKVs[contactType])
       room
-        ?.sendStateEvent(
-          directoryRadicalMetaContactUnstable,
-          content,
-          contactType
-        )
+        ?.sendStateEvent(organMetaContactUnstable, content, contactType)
         .then(res => {
           // console.log("after sending contact state event:", res)
           initialKVs.current[contactType] = contactValue

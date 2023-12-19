@@ -1,10 +1,12 @@
-import LoginLogout from "@/components/LoginLogout"
+import LoginLogout from "@/components/ui/LoginLogout"
+import Link from "next/link"
 
 export function Footer() {
   return (
     <section className="text-sm leading-tight mt-24">
-      <div className="my-4">
+      <div className="my-4 flex gap-2 items-center">
         <LoginLogout />
+        <Link href="/id/new">Create Page</Link>
       </div>
 
       <P className="my-4">

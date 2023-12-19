@@ -2,64 +2,92 @@
 
 import { useState } from "react"
 import { useClient } from "@/lib/useClient"
-import { Input } from "@/components/Input"
-import { Button } from "@/components/Button"
+import { Input, Button, Textarea } from "@/components/styled"
+import { EditableContacts } from "../[slug]/edit/EditableContactSection"
+import {
+  ContactType,
+  contactTypes,
+  organMetaContactUnstable,
+} from "@/lib/types"
 
 const NewRoomPage = () => {
   const client = useClient()
 
   const [name, setName] = useState("")
   const [topic, setTopic] = useState("")
-  const [avatar, setAvatar] = useState("")
-  const [contacts, setContacts] = useState("")
+  const [contactKVs, setContactKVs] = useState<
+    Record<string, string | undefined>
+  >({})
+
+  function setContactKV(contactType: ContactType, contactValue?: string) {
+    // console.log("setting contact kv", contactType, contactValue)
+    setContactKVs({ ...contactKVs, [contactType]: contactValue })
+  }
+  function removeContactKV(contactType: ContactType) {
+    const { [contactType]: _, ...rest } = contactKVs
+    setContactKVs(rest)
+  }
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
   }
 
-  const handleTopicChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTopicChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTopic(event.target.value)
-  }
-
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAvatar(event.target.value)
-  }
-
-  const handleContactsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContacts(event.target.value)
   }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
     // Logic to create a new Matrix room with the provided inputs
     console.log("Creating new room...")
+    client?.createRoom({
+      name,
+      topic,
+      initial_state: [
+        {
+          type: organMetaContactUnstable,
+          state_key: contactTypes.email,
+          content: {
+            type: contactTypes.email,
+            value: contactKVs[contactTypes.email],
+          },
+        },
+      ],
+    })
   }
 
   return (
     <div>
-      <h1>New Page</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <Input type="text" value={name} onChange={handleNameChange} />
-        </label>
+      <h1>Create Page</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <label htmlFor="name">Name:</label>
+        <Input
+          name="name"
+          type="text"
+          value={name}
+          onChange={handleNameChange}
+        />
+        <br />
+        <label htmlFor="description">About:</label>
+        <Textarea
+          name="description"
+          value={topic}
+          onChange={handleTopicChange}
+        />
+        <br />
+
         <br />
         <label>
-          Topic:
-          <Input type="text" value={topic} onChange={handleTopicChange} />
+          Contacts:{" "}
+          <EditableContacts
+            {...{ contactKVs, setContactKV, removeContactKV }}
+          />
         </label>
+
         <br />
-        <label>
-          Avatar:
-          <Input type="text" value={avatar} onChange={handleAvatarChange} />
-        </label>
-        <br />
-        <label>
-          Contacts:
-          <Input type="text" value={contacts} onChange={handleContactsChange} />
-        </label>
-        <br />
-        <Button type="submit">Create Room</Button>
+        <Button type="submit" className="self-start border border-black">
+          Create Page
+        </Button>
       </form>
     </div>
   )

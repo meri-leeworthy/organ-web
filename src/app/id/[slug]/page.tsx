@@ -6,21 +6,17 @@ const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 import { Room, Client, Event } from "simple-matrix-sdk"
 import { getMessagesChunk, noCacheFetch } from "@/lib/utils"
 import { Contact } from "./Contact"
-import { fetchContactKVs } from "@/components/fetchContactKVs"
+import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import { IconSettings } from "@tabler/icons-react"
 import Link from "next/link"
 import { IfModerator } from "@/components/IfModerator"
-import { NewPost } from "@/components/NewPost"
-import { directoryRadicalPostUnstable } from "@/lib/types"
+import { NewPost } from "@/components/ui"
+import { organPostUnstable } from "@/lib/types"
 import { OrgPosts } from "./OrgPosts"
 import { Suspense } from "react"
-import { Button } from "@/components/Button"
+import { Button } from "@/components/styled"
 
 function deleteEditedMessages(messages: Event[]) {
-  // const editMessages = messages.filter(
-  //   message => message?.content && "m.new_content" in message.content
-  // )
-
   const rootEvents = new Map<string, Event[]>()
 
   messages.forEach(message => {
@@ -73,7 +69,7 @@ export default async function OrgSlugPage({
   )
   const messagesWithoutDeleted = deleteEditedMessages(messages)
   const posts = messagesWithoutDeleted.filter(
-    message => message.content?.msgtype === directoryRadicalPostUnstable
+    message => message.content?.msgtype === organPostUnstable
   )
   const avatar = messagesChunk.find(
     (message: Event) => message.type === "m.room.avatar"
@@ -90,7 +86,7 @@ export default async function OrgSlugPage({
 
   return (
     <>
-      <div className="flex gap-4 my-6 mb-10">
+      <div className={`flex my-6 mb-10 ${avatarUrl && "gap-4"}`}>
         <Suspense fallback={<div>loading...</div>}>
           <Avatar url={avatarUrl} />
         </Suspense>
@@ -105,7 +101,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </div>
           <h2 className="font-bold w-72 text-3xl lg:text-4xl">
-            {room.useName()?.name}
+            {room.name?.name}
           </h2>
           <div />
         </div>
@@ -155,7 +151,7 @@ export async function generateMetadata({
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   return {
-    title: room.useName()?.name,
+    title: room.name?.name,
     description: topic?.content?.topic,
   }
 }
@@ -163,8 +159,14 @@ export async function generateMetadata({
 function Avatar({ url }: { url: string | undefined }) {
   return (
     <div className="relative">
-      <div className="absolute w-full h-full bg-[#1D170C33]" />
-      {url && <img src={url} alt="avatar" className="w-20 lg:w-40" />}
+      <div
+        className={`absolute w-full h-full ${
+          url ? "bg-transparent" : "bg-[#1D170C33]"
+        }`}
+      />
+      {url && (
+        <img src={url} alt="avatar" className="w-20 lg:w-40 opacity-100" />
+      )}
     </div>
   )
 }

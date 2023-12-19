@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Dropdown } from "./Dropdown"
+import { Dropdown } from "./"
 import { useRoom } from "@/lib/useRoom"
 
 export function PostEditMenu({

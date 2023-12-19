@@ -9,23 +9,33 @@ export const contactTypes = {
 } as const
 export type ContactType = keyof typeof contactTypes
 
-export type DirectoryRadicalEventUnstable = {}
+export const organCalEventUnstable = "organ.event.unstable"
 
-export type DirectoryRadicalContactMetaUnstable = {
+export type OrganCalEventUnstable = {
+  title: string
+  body: string
+  tags: string[]
+  msgtype: typeof organCalEventUnstable
+  host: { name: string; id: string }
+  datetime: string
+  location?: string
+  avatar?: string
+}
+
+export type OrganMetaContactUnstable = {
   type: ContactType
   value: string
 }
 
-export const directoryRadicalMetaContactUnstable =
-  "directory.radical.meta.contact.unstable"
+export const organMetaContactUnstable = "organ.meta.contact.unstable"
 
-export const directoryRadicalPostUnstable = "directory.radical.post.unstable"
+export const organPostUnstable = "organ.post.unstable"
 
-export type DirectoryRadicalPostUnstable = {
+export type OrganPostUnstable = {
   title: string
   body: string
   tags: string[]
-  msgtype: typeof directoryRadicalPostUnstable
+  msgtype: typeof organPostUnstable
   author: { name: string; id: string }
   media: string[]
 }

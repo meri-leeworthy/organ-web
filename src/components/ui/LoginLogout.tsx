@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Suspense } from "react"
-import { Button } from "./Button"
+import { Button } from "../styled"
 
 const LoginLogout = () => {
   const router = useRouter()

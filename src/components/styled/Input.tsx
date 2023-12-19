@@ -1,6 +1,7 @@
 export function Input(
   props: React.HTMLAttributes<HTMLInputElement> & {
     type: string
+    name?: string
     placeholder?: string
     value?: string
   }

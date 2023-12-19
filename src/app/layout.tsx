@@ -1,7 +1,6 @@
 import Link from "next/link"
 import "@/styles/globals.css"
-import Username from "@/components/Username"
-import { Footer } from "@/components/Footer"
+import { Username, Footer } from "@/components/ui"
 import Script from "next/script"
 
 export const metadata = {

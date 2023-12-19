@@ -26,7 +26,7 @@ export default function RawOrgRoomEvents({
   return (
     <ul className="max-w-xl">
       {events?.map((event, i) => (
-        <li key={i} className="py-2 text-sm font-light whitespace-pre-line">
+        <li key={i} className="py-2 text-sm whitespace-pre-line">
           {JSON.stringify(event)}
         </li>
       ))}

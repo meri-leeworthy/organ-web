@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { OptionsButton } from "./IconButton"
+import { OptionsButton } from "../styled/IconButton"
 
 export function Dropdown({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)

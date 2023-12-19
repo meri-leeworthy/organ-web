@@ -7,7 +7,7 @@ import {
   DeleteButton,
   DoneButton,
   EditButton,
-} from "@/components/IconButton"
+} from "@/components/styled/IconButton"
 import { SectionType, sections } from "./SectionType"
 
 export function EditableContactSection({
@@ -39,15 +39,8 @@ export function EditableContactSection({
         <DoneButton
           label="Done"
           onClick={() => {
-            // console.log("updating contact")
             for (const [contactType, _] of Object.entries(contactTypes)) {
               const contactValue = contactKVs[contactType]
-              // if (!contactValue) continue
-              // console.log(
-              //   "calling updateContact with",
-              //   contactType,
-              //   contactValue
-              // )
               updateContact(contactType as ContactType, contactValue || "")
             }
             setEditSection(null)
@@ -73,7 +66,7 @@ export function EditableContactSection({
   }
 }
 
-function EditableContacts({
+export function EditableContacts({
   contactKVs,
   setContactKV,
   removeContactKV,

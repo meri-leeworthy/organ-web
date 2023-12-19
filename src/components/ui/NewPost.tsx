@@ -1,11 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useClient } from "@/lib/useClient"
 import {
-  DirectoryRadicalPostUnstable,
-  directoryRadicalPostUnstable,
+  OrganCalEventUnstable,
+  OrganPostUnstable,
+  organCalEventUnstable,
+  organPostUnstable,
 } from "@/lib/types"
 import { Room } from "simple-matrix-sdk"
 import {
@@ -15,11 +17,9 @@ import {
 } from "@tabler/icons-react"
 // import { SelectAuthor } from "@/components/SelectAuthor"
 // import Link from "next/link"
-import { Button } from "./Button"
 import { Spinner } from "./Spinner"
 import { getMxcUrl } from "@/lib/utils"
-import { Input } from "./Input"
-import { Textarea } from "./Textarea"
+import { Input, Textarea, Button } from "../styled"
 
 type PostType = "post" | "event"
 
@@ -45,8 +45,26 @@ export const NewPost = ({ slug }: { slug: string }) => {
   const [author, setAuthor] = useState<[Room, string]>()
 
   const client = useClient()
+  const room = useMemo(() => {
+    if (!client) return
+    return new Room(`!${slug}:radical.directory`, client)
+  }, [client, slug])
+
+  useEffect(() => {
+    if (!room) return
+    room.getName().then(value => {
+      const name =
+        typeof value === "object" &&
+        value !== null &&
+        "name" in value &&
+        typeof value.name === "string"
+          ? value.name
+          : ""
+      setAuthor([room, name])
+    })
+  }, [client, room])
+
   if (!client) return "loading..."
-  const room = new Room(`!${slug}:radical.directory`, client)
 
   async function handlePostSubmit(event: React.FormEvent<HTMLFormElement>) {
     // const authorRoom = new Room(content?.author, client)
@@ -62,20 +80,40 @@ export const NewPost = ({ slug }: { slug: string }) => {
     //     : ""
 
     event.preventDefault()
+
     if (!author) return
     const [authorRoom, authorName] = author
-    const roomId = authorRoom.useID()
+    const roomId = authorRoom.roomId
     const authorKV = { name: authorName, id: roomId }
-    const messageEvent: DirectoryRadicalPostUnstable = {
-      msgtype: directoryRadicalPostUnstable,
-      title,
-      body: content,
-      author: authorKV,
-      tags: [],
-      media: imageSrcs,
+
+    switch (type) {
+      case "post":
+        const messageEvent: OrganPostUnstable = {
+          msgtype: organPostUnstable,
+          title,
+          body: content,
+          author: authorKV,
+          tags: [],
+          media: imageSrcs,
+        }
+        const result = await room?.sendMessage(messageEvent)
+        console.log("result", result)
+        break
+      case "event":
+        const eventEvent: OrganCalEventUnstable = {
+          msgtype: organCalEventUnstable,
+          title,
+          body: content,
+          host: authorKV,
+          tags: [],
+          datetime,
+          avatar: imageSrcs[0],
+          location: place,
+        }
+        const result2 = await room?.sendMessage(eventEvent)
+        console.log("result2", result2)
+        break
     }
-    const result = await room.sendMessage(messageEvent)
-    console.log("result", result)
     location.reload()
     // redirect(`/orgs/${params.slug}`)
   }

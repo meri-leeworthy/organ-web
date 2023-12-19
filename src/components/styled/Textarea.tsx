@@ -1,9 +1,10 @@
 export function Textarea(
   props: React.HTMLAttributes<HTMLTextAreaElement> & {
     placeholder?: string
+    name?: string
     value?: string
     rows?: number
-    onChange?: (value: string) => void
+    onChange?: React.ChangeEventHandler<HTMLTextAreaElement>
   }
 ) {
   return (
