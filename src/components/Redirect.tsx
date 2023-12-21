@@ -15,9 +15,9 @@ const Redirect = ({
   useEffect(() => {
     if (!client) return
     client.getJoinedRooms().then(rooms => {
-      if (!rooms.joined_rooms.includes(roomId)) redirect("/orgs")
+      if (!rooms.joined_rooms.includes(roomId)) redirect("/")
     })
-  }, [])
+  }, [client, roomId])
 
   return children
 }
