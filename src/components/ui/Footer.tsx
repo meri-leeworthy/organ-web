@@ -43,6 +43,7 @@ export function Footer() {
           &ldquo;for a world in which many worlds fit&rdquo;
         </a>
       </P>
+      <P className="my-4">made on sovereign Wurundjeri land</P>
     </section>
   )
 }
