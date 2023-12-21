@@ -140,3 +140,7 @@ export function getMxcUrl(mxc: string) {
 
   return `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
 }
+
+export function xor(a: boolean, b: boolean) {
+  return (a || b) && !(a && b)
+}
