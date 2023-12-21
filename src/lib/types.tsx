@@ -6,6 +6,7 @@ export const contactTypes = {
   facebook: "facebook",
   newsletter: "newsletter",
   linktree: "linktree",
+  link: "link",
 } as const
 export type ContactType = keyof typeof contactTypes
 
@@ -24,7 +25,7 @@ export type OrganCalEventUnstable = {
 
 export type OrganMetaContactUnstable = {
   type: ContactType
-  value: string
+  value: string[]
 }
 
 export const organMetaContactUnstable = "organ.meta.contact.unstable"

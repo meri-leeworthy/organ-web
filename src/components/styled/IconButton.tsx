@@ -21,10 +21,10 @@ export function IconButton({
 }) {
   const bgClass =
     bg === "hover"
-      ? "hover:bg-[#1D170C11]"
+      ? "hover:bg-primary"
       : bg === "none"
       ? ""
-      : "bg-[#1D170C11] hover:bg-[#1D170C22]"
+      : "bg-greylight hover:bg-primary"
   return (
     <button
       className={`self-start p-1 text-sm rounded-full text-[#1D170C99] flex items-center ${bgClass}`}
@@ -46,7 +46,7 @@ export function EditButton({
   onClick?: () => void
 }) {
   return (
-    <IconButton alt={alt} onClick={onClick} label={label}>
+    <IconButton alt={alt} onClick={onClick} label={label} bg="hover">
       <IconEdit size={16} />
     </IconButton>
   )

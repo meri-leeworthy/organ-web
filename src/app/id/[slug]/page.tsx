@@ -15,33 +15,37 @@ import { organPostUnstable } from "@/lib/types"
 import { OrgPosts } from "./OrgPosts"
 import { Suspense } from "react"
 import { Button } from "@/components/styled"
+import { Avatar } from "@/components/ui/Avatar"
+import { IfLoggedIn } from "@/components/IfLoggedIn"
+import { IfRoomMember } from "@/components/IfRoomMember"
+import { FollowButton } from "@/components/ui/FollowButton"
 
-function deleteEditedMessages(messages: Event[]) {
-  const rootEvents = new Map<string, Event[]>()
+// function deleteEditedMessages(messages: Event[]) {
+//   const rootEvents = new Map<string, Event[]>()
 
-  messages.forEach(message => {
-    if (message?.content && "m.relates_to" in message.content) {
-      const id = message.content["m.relates_to"].event_id
-      const edits = rootEvents.get(id)
-      rootEvents.set(id, [...(edits || []), message])
-    }
-  })
+//   messages.forEach(message => {
+//     if (message?.content && "m.relates_to" in message.content) {
+//       const id = message.content["m.relates_to"].event_id
+//       const edits = rootEvents.get(id)
+//       rootEvents.set(id, [...(edits || []), message])
+//     }
+//   })
 
-  // console.log("rootEvents", rootEvents)
+//   // console.log("rootEvents", rootEvents)
 
-  rootEvents.forEach((edits, id) => {
-    const finalEdit = edits.reduce((acc, edit) => {
-      if (edit.origin_server_ts > acc.origin_server_ts) {
-        return edit
-      }
-      return acc
-    })
-    // console.log("finalEdit", finalEdit)
-    rootEvents.set(id, [finalEdit])
-  })
+//   rootEvents.forEach((edits, id) => {
+//     const finalEdit = edits.reduce((acc, edit) => {
+//       if (edit.origin_server_ts > acc.origin_server_ts) {
+//         return edit
+//       }
+//       return acc
+//     })
+//     // console.log("finalEdit", finalEdit)
+//     rootEvents.set(id, [finalEdit])
+//   })
 
-  return [...rootEvents.values()].flat()
-}
+//   return [...rootEvents.values()].flat()
+// }
 
 export default async function OrgSlugPage({
   params,
@@ -67,8 +71,14 @@ export default async function OrgSlugPage({
   const messages = messagesChunk.filter(
     message => message.type === "m.room.message"
   )
-  const messagesWithoutDeleted = deleteEditedMessages(messages)
-  const posts = messagesWithoutDeleted.filter(
+  const messagesWithoutPreEdited = Room.deleteEditedMessages(messages)
+  // const posts = messagesWithoutDeleted.filter(
+  //   message => message.content?.msgtype === organPostUnstable
+  // )
+
+  // TODO: note that deleteEditedMessages is not working as expected
+
+  const posts = messages.filter(
     message => message.content?.msgtype === organPostUnstable
   )
   const avatar = messagesChunk.find(
@@ -84,28 +94,34 @@ export default async function OrgSlugPage({
   const contactKVs = await fetchContactKVs(room)
   const topic = messagesChunk.find(message => message.type === "m.room.topic")
 
+  console.log("messages", messages)
+  console.log("posts", posts)
+
   return (
     <>
+      <div className="flex justify-end gap-2 items-center">
+        <FollowButton slug={slug} />
+        <IfModerator slug={slug}>
+          <Link
+            href={`/id/${slug}/edit`}
+            aria-label="Edit Page"
+            className="flex p-1 text-xs opacity-60 items-center border-0 hover:bg-primary rounded-full">
+            <IconSettings size={16} />
+          </Link>
+        </IfModerator>
+      </div>
       <div className={`flex my-6 mb-10 ${avatarUrl && "gap-4"}`}>
         <Suspense fallback={<div>loading...</div>}>
-          <Avatar url={avatarUrl} />
+          <AvatarFull url={avatarUrl} />
         </Suspense>
         <div className="flex flex-col gap-2 grow justify-between">
-          <div className="flex justify-self-start self-end gap-2 justify-between items-end ml-auto">
-            <IfModerator slug={slug}>
-              <Link href={`/id/${slug}/edit`}>
-                <Button className="gap-1 flex text-xs opacity-60 items-center border-0">
-                  Edit Page <IconSettings size={16} />
-                </Button>
-              </Link>
-            </IfModerator>
-          </div>
-          <h2 className="font-bold w-72 text-3xl lg:text-4xl">
+          <div className="flex justify-self-start self-end gap-2 justify-between items-end ml-auto"></div>
+          <h2 className="font-bold flex gap-2 w-72 text-3xl lg:text-4xl">
             {room.name?.name}
           </h2>
-          <div />
         </div>
       </div>
+
       <main className="flex flex-col lg:flex-row-reverse gap-4">
         <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
           <p className="py-3 lg:font-sans lg:opacity-80 whitespace-pre-line lg:text-xs">
@@ -156,7 +172,7 @@ export async function generateMetadata({
   }
 }
 
-function Avatar({ url }: { url: string | undefined }) {
+function AvatarFull({ url }: { url: string | undefined }) {
   return (
     <div className="relative">
       <div
