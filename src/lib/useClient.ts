@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Client } from "simple-matrix-sdk"
 
 export const BASE_URL = "https://matrix.radical.directory"
@@ -12,8 +12,11 @@ export function useClient() {
     const userId = localStorage.getItem(USERID_STORAGE_KEY)
 
     if (accessToken && userId) {
-      setClient(new Client(BASE_URL, accessToken, { userId, fetch }))
+      const client = new Client(BASE_URL, accessToken, { userId, fetch })
+      setClient(client)
     }
   }, [])
-  return client
+  const memoizedClient = useMemo(() => client, [client])
+
+  return memoizedClient
 }
