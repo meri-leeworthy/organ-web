@@ -12,6 +12,11 @@ const config: Config = {
       body: ["Fluxisch", "sans-serif"],
     },
     extend: {
+      colors: {
+        primary: "#ddd2ff",
+        greylight: "#1D170C11",
+        grey: "#1D170C22",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

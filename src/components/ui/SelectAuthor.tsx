@@ -56,7 +56,7 @@ export function SelectAuthor({
   }, [client, joinedRooms])
 
   const thisRoomTuple = adminRooms.find(([room, _]) =>
-    room.useID().includes(slug)
+    room.roomId.includes(slug)
   )
   console.log("thisRoomTuple", thisRoomTuple)
   const otherRooms = adminRooms.filter(tuple => tuple !== thisRoomTuple)
@@ -71,20 +71,20 @@ export function SelectAuthor({
             name="author"
             aria-label="author"
             autoComplete="author"
-            value={author ? author[0].useID() : ""}
+            value={author ? author[0].roomId : ""}
             onChange={e => {
               const roomId = e.target.value
               const room = adminRooms.find(
-                ([room, _]) => room.useID() === roomId
+                ([room, _]) => room.roomId === roomId
               )
               if (room) setAuthor(room)
             }}
             className="block w-full py-2 px-3 border border-gray-300 bg-transparent rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <option key={thisRoom?.useID()} value={thisRoom?.useID()}>
+            <option key={thisRoom?.roomId} value={thisRoom?.roomId}>
               {thisRoomName}
             </option>
             {otherRooms.map(([room, name]) => (
-              <option key={room.useID()} value={room.useID()}>
+              <option key={room.roomId} value={room.roomId}>
                 {name}
               </option>
             ))}

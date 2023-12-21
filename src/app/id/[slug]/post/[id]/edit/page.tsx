@@ -98,7 +98,7 @@ export default function EditPostPage({
         </div>
         <button
           type="submit"
-          className={`self-end rounded bg-[#ddd2ff] px-2 ${
+          className={`self-end rounded bg-primary px-2 ${
             isLoading && "opacity-50"
           }`}>
           Save

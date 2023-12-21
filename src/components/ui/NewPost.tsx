@@ -151,6 +151,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
         </div>
         <div className="flex grow">
           <Textarea
+            autoFocus
             id="content"
             aria-label="content"
             placeholder={
@@ -165,7 +166,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                   : ""
               )
             }
-            className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"
+            className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
           />
         </div>
         {type === "event" && (
@@ -176,7 +177,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
               onChange={e =>
                 setDatetime(toValidDateTimeString(new Date(e.target.value)))
               }
-              className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-[#ddd2ff] focus:outline-dashed focus:outline-1 focus:outline-[#ddd2ff]"
+              className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
             />
             <Input
               type="text"
@@ -202,7 +203,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
         </div>
         {/* <Link
               href={`/id/${slug}/post/new`}
-              className="text-xs text-[#a284ff] border border-[#ddd2ff] border-dashed px-1">
+              className="text-xs text-[#a284ff] border border-primary border-dashed px-1">
               more options
             </Link> */}
       </form>
@@ -220,7 +221,7 @@ function UploadImageButton({
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const client = useClient()
-  console.log("file", file)
+  // console.log("file", file)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -248,9 +249,9 @@ function UploadImageButton({
     <div className="">
       <label
         htmlFor="image"
-        className="flex items-center border-dashed justify-center px-2 py-1 rounded-[100%] text-[#9572ff] border border-[#ddd2ff] cursor-pointer">
+        className="flex items-center border-dashed justify-center px-2 py-1 rounded-[100%] text-[#9572ff] border border-primary cursor-pointer">
         {loading ? (
-          <Spinner className="w-4 h-4 text-[#ddd2ff] animate-spin fill-[#9572ff]" />
+          <Spinner className="w-4 h-4 text-primary animate-spin fill-[#9572ff]" />
         ) : (
           <IconCamera size={16} />
         )}
@@ -280,7 +281,7 @@ function PostTypeButton({
     <Button
       onClick={() => setType(thisType)}
       disabled={thisType === type}
-      className="border border-[#ddd2ff] text-sm gap-1 flex items-center disabled:bg-[#ddd2ff] disabled:border-transparent text-[#9572ff] bg-white disabled:text-black">
+      className="border border-primary text-sm gap-1 flex items-center disabled:bg-primary disabled:border-transparent text-[#9572ff] bg-white disabled:text-black">
       {children}
     </Button>
   )
