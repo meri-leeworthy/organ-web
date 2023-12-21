@@ -70,7 +70,7 @@ export function EditableDescription({
         </>
       ) : (
         <>
-          <p className="whitespace-pre-line">
+          <p className="whitespace-pre-line italic opacity-80 text-sm">
             {description?.trim() === "" ? "No description yet." : description}
           </p>
           {isLoading ? (
