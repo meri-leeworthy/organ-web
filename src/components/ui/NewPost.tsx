@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
 import { useClient } from "@/lib/useClient"
 import {
   OrganCalEventUnstable,
@@ -28,21 +28,31 @@ function toXX(s: number) {
 }
 
 function toValidDateTimeString(date: Date) {
+  return `${toValidDateString(date)}T${toValidTimeString(date)}`
+}
+
+function toValidTimeString(date: Date) {
+  return `${toXX(date.getHours())}:${toXX(date.getMinutes())}`
+}
+
+function toValidDateString(date: Date) {
   return `${date.getFullYear()}-${toXX(date.getMonth() + 1)}-${toXX(
     date.getDate()
-  )}T${toXX(date.getHours())}:${toXX(date.getMinutes())}` + date.getSeconds()
-    ? `:${toXX(date.getSeconds())}`
-    : ""
+  )}`
 }
 
 export const NewPost = ({ slug }: { slug: string }) => {
   const [type, setType] = useState<PostType>("post")
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [datetime, setDatetime] = useState("")
+  const [startDate, setStartDate] = useState(toValidDateString(new Date()))
+  const [startTime, setStartTime] = useState("00:00")
+  const [endDate, setEndDate] = useState(toValidDateString(new Date()))
+  const [endtime, setEndtime] = useState("00:00")
   const [place, setPlace] = useState("")
   const [imageSrcs, setImageSrcs] = useState<string[]>([])
   const [author, setAuthor] = useState<[Room, string]>()
+  const [allDay, setAllDay] = useState(false)
 
   const client = useClient()
   const room = useMemo(() => {
@@ -65,6 +75,8 @@ export const NewPost = ({ slug }: { slug: string }) => {
   }, [client, room])
 
   if (!client) return "loading..."
+
+  console.log("datetime", startTime, startDate)
 
   async function handlePostSubmit(event: React.FormEvent<HTMLFormElement>) {
     // const authorRoom = new Room(content?.author, client)
@@ -106,7 +118,9 @@ export const NewPost = ({ slug }: { slug: string }) => {
           body: content,
           host: authorKV,
           tags: [],
-          datetime,
+          start: `${startDate}T${startTime}`,
+          end: `${endDate}T${endtime}`,
+          allDay,
           avatar: imageSrcs[0],
           location: place,
         }
@@ -169,16 +183,9 @@ export const NewPost = ({ slug }: { slug: string }) => {
             className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
           />
         </div>
-        {type === "event" && (
-          <div className="flex gap-2">
-            <input
-              type="datetime-local"
-              defaultValue={datetime}
-              onChange={e =>
-                setDatetime(toValidDateTimeString(new Date(e.target.value)))
-              }
-              className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
-            />
+
+        <div className="flex flex-col gap-2">
+          {type === "event" && (
             <Input
               type="text"
               id="location"
@@ -187,25 +194,60 @@ export const NewPost = ({ slug }: { slug: string }) => {
               value={place}
               onChange={e => setPlace((e.target as HTMLInputElement).value)}
             />
-          </div>
-        )}
-        <div className="flex justify-end gap-2 items-center">
-          <UploadImageButton
-            imageSrcs={imageSrcs}
-            setImageSrcs={setImageSrcs}
-          />
+          )}
 
-          <Button
-            type="submit"
-            className="rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center">
-            Share
-          </Button>
+          <div className="flex gap-2 items-center ">
+            {type === "event" && (
+              <>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={e =>
+                    setStartDate(toValidDateString(new Date(e.target.value)))
+                  }
+                  className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+                />
+                {!allDay && (
+                  <input
+                    type="time"
+                    value={startTime}
+                    onChange={e => {
+                      console.log("e", e)
+                      setStartTime(e.currentTarget.value)
+                    }}
+                    step="300"
+                    className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+                  />
+                )}
+
+                <label className="flex gap-2 items-center text-xs opacity-80 uppercase">
+                  All Day?
+                  <input
+                    type="checkbox"
+                    id="allday"
+                    name="allday"
+                    checked={allDay}
+                    onChange={e => setAllDay(e.target.checked)}
+                    className="mr-1 outline-4 outline-primary checked:bg-primary"
+                  />
+                </label>
+              </>
+            )}
+
+            <div className="flex justify-end gap-2 items-center ml-auto">
+              <UploadImageButton
+                imageSrcs={imageSrcs}
+                setImageSrcs={setImageSrcs}
+              />
+
+              <Button
+                type="submit"
+                className="rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center">
+                Share
+              </Button>
+            </div>
+          </div>
         </div>
-        {/* <Link
-              href={`/id/${slug}/post/new`}
-              className="text-xs text-[#a284ff] border border-primary border-dashed px-1">
-              more options
-            </Link> */}
       </form>
     </div>
   )
