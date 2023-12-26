@@ -14,7 +14,9 @@ export default async function PostPage({
   const { slug, id } = params
   const roomId = `!${slug}:radical.directory`
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    userId: "@_relay_bot:radical.directory",
+    params: {
+      user_id: "@_relay_bot:radical.directory",
+    },
     fetch,
   })
 
