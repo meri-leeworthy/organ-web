@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { useClient } from "@/lib/useClient"
-import { directoryRadicalPostUnstable } from "@/lib/types"
 import { Room } from "simple-matrix-sdk"
 import { IconNorthStar } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
+import { organPostUnstable } from "@/lib/types"
 
 export default function EditPostPage({
   params,
@@ -37,13 +37,13 @@ export default function EditPostPage({
     event.preventDefault()
     setIsLoading(true)
     const messageEvent = {
-      msgtype: directoryRadicalPostUnstable,
+      msgtype: organPostUnstable,
       title,
       body: content,
       tags: [],
       "m.new_content": {
         body: content,
-        msgtype: directoryRadicalPostUnstable,
+        msgtype: organPostUnstable,
         title,
         tags: [],
       },

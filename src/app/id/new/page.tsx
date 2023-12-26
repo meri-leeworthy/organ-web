@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useClient } from "@/lib/useClient"
 import { Input, Button, Textarea } from "@/components/styled"
-import { EditableContacts } from "../[slug]/edit/EditableContactSection"
+// import { EditableContacts } from "../[slug]/edit/EditableContactSection"
 import {
   ContactType,
   contactTypes,
@@ -76,13 +76,13 @@ const NewRoomPage = () => {
         />
         <br />
 
-        <br />
+        {/* <br />
         <label>
           Contacts:{" "}
           <EditableContacts
             {...{ contactKVs, setContactKV, removeContactKV }}
           />
-        </label>
+        </label> */}
 
         <br />
         <Button type="submit" className="self-start border border-black">
