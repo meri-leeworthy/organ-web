@@ -17,11 +17,9 @@ export function Post({
 }) {
   console.log("post content", content)
   return (
-    <article className="mt-6  pb-4 flex flex-col items-start">
+    <article className="mt-6  pb-4 flex flex-col items-start  border rounded-lg p-2">
       <div className="flex items-center gap-2 w-full">
-        <Link
-          className="flex items-center gap-2"
-          href={`/id/${slug}/post/${id}` || ""}>
+        <Link className="flex items-center gap-2" href={`/id/${slug}` || ""}>
           {content?.author && (
             <>
               <Avatar
@@ -43,7 +41,7 @@ export function Post({
           </IfLoggedIn>
         </div>
       </div>
-      <div className="flex flex-col p-2 mt-2 justify-between gap-2 mb-1 ml-2 border rounded-lg">
+      <div className="flex flex-col mt-2 justify-between gap-2 mb-1">
         {content && "title" in content && content?.title && (
           <div className="flex items-center gap-2">
             <Link href={`/id/${slug}/post/${id.split("$")[1]}`}>
@@ -53,7 +51,17 @@ export function Post({
             </Link>
           </div>
         )}
-        <p className="whitespace-pre-line">{content?.body}</p>
+        <p className="whitespace-pre-line">
+          {content?.body.slice(0, 400)}
+          {content?.body.length > 400 && (
+            <>
+              ...{" "}
+              <Link href={`/id/${slug}/post/${id}`} className="text-[#aa8eff] ">
+                more
+              </Link>
+            </>
+          )}
+        </p>
       </div>
     </article>
   )
