@@ -5,19 +5,15 @@ const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 import { Room, Client, Event } from "simple-matrix-sdk"
 import { getMessagesChunk, noCacheFetch } from "@/lib/utils"
-import { Contact } from "./Contact"
+import { Contact } from "@/components/ui/Contact"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import { IconSettings } from "@tabler/icons-react"
 import Link from "next/link"
 import { IfModerator } from "@/components/IfModerator"
 import { NewPost } from "@/components/ui"
-import { organPostUnstable } from "@/lib/types"
+import { organPostUnstable, organCalEventUnstable } from "@/lib/types"
 import { OrgPosts } from "./OrgPosts"
 import { Suspense } from "react"
-import { Button } from "@/components/styled"
-import { Avatar } from "@/components/ui/Avatar"
-import { IfLoggedIn } from "@/components/IfLoggedIn"
-import { IfRoomMember } from "@/components/IfRoomMember"
 import { FollowButton } from "@/components/ui/FollowButton"
 
 // function deleteEditedMessages(messages: Event[]) {
@@ -79,7 +75,9 @@ export default async function OrgSlugPage({
   // TODO: note that deleteEditedMessages is not working as expected
 
   const posts = messages.filter(
-    message => message.content?.msgtype === organPostUnstable
+    message =>
+      message.content?.msgtype === organPostUnstable ||
+      message.content?.msgtype === organCalEventUnstable
   )
   const avatar = messagesChunk.find(
     (message: Event) => message.type === "m.room.avatar"
@@ -94,8 +92,8 @@ export default async function OrgSlugPage({
   const contactKVs = await fetchContactKVs(room)
   const topic = messagesChunk.find(message => message.type === "m.room.topic")
 
-  console.log("messages", messages)
-  console.log("posts", posts)
+  // console.log("messages", messages)
+  // console.log("posts", posts)
 
   return (
     <>
@@ -124,7 +122,7 @@ export default async function OrgSlugPage({
 
       <main className="flex flex-col lg:flex-row-reverse gap-4">
         <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
-          <p className="py-3 lg:font-sans lg:opacity-80 whitespace-pre-line lg:text-xs">
+          <p className="py-3 lg:opacity-80 whitespace-pre-line lg:text-xs italic text-sm">
             {topic?.content?.topic}
           </p>
           <Contact contactKVs={contactKVs} />

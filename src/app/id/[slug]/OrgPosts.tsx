@@ -1,6 +1,6 @@
 import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
-import { Post } from "../../../components/ui/Post"
-import { EventPost } from "../../../components/ui/EventPost"
+import { Post } from "@/components/ui/Post"
+import { EventPost } from "@/components/ui/EventPost"
 
 export function OrgPosts({ slug, posts }: { slug: string; posts: any[] }) {
   console.log("posts", posts)
