@@ -44,7 +44,7 @@ export function Post({
       <div className="flex flex-col mt-2 justify-between gap-2 mb-1">
         {content && "title" in content && content?.title && (
           <div className="flex items-center gap-2">
-            <Link href={`/id/${slug}/post/${id.split("$")[1]}`}>
+            <Link href={`/id/${slug}/post/${id}`}>
               <h4 className="text-lg font-bold flex gap-2">
                 {content && "title" in content && content?.title}
               </h4>
