@@ -59,6 +59,7 @@ export function EditableContactSection({
           {links.map((_, i) => {
             return (
               <input
+                type="url"
                 className="border border-grey rounded px-1"
                 key={i}
                 value={links[i]}
