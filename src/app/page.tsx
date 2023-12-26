@@ -3,9 +3,9 @@ const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
 // export const dynamic = "force-dynamic"
 
 import { Client, Room } from "simple-matrix-sdk"
-import Link from "next/link"
-import { Org } from "./id/[slug]/Org"
-import { Suspense } from "react"
+// import Link from "next/link"
+// import { Org } from "./id/[slug]/Org"
+// import { Suspense } from "react"
 import { noCacheFetch, slug } from "@/lib/utils"
 import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
 import { Post } from "@/components/ui/Post"
@@ -26,10 +26,6 @@ async function getSpaceChildIds() {
   )
   const spaceChildIds = filteredChildren.map(event => event.state_key)
   return spaceChildIds
-}
-
-function getIdLocalPart(id: string) {
-  return id.split(":")[0].slice(1)
 }
 
 export default async function Orgs() {

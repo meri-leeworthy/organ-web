@@ -166,3 +166,7 @@ export function xor(a: boolean, b: boolean) {
 export function slug(roomId: string) {
   return roomId.split(":")[0].split("!")[1]
 }
+
+export function getIdLocalPart(id: string) {
+  return id.split(":")[0].slice(1)
+}
