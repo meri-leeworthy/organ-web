@@ -162,3 +162,7 @@ export function getMxcUrl(mxc: string) {
 export function xor(a: boolean, b: boolean) {
   return (a || b) && !(a && b)
 }
+
+export function slug(roomId: string) {
+  return roomId.split(":")[0].split("!")[1]
+}
