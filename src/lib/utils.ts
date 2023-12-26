@@ -101,7 +101,9 @@ function doubleDigit(number: number) {
 
 export function getContextualDate(ts: number) {
   const date = new Date(ts)
-  const dateString = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}`
+  const dateString = `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}`
   const timeString = `${doubleDigit(date.getHours())}:${doubleDigit(
     date.getMinutes()
   )}`
@@ -116,17 +118,33 @@ export function getContextualDate(ts: number) {
     date.getDate() === now.getDate() - 1 &&
     date.getMonth() === now.getMonth() &&
     date.getFullYear() === now.getFullYear()
-  const isDateThisWeek =
-    date.getDate() >= now.getDate() - 7 &&
+  const isDateTomorrow =
+    date.getDate() === now.getDate() + 1 &&
     date.getMonth() === now.getMonth() &&
     date.getFullYear() === now.getFullYear()
+  const isDateInLastWeek =
+    date.getDate() >= now.getDate() - 5 &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear()
+  const isDateInComingWeek =
+    date.getDate() <= now.getDate() + 6 &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear()
+
+  console.log("isDateInLastWeek", date, isDateInLastWeek)
 
   const contextualDate = isDateToday
     ? `Today, ${timeString}`
     : isDateYesterday
     ? `Yesterday, ${timeString}`
-    : isDateThisWeek
+    : isDateTomorrow
+    ? `Tomorrow, ${timeString}`
+    : isDateInLastWeek
     ? `${date.toLocaleString("default", {
+        weekday: "long",
+      })}, ${timeString}`
+    : isDateInComingWeek
+    ? `This ${date.toLocaleString("default", {
         weekday: "long",
       })}, ${timeString}`
     : `${dateString}, ${timeString}`
