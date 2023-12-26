@@ -18,7 +18,9 @@ export type OrganCalEventUnstable = {
   tags: string[]
   msgtype: typeof organCalEventUnstable
   host: { name: string; id: string }
-  datetime: string
+  start: string
+  end?: string
+  allDay?: boolean
   location?: string
   avatar?: string
 }
