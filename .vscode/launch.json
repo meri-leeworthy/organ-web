@@ -5,7 +5,9 @@
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm dev"
+      "command": "pnpm dev",
+      "autoAttachChildProcesses": true,
+      "localRoot": "${workspaceFolder}/src"
     },
     {
       "name": "Next.js: debug client-side",
@@ -18,6 +20,8 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
+      "autoAttachChildProcesses": true,
+      "localRoot": "${workspaceFolder}/src",
       "serverReadyAction": {
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
