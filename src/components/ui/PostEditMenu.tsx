@@ -21,9 +21,7 @@ export function PostEditMenu({
 
   return (
     <Dropdown>
-      <Link
-        href={`/id/${slug}/post/${event_id.split("$")[1]}/edit`}
-        className="right-0">
+      <Link href={`/id/${slug}/post/${event_id}/edit`} className="right-0">
         Edit Post
       </Link>
       <button onClick={() => handlePostDelete(event_id)}>Delete Post</button>
