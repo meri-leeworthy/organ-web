@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <section className="text-sm leading-tight mt-24">
+    <section className="text-sm leading-tight mt-24 w-full">
       <div className="my-4 flex gap-2 items-center">
         <LoginLogout />
         <Link href="/id/new">Create Page</Link>
@@ -43,7 +43,7 @@ export function Footer() {
           &ldquo;for a world in which many worlds fit&rdquo;
         </a>
       </P>
-      <P className="my-4">made on sovereign Wurundjeri land</P>
+      <P className="my-4">made on unceded Wurundjeri land</P>
     </section>
   )
 }

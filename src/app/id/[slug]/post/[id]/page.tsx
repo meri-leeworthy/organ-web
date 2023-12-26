@@ -34,7 +34,7 @@ export default async function PostPage({
       : ""
 
   return (
-    <div>
+    <div className="w-full">
       <Link
         href={`/id/${slug}`}
         className="bg-[#fff9] uppercase text-sm border rounded hover:border-primary px-2 py-1">

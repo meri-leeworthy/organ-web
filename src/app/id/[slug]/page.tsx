@@ -97,7 +97,7 @@ export default async function OrgSlugPage({
 
   return (
     <>
-      <div className="flex justify-end gap-2 items-center">
+      <div className="flex justify-end gap-2 items-center w-full">
         <FollowButton slug={slug} />
         <IfModerator slug={slug}>
           <Link
@@ -108,7 +108,7 @@ export default async function OrgSlugPage({
           </Link>
         </IfModerator>
       </div>
-      <div className={`flex my-6 mb-10 ${avatarUrl && "gap-4"}`}>
+      <div className={`flex my-6 w-full mb-10 ${avatarUrl && "gap-4"}`}>
         <Suspense fallback={<div>loading...</div>}>
           <AvatarFull url={avatarUrl} />
         </Suspense>
@@ -120,7 +120,7 @@ export default async function OrgSlugPage({
         </div>
       </div>
 
-      <main className="flex flex-col lg:flex-row-reverse gap-4">
+      <main className="flex flex-col lg:flex-row-reverse w-full gap-4">
         <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
           <p className="py-3 lg:opacity-80 whitespace-pre-line lg:text-xs italic text-sm">
             {topic?.content?.topic}
