@@ -17,9 +17,13 @@ export default async function PostPage({
     userId: "@_relay_bot:radical.directory",
     fetch,
   })
+
   const room = new Room(roomId, client)
   const name = await room.getName()
   const post = await room.getEvent(id)
+
+  console.log("room name", name)
+  console.log("post page", post)
 
   const nameString =
     typeof name === "object" &&
@@ -31,14 +35,16 @@ export default async function PostPage({
 
   return (
     <div>
-      <Link href={`/id/${slug}`} className="bg-[#fff9] rounded-full px-2 py-1">
+      <Link
+        href={`/id/${slug}`}
+        className="bg-[#fff9] uppercase text-sm border rounded hover:border-primary px-2 py-1">
         &larr; {nameString}
       </Link>
-      <h1 className="font-body py-1">{post.content?.title}</h1>
-      <span className="opacity-60 text-sm py-4">
+      <h1 className="py-4">{post.content?.title}</h1>
+      <span className="opacity-60 text-sm mt-8">
         {getContextualDate(post.origin_server_ts)}
       </span>
-      <p className="whitespace-pre-line font-body py-4">{post.content?.body}</p>
+      <p className="whitespace-pre-line py-2">{post.content?.body}</p>
     </div>
   )
 }
