@@ -16,33 +16,6 @@ import { OrgPosts } from "./OrgPosts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
 
-// function deleteEditedMessages(messages: Event[]) {
-//   const rootEvents = new Map<string, Event[]>()
-
-//   messages.forEach(message => {
-//     if (message?.content && "m.relates_to" in message.content) {
-//       const id = message.content["m.relates_to"].event_id
-//       const edits = rootEvents.get(id)
-//       rootEvents.set(id, [...(edits || []), message])
-//     }
-//   })
-
-//   // console.log("rootEvents", rootEvents)
-
-//   rootEvents.forEach((edits, id) => {
-//     const finalEdit = edits.reduce((acc, edit) => {
-//       if (edit.origin_server_ts > acc.origin_server_ts) {
-//         return edit
-//       }
-//       return acc
-//     })
-//     // console.log("finalEdit", finalEdit)
-//     rootEvents.set(id, [finalEdit])
-//   })
-
-//   return [...rootEvents.values()].flat()
-// }
-
 export default async function OrgSlugPage({
   params,
 }: {
@@ -67,18 +40,40 @@ export default async function OrgSlugPage({
   const messages = messagesChunk.filter(
     message => message.type === "m.room.message"
   )
-  const messagesWithoutPreEdited = Room.deleteEditedMessages(messages)
+
+  // const messagesWithoutPreEdited = Room.deleteEditedMessages(messages)
   // const posts = messagesWithoutDeleted.filter(
   //   message => message.content?.msgtype === organPostUnstable
   // )
 
   // TODO: note that deleteEditedMessages is not working as expected
 
-  const posts = messages.filter(
-    message =>
-      message.content?.msgtype === organPostUnstable ||
-      message.content?.msgtype === organCalEventUnstable
+  const posts = new Map(
+    messages
+      .filter(
+        message =>
+          message.content?.msgtype === organPostUnstable ||
+          message.content?.msgtype === organCalEventUnstable
+      )
+      .map(message => [message.event_id, message])
   )
+
+  let toBeDeleted: string[] = []
+
+  posts.forEach(message => {
+    if (
+      message?.content &&
+      "m.relates_to" in message.content &&
+      message.content["m.relates_to"].rel_type === "m.replace"
+    ) {
+      toBeDeleted.push(message.content["m.relates_to"].event_id)
+    }
+  })
+
+  toBeDeleted.forEach(id => {
+    posts.delete(id)
+  })
+
   const avatar = messagesChunk.find(
     (message: Event) => message.type === "m.room.avatar"
   )
@@ -135,7 +130,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <OrgPosts posts={posts} slug={slug} />
+          <OrgPosts posts={[...posts.values()]} slug={slug} />
         </section>
       </main>
     </>
