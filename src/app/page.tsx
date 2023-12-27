@@ -62,7 +62,7 @@ export default async function Orgs() {
       rooms.map(async room => {
         try {
           return (
-            await room.getMessagesOneShotParams({
+            await room.getMessages({
               limit: 50,
               dir: "b",
             })
