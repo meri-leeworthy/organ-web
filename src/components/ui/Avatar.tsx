@@ -10,7 +10,9 @@ export function Avatar({
       {url ? (
         <img className="" src={url} alt={name} />
       ) : (
-        <span className="font-medium opacity-60">{name[0] || ""}</span>
+        <span className="font-medium opacity-60">
+          {(name && name[0]) || ""}
+        </span>
       )}
     </div>
   )
