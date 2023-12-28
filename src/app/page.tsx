@@ -2,13 +2,14 @@ const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
 
 // export const dynamic = "force-dynamic"
 
-import { Client, Room } from "simple-matrix-sdk"
-// import Link from "next/link"
-// import { Org } from "./id/[slug]/Org"
-// import { Suspense } from "react"
-import { noCacheFetch, slug } from "@/lib/utils"
+import { Client, Event, Room } from "simple-matrix-sdk"
+import Link from "next/link"
+import { Org } from "./id/[slug]/Org"
+import { Suspense } from "react"
+import { getIdLocalPart, noCacheFetch, slug } from "@/lib/utils"
 import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
 import { Post } from "@/components/ui/Post"
+import { deleteOldEdits } from "@/lib/deleteOldEdits"
 
 async function getSpaceChildIds() {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
@@ -66,16 +67,12 @@ export default async function Orgs() {
               limit: 50,
               dir: "b",
             })
-          ).chunk
-            .filter(
-              (message: any) =>
-                message.type === "m.room.message" &&
-                (message.content?.msgtype === organCalEventUnstable ||
-                  message.content?.msgtype === organPostUnstable)
-            )
-            .map(
-              (message: any) => [message, slug(room.roomId)] as [any, string]
-            )
+          ).chunk.filter(
+            (message: any) =>
+              message.type === "m.room.message" &&
+              (message.content?.msgtype === organCalEventUnstable ||
+                message.content?.msgtype === organPostUnstable)
+          )
         } catch (e) {
           console.log(e)
         }
@@ -83,15 +80,17 @@ export default async function Orgs() {
     )
   ).flat()
 
-  // const asyncComponent: JSX.Element = await (async (org: Room) => await Org({ room: org }))
+  const freshPosts = deleteOldEdits(posts)
+
+  // debugger
 
   return (
     <main className="max-w-lg w-full">
       <span className="text-lg font-bold">Recent posts</span>
       <ul>
-        {posts.map(([post, slug], i) => {
+        {freshPosts.map((post, i) => {
           const { content, origin_server_ts, event_id } = post
-          switch (post.content.msgtype) {
+          switch (post.content?.msgtype) {
             case organPostUnstable:
               return (
                 <Post
@@ -99,13 +98,13 @@ export default async function Orgs() {
                   content={content}
                   timestamp={origin_server_ts}
                   id={event_id.split("$")[1]}
-                  slug={slug}
+                  slug={slug(post.room_id)}
                 />
               )
           }
         })}
       </ul>
-      {/* <ul>
+      <ul>
         {rooms.map((org, i) => (
           <li key={i}>
             <Link href={`/id/${getIdLocalPart(roomIds[i])}`}>
@@ -115,7 +114,7 @@ export default async function Orgs() {
             </Link>
           </li>
         ))}
-      </ul> */}
+      </ul>
     </main>
   )
 }

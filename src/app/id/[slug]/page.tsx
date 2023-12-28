@@ -15,6 +15,7 @@ import { organPostUnstable, organCalEventUnstable } from "@/lib/types"
 import { OrgPosts } from "./OrgPosts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
+import { deleteOldEdits } from "@/lib/deleteOldEdits"
 
 export default async function OrgSlugPage({
   params,
@@ -41,38 +42,13 @@ export default async function OrgSlugPage({
     message => message.type === "m.room.message"
   )
 
-  // const messagesWithoutPreEdited = Room.deleteEditedMessages(messages)
-  // const posts = messagesWithoutDeleted.filter(
-  //   message => message.content?.msgtype === organPostUnstable
-  // )
-
-  // TODO: note that deleteEditedMessages is not working as expected
-
-  const posts = new Map(
-    messages
-      .filter(
-        message =>
-          message.content?.msgtype === organPostUnstable ||
-          message.content?.msgtype === organCalEventUnstable
-      )
-      .map(message => [message.event_id, message])
+  const posts = messages.filter(
+    message =>
+      message.content?.msgtype === organPostUnstable ||
+      message.content?.msgtype === organCalEventUnstable
   )
 
-  let toBeDeleted: string[] = []
-
-  posts.forEach(message => {
-    if (
-      message?.content &&
-      "m.relates_to" in message.content &&
-      message.content["m.relates_to"].rel_type === "m.replace"
-    ) {
-      toBeDeleted.push(message.content["m.relates_to"].event_id)
-    }
-  })
-
-  toBeDeleted.forEach(id => {
-    posts.delete(id)
-  })
+  const freshPosts = deleteOldEdits(posts)
 
   const avatar = messagesChunk.find(
     (message: Event) => message.type === "m.room.avatar"
@@ -130,7 +106,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <OrgPosts posts={[...posts.values()]} slug={slug} />
+          <OrgPosts posts={freshPosts} slug={slug} />
         </section>
       </main>
     </>
