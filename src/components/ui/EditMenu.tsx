@@ -1,15 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { Dropdown } from "./"
+import { Dropdown } from "."
 import { useRoom } from "@/lib/useRoom"
 
-export function PostEditMenu({
+export function EditMenu({
   slug,
   event_id,
+  type,
 }: {
   slug: string
   event_id: string
+  type: "post" | "event"
 }) {
   const room = useRoom(slug)
 

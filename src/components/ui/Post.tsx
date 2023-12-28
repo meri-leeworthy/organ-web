@@ -1,6 +1,6 @@
 import { getContextualDate } from "@/lib/utils"
 import Link from "next/link"
-import { PostEditMenu } from "@/components/ui/PostEditMenu"
+import { EditMenu } from "@/components/ui/EditMenu"
 import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { Avatar } from "@/components/ui/Avatar"
 
@@ -37,7 +37,7 @@ export function Post({
         </Link>
         <div className="ml-auto">
           <IfLoggedIn>
-            <PostEditMenu slug={slug} event_id={id} />
+            <EditMenu slug={slug} event_id={id} type="post" />
           </IfLoggedIn>
         </div>
       </div>

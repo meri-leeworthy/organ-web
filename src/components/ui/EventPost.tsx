@@ -1,6 +1,6 @@
 import { getContextualDate } from "@/lib/utils"
 import Link from "next/link"
-import { PostEditMenu } from "@/components/ui/PostEditMenu"
+import { EditMenu } from "@/components/ui/EditMenu"
 import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { Avatar } from "@/components/ui/Avatar"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
@@ -24,7 +24,7 @@ export function EventPost({
       <div className="flex items-center gap-2 w-full">
         <Link
           className="flex items-end gap-2"
-          href={`/id/${slug}/post/${id}` || ""}>
+          href={`/id/${slug}/event/${id}` || ""}>
           {content?.host && (
             <>
               <Avatar
@@ -43,7 +43,7 @@ export function EventPost({
         </Link>
         <div className="ml-auto">
           <IfLoggedIn>
-            <PostEditMenu slug={slug} event_id={id} />
+            <EditMenu slug={slug} event_id={id} type="event" />
           </IfLoggedIn>
         </div>
       </div>
