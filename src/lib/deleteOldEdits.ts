@@ -19,16 +19,7 @@ export function deleteOldEdits(posts: Event[]) {
     }
   })
   toBeDeleted.forEach((editPosts, originalId) => {
-    const mostRecentEdit: { ts: number; id: string } = editPosts.reduce(
-      ({ ts: prevTs, id: prevId }, editPost) => {
-        if (editPost.origin_server_ts > prevTs || !prevTs || !prevId) {
-          return { ts: editPost.origin_server_ts, id: editPost.event_id }
-        } else {
-          return { ts: prevTs, id: prevId }
-        }
-      },
-      { ts: editPosts[0].origin_server_ts, id: editPosts[0].event_id }
-    )
+    const mostRecentEdit = getMostRecentEventId(editPosts)
 
     const actuallyDelete = editPosts
       .filter(editPost => editPost.event_id !== mostRecentEdit.id)
@@ -40,4 +31,20 @@ export function deleteOldEdits(posts: Event[]) {
   })
 
   return [...postsMap.values()]
+}
+
+export function getMostRecentEventId(events: Event[]): {
+  ts: number
+  id: string
+} {
+  return events.reduce(
+    ({ ts: prevTs, id: prevId }, event) => {
+      if (event.origin_server_ts > prevTs || !prevTs || !prevId) {
+        return { ts: event.origin_server_ts, id: event.event_id }
+      } else {
+        return { ts: prevTs, id: prevId }
+      }
+    },
+    { ts: events[0].origin_server_ts, id: events[0].event_id }
+  )
 }
