@@ -1,5 +1,6 @@
 "use client"
 
+import { isEvent } from "@/lib/isEvent"
 import { useClient } from "@/lib/useClient"
 import { useEffect, useState } from "react"
 import { Event, Room } from "simple-matrix-sdk"
@@ -11,14 +12,15 @@ export default function RawOrgRoomEvents({
 }) {
   const [events, setEvents] = useState<Event[]>()
   const client = useClient()
+
   useEffect(() => {
     if (!client) return
     const room = new Room(`!${slug}:radical.directory`, client)
     console.log("room", room)
-    const iterator = room?.getMessagesAsyncGenerator()
+    const iterator = room?.getMessagesAsyncGenerator("b", 200)
 
     iterator?.next().then(result => {
-      const events = result.value.chunk.filter(isEvent)
+      const events = result.value.chunk //.filter(isEvent)
       setEvents(events)
       console.log("events", events)
     })
@@ -26,25 +28,10 @@ export default function RawOrgRoomEvents({
   return (
     <ul className="max-w-xl">
       {events?.map((event, i) => (
-        <li key={i} className="py-2 text-sm whitespace-pre-line">
+        <li key={i} className="py-2 text-sm whitespace-pre-line break-words">
           {JSON.stringify(event)}
         </li>
       ))}
     </ul>
-  )
-}
-
-const isEvent = (event: any): event is Event => {
-  if (!event || typeof event !== "object") return false
-  if ("content" in event && typeof event.content !== "object") return false
-  return (
-    "type" in event &&
-    "event_id" in event &&
-    "origin_server_ts" in event &&
-    "room_id" in event &&
-    typeof event.type === "string" &&
-    typeof event.event_id === "string" &&
-    typeof event.origin_server_ts === "number" &&
-    typeof event.room_id === "string"
   )
 }
