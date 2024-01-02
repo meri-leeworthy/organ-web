@@ -20,6 +20,9 @@ dependencies:
   simple-matrix-sdk:
     specifier: ^0.3.0
     version: 0.3.0
+  valibot:
+    specifier: ^0.25.0
+    version: 0.25.0
 
 devDependencies:
   '@types/node':
