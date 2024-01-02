@@ -16,8 +16,9 @@ export function EditMenu({
   const room = useRoom(slug)
 
   function handlePostDelete(event_id: string) {
-    room?.redactEvent(event_id).then(() => {
-      location.reload()
+    room?.redactEvent(event_id).then(result => {
+      console.log("redaction result", result)
+      // location.reload()
     })
   }
 

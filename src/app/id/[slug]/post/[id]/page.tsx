@@ -5,6 +5,7 @@ const { AS_TOKEN, MATRIX_BASE_URL } = process.env
 import { Client, Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
+import { organPostUnstable } from "@/lib/types"
 
 export default async function PostPage({
   params,
@@ -26,6 +27,8 @@ export default async function PostPage({
 
   console.log("room name", name)
   console.log("post page", post)
+
+  if (post.content?.msgtype !== organPostUnstable) return "Post not valid :("
 
   const nameString =
     typeof name === "object" &&

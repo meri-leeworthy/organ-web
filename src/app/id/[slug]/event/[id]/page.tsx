@@ -5,6 +5,8 @@ const { AS_TOKEN, MATRIX_BASE_URL } = process.env
 import { Client, Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
+import { EventPost } from "@/components/ui/EventPost"
+import { organCalEventUnstable } from "@/lib/types"
 
 export default async function EventPage({
   params,
@@ -26,8 +28,15 @@ export default async function EventPage({
   const name = await room.getName()
   const post = await room.getEvent(id)
 
+  const title = post.content?.title || ""
+  const body = post.content?.body || ""
+  const host = post.content?.host || {}
+
   console.log("room name", name)
   console.log("post page", post)
+
+  if (post.content?.msgtype !== organCalEventUnstable)
+    return "Post not valid :("
 
   const nameString =
     typeof name === "object" &&
@@ -44,6 +53,12 @@ export default async function EventPage({
         className="bg-[#fff9] uppercase text-sm border rounded hover:border-primary px-2 py-1">
         &larr; {nameString}
       </Link>
+      <EventPost
+        content={post.content}
+        timestamp={post.origin_server_ts}
+        id={id}
+        slug={slug}
+      />
       <h1 className="py-4">{post.content?.title}</h1>
       <span className="opacity-60 text-sm mt-8">
         {getContextualDate(post.origin_server_ts)}
