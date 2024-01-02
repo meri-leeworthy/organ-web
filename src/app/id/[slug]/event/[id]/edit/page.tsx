@@ -5,7 +5,7 @@ import { useClient } from "@/lib/useClient"
 import { Room } from "simple-matrix-sdk"
 import { IconNorthStar } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { organPostUnstable } from "@/lib/types"
+import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
 
 export default function EditEventPage({
   params,
@@ -16,8 +16,9 @@ export default function EditEventPage({
 
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [author, setAuthor] = useState({})
+  const [host, setHost] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const client = useClient()
@@ -28,29 +29,34 @@ export default function EditEventPage({
 
   useEffect(() => {
     room?.getEvent(params.id).then(post => {
+      if (!post) setError("Post not found")
+      if (post.type !== "m.room.message") setError("Post not valid")
+      if (post.content?.msgtype !== organCalEventUnstable)
+        setError("Post not valid")
       setTitle(post.content?.title || "")
       setContent(post.content?.body || "")
-      setAuthor(post.content?.author || {})
+      setHost(post.content?.host || {})
     })
   }, [client])
 
   if (!client) return "loading..."
+  if (error) return `error! ${error} :(`
 
   async function handlePostSubmit(event: React.FormEvent<HTMLFormElement>) {
     console.log("id", params.id)
     event.preventDefault()
     setIsLoading(true)
     const messageEvent = {
-      msgtype: organPostUnstable,
+      msgtype: organCalEventUnstable,
       title,
       body: content,
-      author,
+      host,
       tags: [],
       "m.new_content": {
         body: content,
-        msgtype: organPostUnstable,
+        msgtype: organCalEventUnstable,
         title,
-        author,
+        host,
         tags: [],
       },
       "m.relates_to": {
