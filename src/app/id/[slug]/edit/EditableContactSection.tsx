@@ -86,10 +86,6 @@ export function EditableContactSection({
               )
             })}
           </ul>
-          {/* <EditButton
-            alt="Edit description"
-            onClick={() => setEditSection("description")}
-          /> */}
         </>
       )}
       <div className="flex">
