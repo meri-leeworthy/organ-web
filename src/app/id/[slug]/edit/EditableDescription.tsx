@@ -1,26 +1,19 @@
 import { EditButton, DoneButton } from "@/components/styled/IconButton"
 import { SectionType, sections } from "./SectionType"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Spinner } from "@/components/ui"
 import { useRoom } from "@/lib/useRoom"
 import { getMessagesChunk } from "@/lib/utils"
-import { Room } from "simple-matrix-sdk"
 
 //TODO: add a loading state for when we're fetching data, and don't say 'loading' if we just didn't find any
 
 export function EditableDescription({
   editSection,
   setEditSection,
-  // description,
-  // setDescription,
-  // updateDescription,
   slug,
 }: {
   editSection: SectionType
   setEditSection: (section: SectionType) => void
-  // description?: string
-  // setDescription: (name: string) => void
-  // updateDescription: (name: string) => Promise<void>
   slug: string
 }) {
   const [isLoading, setIsLoading] = useState(true)
