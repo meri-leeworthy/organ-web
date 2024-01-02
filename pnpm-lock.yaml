@@ -18,8 +18,8 @@ dependencies:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
   simple-matrix-sdk:
-    specifier: ^0.2.12
-    version: 0.2.12
+    specifier: ^0.3.0
+    version: 0.3.0
 
 devDependencies:
   '@types/node':
@@ -44,8 +44,8 @@ devDependencies:
     specifier: ^8
     version: 8.4.32
   tailwindcss:
-    specifier: ^3.3.0
-    version: 3.3.6
+    specifier: ^3.4.0
+    version: 3.4.0
   typescript:
     specifier: ^5
     version: 5.3.3
@@ -2269,8 +2269,10 @@ packages:
       object-inspect: 1.13.1
     dev: true
 
-  /simple-matrix-sdk@0.2.12:
-    resolution: {integrity: sha512-vJz6Z/PL/3bhngN/kzNXoVKydVho7vY+YqOSJAe+HxweP+2AVrFseQSfu8dX8dB1TZGksXAzEOX7GiCE6q1kEw==}
+  /simple-matrix-sdk@0.3.0:
+    resolution: {integrity: sha512-4mzaM7k+cDGbsk4v2U9rWcdHiip/caHw81g9qG5F6T7Dkm47qvKO6jF6Tcmi3MA0wFfZR2NjbSnFn+r1MsxRog==}
+    dependencies:
+      valibot: 0.25.0
     dev: false
 
   /slash@3.0.0:
@@ -2386,8 +2388,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tailwindcss@3.3.6:
-    resolution: {integrity: sha512-AKjF7qbbLvLaPieoKeTjG1+FyNZT6KaJMJPFeQyLfIp7l82ggH1fbHJSsYIvnbTFQOlkh+gBYpyby5GT1LIdLw==}
+  /tailwindcss@3.4.0:
+    resolution: {integrity: sha512-VigzymniH77knD1dryXbyxR+ePHihHociZbXnLZHUyzf2MMs2ZVqlUrZ3FvpXP8pno9JzmILt1sZPD19M3IxtA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
@@ -2561,6 +2563,10 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /valibot@0.25.0:
+    resolution: {integrity: sha512-cmD0ca15oyAbT75iYLNW6uU6doAeIwYfOshpXka/E1Bx4frzbkrgb7gvkI7K0YK/DVOksei4FfxWfRoBP3NFTg==}
+    dev: false
 
   /watchpack@2.4.0:
     resolution: {integrity: sha512-Lcvm7MGST/4fup+ifyKi2hjyIAwcdI4HRgtvTpIUxBRhB+RFtUh8XtDOxUfctVCnhVi+QQj49i91OyvzkJl6cg==}
