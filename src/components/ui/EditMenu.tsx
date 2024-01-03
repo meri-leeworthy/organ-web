@@ -18,7 +18,7 @@ export function EditMenu({
   function handlePostDelete(event_id: string) {
     room?.redactEvent(`$${event_id}`).then(result => {
       console.log("redaction result", result)
-      // location.reload()
+      location.reload()
     })
   }
 
