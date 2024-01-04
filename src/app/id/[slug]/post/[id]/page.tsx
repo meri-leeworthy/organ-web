@@ -24,7 +24,7 @@ export default async function PostPage({
 
   const room = new Room(roomId, client)
   const name = await room.getName()
-  const post = await room.getEvent(id)
+  const post = await room.getEvent(`$${id}`)
 
   console.log("room name", name)
   console.log("post page", post)
