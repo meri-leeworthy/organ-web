@@ -28,7 +28,7 @@ export default function EditPostPage({
 
   useEffect(() => {
     room
-      ?.getEvent(params.id)
+      ?.getEvent(`$${params.id}`)
       .then(post => {
         if (!post) throw new Error("Post not found")
         if (post.type !== "m.room.message") throw new Error("Post not valid")

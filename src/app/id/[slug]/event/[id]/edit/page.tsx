@@ -42,7 +42,7 @@ export default function EditEventPage({
     : undefined
 
   useEffect(() => {
-    room?.getEvent(params.id).then(post => {
+    room?.getEvent(`$${params.id}`).then(post => {
       if (!post) setError("Event not found")
       if (post.type !== "m.room.message") setError("Event not valid")
       if (!is(OrganCalEventUnstableSchema, post.content)) {
