@@ -23,7 +23,7 @@ export function UploadOrShowAvatar({
     if (!room) return
     room.getAvatarUrl().then((url): void => {
       console.log("url", url)
-      setImageUri(url.url)
+      setImageUri(url)
       setIsLoading(false)
     })
   }, [room])

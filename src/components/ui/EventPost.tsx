@@ -36,7 +36,7 @@ export async function EventPost({
   return (
     <article className="flex flex-col items-start pb-4 mt-6">
       <div className="flex items-center w-full gap-2">
-        <Avatar url={avatarUrl?.url} name={content?.host?.name} />
+        <Avatar url={avatarUrl} name={content?.host?.name} />
         <Link
           className="flex flex-wrap items-baseline gap-x-1"
           href={`/id/${slug}/event/$${id}` || ""}>

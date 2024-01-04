@@ -28,18 +28,18 @@ export async function Post({
   const room = new Room(`!${slug}:radical.directory`, client)
   const avatarUrl = await room.getAvatarUrl()
   return (
-    <article className="mt-6  pb-4 flex flex-col items-start  border rounded-lg p-2">
-      <div className="flex items-center gap-2 w-full">
+    <article className="flex flex-col items-start p-2 pb-4 mt-6 border rounded-lg">
+      <div className="flex items-center w-full gap-2">
         <Link className="flex items-center gap-2" href={`/id/${slug}` || ""}>
           {content?.author && (
             <>
-              <Avatar url={avatarUrl?.url} name={content?.author?.name} />
-              <h5 className="text-sm flex items-center font-medium gap-2">
+              <Avatar url={avatarUrl} name={content?.author?.name} />
+              <h5 className="flex items-center gap-2 text-sm font-medium">
                 {content?.author?.name}
               </h5>
             </>
           )}
-          <time className="opacity-60 text-xs justify-self-start uppercase">
+          <time className="text-xs uppercase opacity-60 justify-self-start">
             {getContextualDate(timestamp)}
           </time>
         </Link>
@@ -49,11 +49,11 @@ export async function Post({
           </IfLoggedIn>
         </div>
       </div>
-      <div className="flex flex-col mt-2 justify-between gap-2 mb-1">
+      <div className="flex flex-col justify-between gap-2 mt-2 mb-1">
         {content && "title" in content && content?.title && (
           <div className="flex items-center gap-2">
             <Link href={`/id/${slug}/post/${id}`}>
-              <h4 className="text-lg font-bold flex gap-2">
+              <h4 className="flex gap-2 text-lg font-bold">
                 {content && "title" in content && content?.title}
               </h4>
             </Link>
