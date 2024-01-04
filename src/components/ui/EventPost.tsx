@@ -98,7 +98,9 @@ export async function EventPost({
           {content.body.length > 400 && (
             <>
               ...{" "}
-              <Link href={`/id/${slug}/post/${id}`} className="text-[#aa8eff] ">
+              <Link
+                href={`/id/${slug}/event/${id}`}
+                className="text-[#aa8eff] ">
                 more
               </Link>
             </>
