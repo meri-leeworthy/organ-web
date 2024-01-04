@@ -1,10 +1,13 @@
+const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+
 import { getContextualDate } from "@/lib/utils"
 import Link from "next/link"
 import { EditMenu } from "@/components/ui/EditMenu"
 import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { Avatar } from "@/components/ui/Avatar"
+import { Client, Room } from "simple-matrix-sdk"
 
-export function Post({
+export async function Post({
   content,
   timestamp,
   id,
@@ -16,16 +19,21 @@ export function Post({
   slug: string
 }) {
   console.log("post content", content)
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch,
+    params: {
+      user_id: "@_relay_bot:radical.directory",
+    },
+  })
+  const room = new Room(`!${slug}:radical.directory`, client)
+  const avatarUrl = await room.getAvatarUrl()
   return (
     <article className="mt-6  pb-4 flex flex-col items-start  border rounded-lg p-2">
       <div className="flex items-center gap-2 w-full">
         <Link className="flex items-center gap-2" href={`/id/${slug}` || ""}>
           {content?.author && (
             <>
-              <Avatar
-                url={content?.author?.avatar_url}
-                name={content?.author?.name}
-              />
+              <Avatar url={avatarUrl?.url} name={content?.author?.name} />
               <h5 className="text-sm flex items-center font-medium gap-2">
                 {content?.author?.name}
               </h5>

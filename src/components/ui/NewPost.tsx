@@ -41,6 +41,36 @@ function toValidDateString(date: Date) {
   )}`
 }
 
+export function Description(props: {
+  type: PostType
+  content: string
+  setContent: Dispatch<SetStateAction<string>>
+  rows?: number
+}) {
+  return (
+    <div className="flex grow">
+      <Textarea
+        autoFocus
+        id="content"
+        aria-label="content"
+        placeholder={
+          props.type === "post" ? "Write your update here" : "Event description"
+        }
+        rows={props.rows || 3}
+        value={props.content}
+        onChange={e =>
+          props.setContent(
+            typeof e === "object" && e !== null && "target" in e
+              ? (e.target as HTMLTextAreaElement).value
+              : ""
+          )
+        }
+        className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+      />
+    </div>
+  )
+}
+
 export const NewPost = ({ slug }: { slug: string }) => {
   const [type, setType] = useState<PostType>("post")
   const [title, setTitle] = useState("")
@@ -163,26 +193,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
             />
           )}
         </div>
-        <div className="flex grow">
-          <Textarea
-            autoFocus
-            id="content"
-            aria-label="content"
-            placeholder={
-              type === "post" ? "Write your update here" : "Event description"
-            }
-            rows={3}
-            value={content}
-            onChange={e =>
-              setContent(
-                typeof e === "object" && e !== null && "target" in e
-                  ? (e.target as HTMLTextAreaElement).value
-                  : ""
-              )
-            }
-            className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
-          />
-        </div>
+        <Description type={type} content={content} setContent={setContent} />
 
         <div className="flex flex-col gap-2">
           {type === "event" && (
@@ -308,7 +319,7 @@ function UploadImageButton({
   )
 }
 
-function PostTypeButton({
+export function PostTypeButton({
   type,
   thisType,
   setType,

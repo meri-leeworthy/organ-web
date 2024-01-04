@@ -1,3 +1,13 @@
+import {
+  Output,
+  array,
+  boolean,
+  literal,
+  object,
+  optional,
+  string,
+} from "valibot"
+
 export const contactTypes = {
   email: "email",
   website: "website",
@@ -12,18 +22,23 @@ export type ContactType = keyof typeof contactTypes
 
 export const organCalEventUnstable = "organ.event.unstable"
 
-export type OrganCalEventUnstable = {
-  title: string
-  body: string
-  tags: string[]
-  msgtype: typeof organCalEventUnstable
-  host: { name: string; id: string }
-  start: string
-  end?: string
-  allDay?: boolean
-  location?: string
-  avatar?: string
-}
+export const OrganCalEventUnstableSchema = object({
+  title: string(),
+  body: string(),
+  tags: array(string()),
+  msgtype: literal(organCalEventUnstable),
+  host: object({
+    name: string(),
+    id: string(),
+  }),
+  start: string(),
+  end: optional(string()),
+  allDay: optional(boolean()),
+  location: optional(string()),
+  avatar: optional(string()),
+})
+
+export type OrganCalEventUnstable = Output<typeof OrganCalEventUnstableSchema>
 
 export type OrganMetaContactUnstable = {
   type: ContactType
@@ -34,14 +49,16 @@ export const organMetaContactUnstable = "organ.meta.contact.unstable"
 
 export const organPostUnstable = "organ.post.unstable"
 
-export type OrganPostUnstable = {
-  title: string
-  body: string
-  tags: string[]
-  msgtype: typeof organPostUnstable
-  author: { name: string; id: string }
-  media: string[]
-}
+export const OrganPostUnstableSchema = object({
+  title: string(),
+  body: string(),
+  tags: array(string()),
+  msgtype: literal(organPostUnstable),
+  author: object({ name: string(), id: string() }),
+  media: array(string()),
+})
+
+export type OrganPostUnstable = Output<typeof OrganPostUnstableSchema>
 
 export type Chunk = {
   type: string

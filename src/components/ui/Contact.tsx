@@ -16,7 +16,7 @@ export function Contact({
   contactKVs: Record<ContactType, string[] | undefined>
 }) {
   return (
-    <ul className="text-sm flex items-start flex-col gap-1 justify-start">
+    <ul className="text-sm flex items-start flex-col justify-start">
       {/* {Object.entries(contactKVs).map(([contactType, contactValue]) => (
         <li key={contactType}>
           <ContactItem
@@ -47,11 +47,19 @@ export function ContactItem({
   contactValue: string[] | undefined
   i: number
 }) {
+  if (!contactValue) return null
+  if (!contactValue[i]) return null
+  const link = contactValue[i]
+  const truncatedLink = link.includes("://")
+    ? link.split("://")[1]
+    : link.includes("mailto:")
+    ? link.split("mailto:")[1]
+    : link
   return (
     <a href={contactValue && contactValue[i]}>
       <div className="flex rounded-full uppercase opacity-70 text-xs p-1 justify-start items-center gap-1 overflow-hidden">
         <div className="text-black">{getIcon(contactType)} </div>
-        {getLabel(contactType, (contactValue && contactValue[i]) || "")}
+        {getLabel(contactType, truncatedLink || "")}
       </div>
     </a>
   )

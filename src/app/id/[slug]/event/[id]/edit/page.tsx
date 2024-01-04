@@ -1,11 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { useEffect, useState } from "react"
 import { useClient } from "@/lib/useClient"
 import { Room } from "simple-matrix-sdk"
-import { IconNorthStar } from "@tabler/icons-react"
+import { IconCalendarEvent } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
+import { OrganCalEventUnstableSchema, organCalEventUnstable } from "@/lib/types"
+import { is } from "valibot"
+import {
+  Description,
+  PostTypeButton,
+  UploadOrShowAvatar,
+} from "@/components/ui"
+import { Input } from "@/components/styled"
+import { getMxcUrl } from "@/lib/utils"
 
 export default function EditEventPage({
   params,
@@ -17,6 +26,11 @@ export default function EditEventPage({
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [host, setHost] = useState({})
+  const [place, setPlace] = useState("")
+  const [start, setStart] = useState("")
+  const [end, setEnd] = useState("")
+  const [allDay, setAllDay] = useState(false)
+  const [avatar, setAvatar] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
@@ -29,13 +43,20 @@ export default function EditEventPage({
 
   useEffect(() => {
     room?.getEvent(params.id).then(post => {
-      if (!post) setError("Post not found")
-      if (post.type !== "m.room.message") setError("Post not valid")
-      if (post.content?.msgtype !== organCalEventUnstable)
-        setError("Post not valid")
+      if (!post) setError("Event not found")
+      if (post.type !== "m.room.message") setError("Event not valid")
+      if (!is(OrganCalEventUnstableSchema, post.content)) {
+        setError("Event not valid")
+        return
+      }
       setTitle(post.content?.title || "")
       setContent(post.content?.body || "")
       setHost(post.content?.host || {})
+      setPlace(post.content?.location || "")
+      setStart(post.content?.start || "")
+      setEnd(post.content?.end || "")
+      setAllDay(post.content?.allDay || false)
+      setAvatar(post.content?.avatar || "")
     })
   }, [client])
 
@@ -51,12 +72,22 @@ export default function EditEventPage({
       title,
       body: content,
       host,
+      location: place,
+      start,
+      end,
+      allDay,
+      avatar,
       tags: [],
       "m.new_content": {
         body: content,
         msgtype: organCalEventUnstable,
         title,
         host,
+        location: place,
+        start,
+        end,
+        allDay,
+        avatar,
         tags: [],
       },
       "m.relates_to": {
@@ -74,28 +105,46 @@ export default function EditEventPage({
     setTitle(event.target.value)
   }
 
-  function handleContentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setContent(event.target.value)
+  const handler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0]
+      const result = file && (await client?.uploadFile(file))
+      console.log("result", result)
+      setAvatar(getMxcUrl(result.content_uri))
+      location.reload()
+    }
   }
 
   return (
-    <div className="mt-3 border border-[#1D170C22] rounded p-1 bg-[#fff3] flex flex-col w-full">
+    <div className="mt-3 p-1 bg-[#fff3] flex flex-col w-full">
       <form onSubmit={handlePostSubmit} className="flex flex-col gap-2">
+        {avatar && (
+          <div className="flex items-center justify-center grow">
+            <img src={avatar} alt="post" key={avatar} className="h-72" />
+          </div>
+        )}
+        <UploadOrShowAvatar handler={handler} slug={params.slug} />
         <div className="flex gap-1">
-          <h3 className="opacity-80 w-36 text-base font-medium flex justify-center items-center gap-1 px-1 pr-2 bg-[#fff9] rounded">
-            <IconNorthStar size={16} /> Edit
-          </h3>
-          <input
+          <PostTypeButton type="event" thisType="event" setType={() => {}}>
+            <IconCalendarEvent size={16} /> Event
+          </PostTypeButton>
+          <Input
             type="text"
             id="title"
             placeholder="Title"
             aria-label="title"
             value={title}
             onChange={handleTitleChange}
-            className="w-full px-1 bg-transparent font-medium placeholder:text-black placeholder:opacity-30 border border-[#1D170C1a] rounded"
           />
         </div>
-        <div className="flex flex-col">
+
+        <Description
+          type="event"
+          content={content}
+          setContent={setContent}
+          rows={20}
+        />
+        {/* <div className="flex flex-col">
           <textarea
             id="content"
             aria-label="content"
@@ -107,7 +156,7 @@ export default function EditEventPage({
               isLoading && "opacity-50"
             }`}
           />
-        </div>
+        </div> */}
         <button
           type="submit"
           className={`self-end rounded bg-primary px-2 ${
@@ -116,6 +165,7 @@ export default function EditEventPage({
           Save
         </button>
       </form>
+      {/* <NewPost slug={slug} /> */}
     </div>
   )
 }

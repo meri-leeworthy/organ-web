@@ -11,11 +11,15 @@ import { IconSettings } from "@tabler/icons-react"
 import Link from "next/link"
 import { IfModerator } from "@/components/IfModerator"
 import { NewPost } from "@/components/ui"
-import { organPostUnstable, organCalEventUnstable } from "@/lib/types"
-import { OrgPosts } from "./OrgPosts"
+import {
+  OrganPostUnstableSchema,
+  OrganCalEventUnstableSchema,
+} from "@/lib/types"
+import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
 import { deleteOldEdits } from "@/lib/deleteOldEdits"
+import { is, object, string } from "valibot"
 
 export default async function OrgSlugPage({
   params,
@@ -44,8 +48,8 @@ export default async function OrgSlugPage({
 
   const posts = messages.filter(
     message =>
-      message.content?.msgtype === organPostUnstable ||
-      message.content?.msgtype === organCalEventUnstable
+      is(OrganPostUnstableSchema, message.content) ||
+      is(OrganCalEventUnstableSchema, message.content)
   )
 
   const freshPosts = deleteOldEdits(posts)
@@ -53,7 +57,12 @@ export default async function OrgSlugPage({
   const avatar = messagesChunk.find(
     (message: Event) => message.type === "m.room.avatar"
   )
-  const imageUri: string | undefined = avatar?.content?.url
+  const imageUri: string | undefined = is(
+    object({ url: string() }),
+    avatar?.content
+  )
+    ? avatar.content.url
+    : undefined
   const serverName = imageUri && imageUri.split("://")[1].split("/")[0]
   const mediaId = imageUri && imageUri.split("://")[1].split("/")[1]
   const avatarUrl =
@@ -94,7 +103,8 @@ export default async function OrgSlugPage({
       <main className="flex flex-col lg:flex-row-reverse w-full gap-4">
         <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
           <p className="py-3 lg:opacity-80 whitespace-pre-line lg:text-xs italic text-sm">
-            {topic?.content?.topic}
+            {is(object({ topic: string() }), topic?.content) &&
+              topic.content.topic}
           </p>
           <Contact contactKVs={contactKVs} />
         </section>
@@ -106,7 +116,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <OrgPosts posts={freshPosts} slug={slug} />
+          <Posts posts={freshPosts} />
         </section>
       </main>
     </>
@@ -137,7 +147,8 @@ export async function generateMetadata({
 
   return {
     title: room.name?.name,
-    description: topic?.content?.topic,
+    description:
+      is(object({ topic: string() }), topic?.content) && topic.content.topic,
   }
 }
 

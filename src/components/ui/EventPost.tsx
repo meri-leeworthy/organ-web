@@ -1,11 +1,15 @@
-import { getContextualDate } from "@/lib/utils"
+/* eslint-disable @next/next/no-img-element */
+const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+
+import { getContextualDate, getMxcUrl } from "@/lib/utils"
 import Link from "next/link"
 import { EditMenu } from "@/components/ui/EditMenu"
 import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { Avatar } from "@/components/ui/Avatar"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
+import { Client, Room } from "simple-matrix-sdk"
 
-export function EventPost({
+export async function EventPost({
   content,
   timestamp,
   id,
@@ -17,28 +21,35 @@ export function EventPost({
   slug: string
 }) {
   // console.log("event content", content)
-  console.log("name:", content.title, "id", id)
+  // console.log("name:", content.title, "id", id)
   if (!content) return null
+
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch,
+    params: {
+      user_id: "@_relay_bot:radical.directory",
+    },
+  })
+  const room = new Room(`!${slug}:radical.directory`, client)
+  const avatarUrl = await room.getAvatarUrl()
+
   return (
-    <article className="mt-6  pb-4 flex flex-col items-start">
-      <div className="flex items-center gap-2 w-full">
+    <article className="flex flex-col items-start pb-4 mt-6">
+      <div className="flex items-center w-full gap-2">
+        <Avatar url={avatarUrl?.url} name={content?.host?.name} />
         <Link
-          className="flex items-end gap-2"
-          href={`/id/${slug}/event/${id}` || ""}>
+          className="flex flex-wrap items-baseline gap-x-1"
+          href={`/id/${slug}/event/$${id}` || ""}>
           {content?.host && (
             <>
-              <Avatar
-                url={content?.host?.avatar_url}
-                name={content?.host?.name}
-              />
-              <h5 className="text-sm flex items-center font-medium gap-2">
+              <h5 className="flex gap-2 text-sm font-medium">
                 {content?.host?.name}
               </h5>
-              <span className="text-sm">posted a new event</span>
+              <span className="mr-1 text-sm">posted a new event</span>
             </>
           )}
-          <time className="opacity-60 text-xs uppercase">
-            {getContextualDate(timestamp)}
+          <time className="text-xs uppercase opacity-60">
+            {getContextualDate(timestamp)}{" "}
           </time>
         </Link>
         <div className="ml-auto">
@@ -47,27 +58,52 @@ export function EventPost({
           </IfLoggedIn>
         </div>
       </div>
-      <div className="flex flex-col p-2 mt-2 justify-between gap-2 mb-1 ml-2 border rounded-lg">
-        {"title" in content && content.title && (
-          <div className="flex items-center gap-2">
-            <Link href={`/id/${slug}/post/${id}`}>
-              <h4 className="text-lg font-bold flex gap-2 items-center">
-                {"title" in content && content.title}
-              </h4>
-              <ul>
-                <li className="flex gap-2 uppercase text-xs items-center">
-                  <IconCalendarEvent size={12} />
-                  {getContextualDate(new Date(content.start).valueOf())}
-                </li>
-                <li className="flex gap-2 uppercase text-xs items-center">
-                  <IconMapPin size={12} />
-                  {"location" in content && content.location}
-                </li>
-              </ul>
-            </Link>
+      <div className="flex flex-col justify-between w-full gap-2 p-2 mt-2 mb-1 ml-2 border rounded-lg">
+        {content.avatar && (
+          <div className="flex items-center justify-center grow">
+            <img
+              src={content.avatar}
+              alt="post"
+              key={content.avatar}
+              className="h-72"
+            />
           </div>
         )}
-        <p className="whitespace-pre-line">{content.body}</p>
+        <div className="flex items-center gap-2">
+          <Link href={`/id/${slug}/event/$${id}`}>
+            <h3 className="flex items-center gap-2 mb-1 text-2xl font-bold">
+              {"title" in content && content.title}
+            </h3>
+            <ul className="flex flex-wrap gap-2">
+              <li className="flex items-center gap-2 px-1 text-sm uppercase bg-orange-100 rounded">
+                <IconMapPin size={12} />
+                {"location" in content && content.location}
+              </li>
+              <li
+                className={`flex gap-2 uppercase text-sm px-1 rounded items-center ${
+                  new Date(content.start).valueOf() > Date.now()
+                    ? "bg-primary"
+                    : "bg-slate-200"
+                }`}>
+                <IconCalendarEvent size={12} />
+                {getContextualDate(new Date(content.start).valueOf())}
+                {/* {new Intl.DateTimeFormat("en-AU").format(new Date(timestamp))} */}
+              </li>
+            </ul>
+          </Link>
+        </div>
+
+        <p className="whitespace-pre-line">
+          {content.body.slice(0, 400)}
+          {content.body.length > 400 && (
+            <>
+              ...{" "}
+              <Link href={`/id/${slug}/post/${id}`} className="text-[#aa8eff] ">
+                more
+              </Link>
+            </>
+          )}
+        </p>
       </div>
     </article>
   )

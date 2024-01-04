@@ -1,3 +1,5 @@
+import { getMxcUrl } from "@/lib/utils"
+
 export function Avatar({
   url,
   name,
@@ -8,7 +10,7 @@ export function Avatar({
   return (
     <div className="flex items-center justify-center bg-primary rounded-full overflow-clip w-6 h-6">
       {url ? (
-        <img className="" src={url} alt={name} />
+        <img className="" src={getMxcUrl(url)} alt={name} />
       ) : (
         <span className="font-medium opacity-60">
           {(name && name[0]) || ""}
