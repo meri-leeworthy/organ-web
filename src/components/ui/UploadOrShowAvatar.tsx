@@ -21,7 +21,7 @@ export function UploadOrShowAvatar({
   const room = useRoom(slug)
   useEffect(() => {
     if (!room) return
-    room.getAvatarUrl().then((url): void => {
+    room.getAvatarMxc().then((url): void => {
       console.log("url", url)
       setImageUri(url)
       setIsLoading(false)

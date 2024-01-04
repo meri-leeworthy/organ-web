@@ -237,6 +237,9 @@ export function getContextualDate(ts: number) {
 }
 
 export function getMxcUrl(mxc: string) {
+  console.log("mxc", mxc)
+  if (!mxc) return ""
+  if (!mxc.includes("mxc://")) return mxc
   const serverName = mxc.split("://")[1].split("/")[0]
   const mediaId = mxc.split("://")[1].split("/")[1]
 

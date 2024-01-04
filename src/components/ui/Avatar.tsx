@@ -8,7 +8,7 @@ export function Avatar({
   name: string
 }) {
   return (
-    <div className="flex items-center justify-center bg-primary rounded-full overflow-clip w-6 h-6">
+    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary overflow-clip">
       {url ? (
         <img className="" src={getMxcUrl(url)} alt={name} />
       ) : (

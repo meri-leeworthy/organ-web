@@ -31,7 +31,7 @@ export async function EventPost({
     },
   })
   const room = new Room(`!${slug}:radical.directory`, client)
-  const avatarUrl = await room.getAvatarUrl()
+  const avatarUrl = await room.getAvatarMxc()
 
   return (
     <article className="flex flex-col items-start pb-4 mt-6">

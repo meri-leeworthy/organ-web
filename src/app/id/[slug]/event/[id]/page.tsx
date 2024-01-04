@@ -32,7 +32,7 @@ export default async function EventPage({
   const room = new Room(roomId, client)
   const name = await room.getName()
   const post = await room.getEvent(id)
-  const avatarUrl = await room.getAvatarUrl()
+  const avatarUrl = await room.getAvatarMxc()
 
   if (!is(OrganCalEventUnstableSchema, post.content))
     return "Event not valid :("

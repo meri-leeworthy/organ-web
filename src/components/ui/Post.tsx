@@ -26,7 +26,7 @@ export async function Post({
     },
   })
   const room = new Room(`!${slug}:radical.directory`, client)
-  const avatarUrl = await room.getAvatarUrl()
+  const avatarUrl = await room.getAvatarMxc()
   return (
     <article className="flex flex-col items-start p-2 pb-4 mt-6 border rounded-lg">
       <div className="flex items-center w-full gap-2">
