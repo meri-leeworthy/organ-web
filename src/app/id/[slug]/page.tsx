@@ -3,7 +3,7 @@ const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 // export const dynamic = "force-dynamic"
 
-import { Room, Client, Event } from "simple-matrix-sdk"
+import { Room, Client, ClientEventOutput } from "simple-matrix-sdk"
 import { getMessagesChunk, noCacheFetch } from "@/lib/utils"
 import { Contact } from "@/components/ui/Contact"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
@@ -41,7 +41,9 @@ export default async function OrgSlugPage({
   console.log(await room.getName())
 
   const messagesIterator = room.getMessagesAsyncGenerator()
-  const messagesChunk: Event[] = await getMessagesChunk(messagesIterator)
+  const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
+    messagesIterator
+  )
   const messages = messagesChunk.filter(
     message => message.type === "m.room.message"
   )
@@ -55,7 +57,7 @@ export default async function OrgSlugPage({
   const freshPosts = deleteOldEdits(posts)
 
   const avatar = messagesChunk.find(
-    (message: Event) => message.type === "m.room.avatar"
+    (message: ClientEventOutput) => message.type === "m.room.avatar"
   )
   const imageUri: string | undefined = is(
     object({ url: string() }),
@@ -77,13 +79,13 @@ export default async function OrgSlugPage({
 
   return (
     <>
-      <div className="flex justify-end gap-2 items-center w-full">
+      <div className="flex items-center justify-end w-full gap-2">
         <FollowButton slug={slug} />
         <IfModerator slug={slug}>
           <Link
             href={`/id/${slug}/edit`}
             aria-label="Edit Page"
-            className="flex p-1 text-xs opacity-60 items-center border-0 hover:bg-primary rounded-full">
+            className="flex items-center p-1 text-xs border-0 rounded-full opacity-60 hover:bg-primary">
             <IconSettings size={16} />
           </Link>
         </IfModerator>
@@ -92,17 +94,17 @@ export default async function OrgSlugPage({
         <Suspense fallback={<div>loading...</div>}>
           <AvatarFull url={avatarUrl} />
         </Suspense>
-        <div className="flex flex-col gap-2 grow justify-between">
-          <div className="flex justify-self-start self-end gap-2 justify-between items-end ml-auto"></div>
-          <h2 className="font-bold flex gap-2 w-72 text-3xl lg:text-4xl">
+        <div className="flex flex-col justify-between gap-2 grow">
+          <div className="flex items-end self-end justify-between gap-2 ml-auto justify-self-start"></div>
+          <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
             {room.name?.name}
           </h2>
         </div>
       </div>
 
-      <main className="flex flex-col lg:flex-row-reverse w-full gap-4">
-        <section className="lg:w-48 w-full flex flex-col lg:flex-col-reverse justify-start lg:justify-end">
-          <p className="py-3 lg:opacity-80 whitespace-pre-line lg:text-xs italic text-sm">
+      <main className="flex flex-col w-full gap-4 lg:flex-row-reverse">
+        <section className="flex flex-col justify-start w-full lg:w-48 lg:flex-col-reverse lg:justify-end">
+          <p className="py-3 text-sm italic whitespace-pre-line lg:opacity-80 lg:text-xs">
             {is(object({ topic: string() }), topic?.content) &&
               topic.content.topic}
           </p>
@@ -142,7 +144,9 @@ export async function generateMetadata({
   )
   console.log(await room.getName())
   const messagesIterator = await room.getMessagesAsyncGenerator()
-  const messagesChunk: Event[] = await getMessagesChunk(messagesIterator)
+  const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
+    messagesIterator
+  )
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   return {
@@ -161,7 +165,7 @@ function AvatarFull({ url }: { url: string | undefined }) {
         }`}
       />
       {url && (
-        <img src={url} alt="avatar" className="w-20 lg:w-40 opacity-100" />
+        <img src={url} alt="avatar" className="w-20 opacity-100 lg:w-40" />
       )}
     </div>
   )

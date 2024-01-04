@@ -5,7 +5,8 @@ const { AS_TOKEN, MATRIX_BASE_URL } = process.env
 import { Client, Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
-import { organPostUnstable } from "@/lib/types"
+import { OrganPostUnstableSchema, organPostUnstable } from "@/lib/types"
+import { is } from "valibot"
 
 export default async function PostPage({
   params,
@@ -28,7 +29,7 @@ export default async function PostPage({
   console.log("room name", name)
   console.log("post page", post)
 
-  if (post.content?.msgtype !== organPostUnstable) return "Post not valid :("
+  if (!is(OrganPostUnstableSchema, post.content)) return "Post not valid :("
 
   const nameString =
     typeof name === "object" &&
@@ -46,10 +47,10 @@ export default async function PostPage({
         &larr; {nameString}
       </Link>
       <h1 className="py-4">{post.content?.title}</h1>
-      <span className="opacity-60 text-sm mt-8">
+      <span className="mt-8 text-sm opacity-60">
         {getContextualDate(post.origin_server_ts)}
       </span>
-      <p className="whitespace-pre-line py-2">{post.content?.body}</p>
+      <p className="py-2 whitespace-pre-line">{post.content?.body}</p>
     </div>
   )
 }

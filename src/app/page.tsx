@@ -2,23 +2,13 @@ const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
 
 export const dynamic = "force-dynamic"
 
-import {
-  Client,
-  ClientEventSchema,
-  ContentUnionSchema,
-  Event,
-  Room,
-  RoomMessageContentSchema,
-  Timeline,
-} from "simple-matrix-sdk"
+import { Client, Room, Timeline } from "simple-matrix-sdk"
 import Link from "next/link"
 import { Org } from "./id/[slug]/Org"
 import { Suspense } from "react"
-import { getIdLocalPart, noCacheFetch, slug } from "@/lib/utils"
+import { getIdLocalPart, noCacheFetch } from "@/lib/utils"
 import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
-import { Post } from "@/components/ui/Post"
-import { deleteOldEdits } from "@/lib/deleteOldEdits"
-import { array, intersect, is, object, parse, safeParse, string } from "valibot"
+import { array, is, object, safeParse, string } from "valibot"
 import { Posts } from "@/components/ui/Posts"
 
 async function getSpaceChildIds() {

@@ -5,7 +5,8 @@ import { useClient } from "@/lib/useClient"
 import { Room } from "simple-matrix-sdk"
 import { IconNorthStar } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { organPostUnstable } from "@/lib/types"
+import { OrganPostUnstableSchema, organPostUnstable } from "@/lib/types"
+import { is } from "valibot"
 
 export default function EditPostPage({
   params,
@@ -26,15 +27,22 @@ export default function EditPostPage({
     : undefined
 
   useEffect(() => {
-    room?.getEvent(params.id).then(post => {
-      if (!post) setError("Post not found")
-      if (post.type !== "m.room.message") setError("Post not valid")
-      if (post.content?.msgtype !== organPostUnstable)
-        setError("Post not valid")
-      setTitle(post.content?.title || "")
-      setContent(post.content?.body || "")
-      setAuthor(post.content?.author || {})
-    })
+    room
+      ?.getEvent(params.id)
+      .then(post => {
+        if (!post) throw new Error("Post not found")
+        if (post.type !== "m.room.message") throw new Error("Post not valid")
+        if (!is(OrganPostUnstableSchema, post.content))
+          throw new Error("Post not valid")
+
+        setTitle(post.content.title || "")
+        setContent(post.content.body || "")
+        setAuthor(post.content.author || {})
+      })
+      .catch(e => {
+        setError(e)
+        return
+      })
   }, [client])
 
   if (!client) return "loading..."
