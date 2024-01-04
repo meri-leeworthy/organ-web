@@ -17,7 +17,7 @@ export default function RawOrgRoomEvents({
     : undefined
   useEffect(() => {
     room
-      ?.getEvent(id)
+      ?.getEvent(`$${id}`)
       .then(post => {
         if (!post) throw new Error("Post not found")
         setEvent(post)
