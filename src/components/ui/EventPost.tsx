@@ -70,7 +70,7 @@ export async function EventPost({
           </div>
         )}
         <div className="flex items-center gap-2">
-          <Link href={`/id/${slug}/event/$${id}`}>
+          <Link href={`/id/${slug}/event/${id}`}>
             <h3 className="flex items-center gap-2 mb-1 text-2xl font-bold">
               {"title" in content && content.title}
             </h3>
