@@ -18,28 +18,10 @@ import {
 // import { SelectAuthor } from "@/components/SelectAuthor"
 // import Link from "next/link"
 import { Spinner } from "./Spinner"
-import { getMxcUrl } from "@/lib/utils"
+import { getMxcUrl, toValidDateString } from "@/lib/utils"
 import { Input, Textarea, Button } from "../styled"
 
 type PostType = "post" | "event"
-
-function toXX(s: number) {
-  return s < 10 ? `0${s}` : s
-}
-
-function toValidDateTimeString(date: Date) {
-  return `${toValidDateString(date)}T${toValidTimeString(date)}`
-}
-
-function toValidTimeString(date: Date) {
-  return `${toXX(date.getHours())}:${toXX(date.getMinutes())}`
-}
-
-function toValidDateString(date: Date) {
-  return `${date.getFullYear()}-${toXX(date.getMonth() + 1)}-${toXX(
-    date.getDate()
-  )}`
-}
 
 export function Description(props: {
   type: PostType
@@ -78,11 +60,13 @@ export const NewPost = ({ slug }: { slug: string }) => {
   const [startDate, setStartDate] = useState(toValidDateString(new Date()))
   const [startTime, setStartTime] = useState("00:00")
   const [endDate, setEndDate] = useState(toValidDateString(new Date()))
-  const [endtime, setEndtime] = useState("00:00")
+  const [endTime, setEndTime] = useState("00:00")
   const [place, setPlace] = useState("")
   const [imageSrcs, setImageSrcs] = useState<string[]>([])
   const [author, setAuthor] = useState<[Room, string]>()
   const [allDay, setAllDay] = useState(false)
+
+  console.log("imageSrcs", imageSrcs)
 
   const client = useClient()
   const room = useMemo(() => {
@@ -149,7 +133,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
           host: authorKV,
           tags: [],
           start: `${startDate}T${startTime}`,
-          end: `${endDate}T${endtime}`,
+          end: `${endDate}T${endTime}`,
           allDay,
           avatar: imageSrcs[0],
           location: place,
@@ -165,7 +149,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
   return (
     <div className="rounded bg-[#fff3] flex flex-col gap-2">
       {imageSrcs[0] && (
-        <div className="flex items-center grow justify-center">
+        <div className="flex items-center justify-center grow">
           <img
             src={imageSrcs[0]}
             alt="post"
@@ -174,7 +158,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
           />
         </div>
       )}
-      <form onSubmit={handlePostSubmit} className="flex flex-col grow gap-2">
+      <form onSubmit={handlePostSubmit} className="flex flex-col gap-2 grow">
         <div className="flex gap-1">
           <PostTypeButton type={type} thisType="post" setType={setType}>
             <IconNorthStar size={16} /> Post
@@ -207,7 +191,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
             />
           )}
 
-          <div className="flex gap-2 items-center ">
+          <div className="flex items-center gap-2 ">
             {type === "event" && (
               <>
                 <input
@@ -231,7 +215,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                   />
                 )}
 
-                <label className="flex gap-2 items-center text-xs opacity-80 uppercase">
+                <label className="flex items-center gap-2 text-xs uppercase opacity-80">
                   All Day?
                   <input
                     type="checkbox"
@@ -245,7 +229,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
               </>
             )}
 
-            <div className="flex justify-end gap-2 items-center ml-auto">
+            <div className="flex items-center justify-end gap-2 ml-auto">
               <UploadImageButton
                 imageSrcs={imageSrcs}
                 setImageSrcs={setImageSrcs}
@@ -264,12 +248,14 @@ export const NewPost = ({ slug }: { slug: string }) => {
   )
 }
 
-function UploadImageButton({
+export function UploadImageButton({
   imageSrcs,
   setImageSrcs,
 }: {
-  imageSrcs: string[]
-  setImageSrcs: (imageSrcs: string[]) => void
+  imageSrcs: string | string[]
+  setImageSrcs:
+    | Dispatch<SetStateAction<string[]>>
+    | Dispatch<SetStateAction<string>>
 }) {
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
@@ -288,7 +274,15 @@ function UploadImageButton({
       file &&
         client?.uploadFile(file).then(result => {
           console.log("result", result)
-          setImageSrcs([...imageSrcs, getMxcUrl(result.content_uri)])
+          if (typeof imageSrcs === "string") {
+            const newImageSrc = getMxcUrl(result.content_uri)
+            console.log("newImageSrc", newImageSrc)
+            ;(setImageSrcs as Dispatch<SetStateAction<string>>)(newImageSrc)
+          } else {
+            const newImageSrcs = [...imageSrcs, getMxcUrl(result.content_uri)]
+            console.log("newImageSrcs", newImageSrcs)
+            ;(setImageSrcs as Dispatch<SetStateAction<string[]>>)(newImageSrcs)
+          }
           setFile(null)
           setLoading(false)
         })
