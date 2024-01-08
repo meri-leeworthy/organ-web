@@ -103,7 +103,7 @@ export default function EditEventPage({
     const newPostId = await room?.sendMessage(messageEvent)
     // console.log("newPostId", newPostId)
     setIsLoading(false)
-    router.push(`/id/${params.slug}/post/${newPostId?.event_id}`)
+    router.push(`/id/${params.slug}/event/${newPostId?.event_id.split("$")[1]}`)
   }
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
