@@ -97,7 +97,7 @@ export default async function Orgs() {
 
   return (
     <main className="w-full max-w-lg">
-      <span className="text-lg font-bold">Recent posts</span>
+      <h3 className="text-lg font-bold">Recent posts</h3>
       <Posts posts={posts} />
       <h3 className="mt-6 font-bold">Collectives</h3>
       <ul>
