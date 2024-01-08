@@ -4,11 +4,12 @@ import { EventPost } from "@/components/ui/EventPost"
 import { slug } from "@/lib/utils"
 
 export function Posts({ posts }: { posts: any[] }) {
-  console.log("posts", posts)
+  // console.log("posts", posts)
   return (
     <section className="">
       {posts.map((post, i) => {
         const { content, origin_server_ts, event_id } = post
+
         const postSlug = slug(post.room_id)
 
         switch (content?.msgtype) {

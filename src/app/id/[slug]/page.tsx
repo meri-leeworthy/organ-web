@@ -3,7 +3,7 @@ const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 // export const dynamic = "force-dynamic"
 
-import { Room, Client, ClientEventOutput } from "simple-matrix-sdk"
+import { Room, Client, ClientEventOutput, Timeline } from "simple-matrix-sdk"
 import { getMessagesChunk, noCacheFetch } from "@/lib/utils"
 import { Contact } from "@/components/ui/Contact"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
@@ -53,6 +53,8 @@ export default async function OrgSlugPage({
       is(OrganPostUnstableSchema, message.content) ||
       is(OrganCalEventUnstableSchema, message.content)
   )
+
+  // const timeline = new Timeline(posts)
 
   const freshPosts = deleteOldEdits(posts)
 

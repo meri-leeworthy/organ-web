@@ -18,7 +18,7 @@ export async function Post({
   id: string
   slug: string
 }) {
-  console.log("post content", content)
+  // console.log("post content", content)
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {

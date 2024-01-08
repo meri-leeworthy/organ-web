@@ -28,6 +28,8 @@ export function UploadOrShowAvatar({
     })
   }, [room])
 
+  if (isLoading) return <div>loading...</div>
+
   console.log("imageUri", imageUri)
   if (imageUri) {
     const avatarUrl = getMxcUrl(imageUri)
@@ -42,7 +44,7 @@ export function UploadOrShowAvatar({
   return <UploadAvatar {...{ slug }} />
 }
 
-function UploadAvatar({
+export function UploadAvatar({
   slug,
   edit,
   handler,
@@ -70,7 +72,9 @@ function UploadAvatar({
     <form className={`flex mt-2 ${edit ? "absolute top-2 left-2" : "w-72 "}`}>
       <label
         htmlFor="file"
-        className="flex gap-1 text-xs items-center border border-transparent bg-[#ffffff99] hover:border-grey rounded uppercase px-1 self-start cursor-pointer">
+        className={`flex gap-1 text-xs items-center border border-transparent bg-[#ffffffcc] hover:border-white rounded uppercase px-1 ${
+          edit && "p-1 shadow-lg"
+        } self-start cursor-pointer`}>
         {edit ? <IconEdit size={12} /> : <IconPhoto size={12} />}
         {!edit && "Add Profile Image"}
       </label>

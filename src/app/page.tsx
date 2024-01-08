@@ -1,6 +1,8 @@
 const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
 
-export const dynamic = "force-dynamic"
+// export const dynamic = "force-dynamic"
+
+// TODO: why does the event show up on the org page but not the homepage?
 
 import { Client, Room, Timeline } from "simple-matrix-sdk"
 import Link from "next/link"
@@ -87,9 +89,9 @@ export default async function Orgs() {
     )
   ).flat()
 
-  const timeline = new Timeline(posts)
+  // const timeline = new Timeline(posts)
 
-  console.log("posts", timeline)
+  // console.log("posts", timeline)
 
   // const freshPosts = deleteOldEdits(posts)
 
@@ -97,6 +99,7 @@ export default async function Orgs() {
     <main className="w-full max-w-lg">
       <span className="text-lg font-bold">Recent posts</span>
       <Posts posts={posts} />
+      <h3 className="mt-6 font-bold">Collectives</h3>
       <ul>
         {rooms.map((org, i) => (
           <li key={i}>

@@ -257,3 +257,21 @@ export function slug(roomId: string) {
 export function getIdLocalPart(id: string) {
   return id.split(":")[0].slice(1)
 }
+
+export function toXX(s: number) {
+  return s < 10 ? `0${s}` : s
+}
+
+export function toValidDateTimeString(date: Date) {
+  return `${toValidDateString(date)}T${toValidTimeString(date)}`
+}
+
+export function toValidTimeString(date: Date) {
+  return `${toXX(date.getHours())}:${toXX(date.getMinutes())}`
+}
+
+export function toValidDateString(date: Date) {
+  return `${date.getFullYear()}-${toXX(date.getMonth() + 1)}-${toXX(
+    date.getDate()
+  )}`
+}
