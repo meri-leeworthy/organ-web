@@ -1,6 +1,6 @@
 "use client"
 
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { IconCheck, IconPlus } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 

@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { IconEdit, IconPhoto } from "@tabler/icons-react"
-import { useRoom } from "@/lib/useRoom"
+import { useRoom } from "@/hooks/useRoom"
 import { getMxcUrl } from "@/lib/utils"
 import { useEffect, useState } from "react"
 

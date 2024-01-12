@@ -1,6 +1,6 @@
 "use client"
 
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { xor } from "@/lib/utils"
 import { useState, useEffect } from "react"
 

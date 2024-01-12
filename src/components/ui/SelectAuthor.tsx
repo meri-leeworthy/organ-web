@@ -1,7 +1,7 @@
 "use client"
 
-import { useClient } from "@/lib/useClient"
-import { useRoom } from "@/lib/useRoom"
+import { useClient } from "@/hooks/useClient"
+import { useRoom } from "@/hooks/useRoom"
 import { useState, useEffect } from "react"
 import { Room } from "simple-matrix-sdk"
 

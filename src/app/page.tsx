@@ -6,14 +6,13 @@ const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
 
 import { Client, Room, Timeline } from "simple-matrix-sdk"
 import Link from "next/link"
-import { Org } from "./id/[slug]/Org"
+import { Org } from "@/components/Org"
 import { Suspense } from "react"
 import { getIdLocalPart, noCacheFetch } from "@/lib/utils"
 import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
-import { array, is, object, safeParse, string } from "valibot"
 import { Posts } from "@/components/ui/Posts"
 
-async function getSpaceChildIds() {
+export default async function Orgs() {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
@@ -21,37 +20,21 @@ async function getSpaceChildIds() {
     },
   })
 
-  const space = new Room(HOME_SPACE!, client)
-  const state = await space.getState()
-  const sortedState = Room.sortEvents(state)
-  const filteredChildren = sortedState["m.space.child"].filter(event => {
-    const result = safeParse(object({ via: string() }), event.content)
-    console.log("filteredChildren", event, result)
-    return is(object({ via: array(string()) }), event.content)
+  const noCacheClient = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch: noCacheFetch,
+    params: {
+      user_id: "@_relay_bot:radical.directory",
+    },
   })
 
-  const spaceChildIds = filteredChildren.map(event => event.state_key)
-  return spaceChildIds
-}
-
-export default async function Orgs() {
-  const roomIds = await getSpaceChildIds()
-
-  console.log("roomIds", roomIds)
-  // const accessToken = await getServerAccessToken()
-  const rooms = roomIds
+  const space = new Room(HOME_SPACE!, client)
+  const hierarchy = await space.getHierarchy()
+  const children = hierarchy.filter(room => room.children_state.length === 0)
+  const rooms = children
     .filter(r => r !== undefined)
-    .map(roomId => {
-      if (!roomId) throw new Error("roomId is undefined")
-      return new Room(
-        roomId,
-        new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-          fetch: noCacheFetch,
-          params: {
-            user_id: "@_relay_bot:radical.directory",
-          },
-        })
-      )
+    .map(room => {
+      if (!room) throw new Error("room is undefined")
+      return new Room(room.room_id, noCacheClient)
     })
   await Promise.all(
     rooms.map(async room => {
@@ -101,11 +84,11 @@ export default async function Orgs() {
       <Posts posts={posts} />
       <h3 className="mt-6 font-bold">Collectives</h3>
       <ul>
-        {rooms.map((org, i) => (
+        {rooms.map((room, i) => (
           <li key={i}>
-            <Link href={`/id/${getIdLocalPart(roomIds[i] || "")}`}>
+            <Link href={`/id/${getIdLocalPart(room.roomId || "")}`}>
               <Suspense fallback={<>loading...</>}>
-                <Org room={org} />
+                <Org room={room} />
               </Suspense>
             </Link>
           </li>

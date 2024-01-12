@@ -2,7 +2,7 @@ import { EditButton, DoneButton } from "@/components/styled/IconButton"
 import { SectionType, sections } from "./SectionType"
 import { useEffect, useState } from "react"
 import { Spinner } from "@/components/ui"
-import { useRoom } from "@/lib/useRoom"
+import { useRoom } from "@/hooks/useRoom"
 import { getMessagesChunk } from "@/lib/utils"
 
 //TODO: add a loading state for when we're fetching data, and don't say 'loading' if we just didn't find any

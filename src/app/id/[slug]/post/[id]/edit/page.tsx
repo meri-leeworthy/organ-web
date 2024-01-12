@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { Room } from "simple-matrix-sdk"
 import { IconNorthStar } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"

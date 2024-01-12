@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { OrganMetaContactUnstable, organMetaContactUnstable } from "@/lib/types"
 
 import { SectionType, sections } from "./SectionType"
-import { useRoom } from "@/lib/useRoom"
+import { useRoom } from "@/hooks/useRoom"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import { IconCheck, IconEdit, IconLink, IconPlus } from "@tabler/icons-react"
 import { Spinner } from "@/components/ui"

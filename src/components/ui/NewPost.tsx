@@ -2,7 +2,7 @@
 "use client"
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import {
   OrganCalEventUnstable,
   OrganPostUnstable,

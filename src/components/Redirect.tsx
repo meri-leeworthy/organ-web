@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { redirect } from "next/navigation"
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 
 const Redirect = ({
   roomId,

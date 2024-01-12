@@ -1,6 +1,6 @@
 "use client"
 
-import { useRoom } from "@/lib/useRoom"
+import { useRoom } from "@/hooks/useRoom"
 import { useState, useEffect } from "react"
 
 export function IfModerator({

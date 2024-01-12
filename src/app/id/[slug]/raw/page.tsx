@@ -1,7 +1,7 @@
 "use client"
 
 import { isEvent } from "@/lib/isEvent"
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { useEffect, useState } from "react"
 import { Event, Room } from "simple-matrix-sdk"
 

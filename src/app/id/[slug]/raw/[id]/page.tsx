@@ -1,6 +1,6 @@
 "use client"
 
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { useEffect, useState } from "react"
 import { ClientEventOutput, Room } from "simple-matrix-sdk"
 

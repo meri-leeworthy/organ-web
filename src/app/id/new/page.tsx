@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { Input, Button, Textarea } from "@/components/styled"
 // import { EditableContacts } from "../[slug]/edit/EditableContactSection"
 import {

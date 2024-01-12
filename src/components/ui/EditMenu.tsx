@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Dropdown } from "."
-import { useRoom } from "@/lib/useRoom"
+import { useRoom } from "@/hooks/useRoom"
 
 export function EditMenu({
   slug,

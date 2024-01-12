@@ -1,6 +1,6 @@
 "use client"
 
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import React, { useState } from "react"
 
 export const Username: React.FC = () => {

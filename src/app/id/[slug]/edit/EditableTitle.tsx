@@ -1,7 +1,7 @@
 import { EditButton, DoneButton } from "@/components/styled/IconButton"
 import { SectionType, sections } from "./SectionType"
 import { useEffect, useState } from "react"
-import { useRoom } from "@/lib/useRoom"
+import { useRoom } from "@/hooks/useRoom"
 import { Spinner } from "@/components/ui"
 
 export function EditableTitle({

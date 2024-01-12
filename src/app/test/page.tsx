@@ -1,6 +1,6 @@
 "use client"
 
-import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/useClient"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/hooks/useClient"
 import { useEffect, useState } from "react"
 
 export default function RequestTester() {

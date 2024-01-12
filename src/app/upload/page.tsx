@@ -1,6 +1,6 @@
 "use client"
 
-import { useClient } from "@/lib/useClient"
+import { useClient } from "@/hooks/useClient"
 import { useState } from "react"
 
 export default function UploadFilePage() {
