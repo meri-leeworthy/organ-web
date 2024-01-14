@@ -1,5 +1,12 @@
 import { IfLoggedIn } from "@/components/IfLoggedIn"
-import { JoinRoom, Register, GetRooms } from "./Forms"
+import {
+  JoinRoom,
+  Register,
+  GetRooms,
+  CreateMailbox,
+  SetSecret,
+  GetSecret,
+} from "./Forms"
 const { NODE_ENV, HOME_SPACE } = process.env
 
 export default async function ApplicationServiceTest() {
@@ -8,7 +15,7 @@ export default async function ApplicationServiceTest() {
   return (
     <IfLoggedIn>
       {NODE_ENV === "development" && (
-        <>
+        <div className="max-w-lg">
           <h1>Application Service Test</h1>
 
           <p>Home space: {HOME_SPACE}</p>
@@ -21,7 +28,16 @@ export default async function ApplicationServiceTest() {
 
           <h2>Register User</h2>
           <Register />
-        </>
+
+          <h2>Create Mailbox Room</h2>
+          <CreateMailbox />
+
+          <h2>Set Secret</h2>
+          <SetSecret />
+
+          <h2>Get Secret</h2>
+          <GetSecret />
+        </div>
       )}
     </IfLoggedIn>
   )
