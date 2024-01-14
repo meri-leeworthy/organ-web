@@ -1,10 +1,12 @@
 import {
   Output,
+  any,
   array,
   boolean,
   literal,
   object,
   optional,
+  record,
   string,
 } from "valibot"
 
@@ -50,12 +52,21 @@ export const organMetaContactUnstable = "organ.meta.contact.unstable"
 export const organPostUnstable = "organ.post.unstable"
 
 export const OrganPostUnstableSchema = object({
-  title: string(),
-  body: string(),
-  tags: array(string()),
+  title: string("title must be a string"),
+  body: string("body must be a string"),
+  tags: array(string("tags must be an array of strings")),
   msgtype: literal(organPostUnstable),
-  author: object({ name: string(), id: string() }),
-  media: array(string()),
+  author: object({
+    name: string("author name must be a string"),
+    id: string("author id must be string"),
+  }),
+  media: optional(array(string("media must be an array of strings"))),
+  "m.new_content": optional(
+    record(string("m.new_content record key must be string"), any())
+  ),
+  "m.relates_to": optional(
+    record(string("m.relates_to record key must be string"), any())
+  ),
 })
 
 export type OrganPostUnstable = Output<typeof OrganPostUnstableSchema>
