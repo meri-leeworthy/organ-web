@@ -11,8 +11,9 @@ import { Suspense } from "react"
 import { getIdLocalPart, noCacheFetch } from "@/lib/utils"
 import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
 import { Posts } from "@/components/ui/Posts"
+import { WelcomeEmailSignup } from "./WelcomeEmailSignup"
 
-export default async function Orgs() {
+export default async function Home() {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
@@ -72,7 +73,7 @@ export default async function Orgs() {
     )
   ).flat()
 
-  // const timeline = new Timeline(posts)
+  const timeline = new Timeline(posts)
 
   // console.log("posts", timeline)
 
@@ -80,9 +81,10 @@ export default async function Orgs() {
 
   return (
     <main className="w-full max-w-lg">
-      <h3 className="text-lg font-bold">Recent posts</h3>
-      <Posts posts={posts} />
-      <h3 className="mt-6 font-bold">Collectives</h3>
+      <WelcomeEmailSignup />
+      <h3 className="text-lg font-medium">Recent posts</h3>
+      <Posts posts={[...timeline.events.values()]} />
+      <h3 className="mt-6 font-medium">Collectives</h3>
       <ul>
         {rooms.map((room, i) => (
           <li key={i}>
