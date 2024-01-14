@@ -14,7 +14,7 @@
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "simple-matrix-sdk": "^0.3.6",
+    "simple-matrix-sdk": "^0.3.7",
     "valibot": "^0.25.0"
   },
   "devDependencies": {

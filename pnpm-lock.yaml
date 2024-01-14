@@ -18,8 +18,8 @@ dependencies:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
   simple-matrix-sdk:
-    specifier: ^0.3.6
-    version: 0.3.6
+    specifier: ^0.3.7
+    version: 0.3.7
   valibot:
     specifier: ^0.25.0
     version: 0.25.0
@@ -2272,8 +2272,8 @@ packages:
       object-inspect: 1.13.1
     dev: true
 
-  /simple-matrix-sdk@0.3.6:
-    resolution: {integrity: sha512-51lcLxRR00m48lf6BHF3uJECA1UKQm/WWeyXdNz4l9x6KnNgPszyXbr5lkmavoLcggoMrsOWV0MvJLy1itodHQ==}
+  /simple-matrix-sdk@0.3.7:
+    resolution: {integrity: sha512-2bENawRix2+/pcp4UqgNsuCCRY5lRrLYqkafRhRHRUAR51axZH80OYmPAeCU2W1BoLCBL3BQ6JGD3sGtA6DvtA==}
     dependencies:
       valibot: 0.25.0
     dev: false
