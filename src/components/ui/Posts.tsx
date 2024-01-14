@@ -2,15 +2,33 @@ import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
 import { slug } from "@/lib/utils"
+import { Event } from "simple-matrix-sdk"
 
-export function Posts({ posts }: { posts: any[] }) {
-  // console.log("posts", posts)
+export function Posts({ posts }: { posts: Event[] }) {
+  console.log("posts", posts)
+
+  const sortedPosts = posts.sort((a, b) => {
+    return b.originServerTs - a.originServerTs
+  })
+
   return (
     <section className="">
-      {posts.map((post, i) => {
-        const { content, origin_server_ts, event_id } = post
+      {sortedPosts.map((post, i) => {
+        const content = post.content
+        const originServerTs = post.originServerTs
+        const eventId = post.eventId
 
-        const postSlug = slug(post.room_id)
+        const postSlug = slug(post.roomId)
+
+        if (
+          !post ||
+          !content ||
+          typeof content !== "object" ||
+          content === null ||
+          !("msgtype" in content) ||
+          (post.edits && post.edits.size > 0)
+        )
+          return null
 
         switch (content?.msgtype) {
           case organPostUnstable:
@@ -18,8 +36,8 @@ export function Posts({ posts }: { posts: any[] }) {
               <Post
                 key={i}
                 content={content}
-                timestamp={origin_server_ts}
-                id={event_id.split("$")[1]}
+                timestamp={originServerTs}
+                id={eventId.split("$")[1]}
                 slug={postSlug}
               />
             )
@@ -28,8 +46,8 @@ export function Posts({ posts }: { posts: any[] }) {
               <EventPost
                 key={i}
                 content={content}
-                timestamp={origin_server_ts}
-                id={event_id.split("$")[1]}
+                timestamp={originServerTs}
+                id={eventId.split("$")[1]}
                 slug={postSlug}
               />
             )
