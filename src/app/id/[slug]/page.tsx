@@ -54,9 +54,9 @@ export default async function OrgSlugPage({
       is(OrganCalEventUnstableSchema, message.content)
   )
 
-  // const timeline = new Timeline(posts)
+  const timeline = new Timeline(posts)
 
-  const freshPosts = deleteOldEdits(posts)
+  // const freshPosts = deleteOldEdits(posts)
 
   const avatar = messagesChunk.find(
     (message: ClientEventOutput) => message.type === "m.room.avatar"
@@ -120,7 +120,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <Posts posts={freshPosts} />
+          <Posts posts={[...timeline.events.values()]} />
         </section>
       </main>
     </>
