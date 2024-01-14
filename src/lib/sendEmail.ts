@@ -109,9 +109,9 @@ export async function getOrCreateMailboxId(username: string, email: string) {
 
   if (!("room_id" in roomId)) throw new Error("No room_id in response")
 
-  const room = new Room(roomId.room_id, client)
+  const room = new Room(roomId.room_id as string, client)
 
-  const aliasUsernameResponse = await room.setRoomAlias(
+  const aliasUsernameResponse = await room.setAlias(
     `%23relay_${username}%3Aradical.directory`
   )
 
