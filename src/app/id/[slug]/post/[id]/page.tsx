@@ -6,7 +6,7 @@ import { Client, Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
 import { OrganPostUnstableSchema, organPostUnstable } from "@/lib/types"
-import { is } from "valibot"
+import { is, safeParse } from "valibot"
 
 export default async function PostPage({
   params,
@@ -26,8 +26,14 @@ export default async function PostPage({
   const name = await room.getName()
   const post = await room.getEvent(`$${id}`)
 
+  // const relations = await room.getRelations(post.event_id, {})
+
+  // console.log("relations", relations)
+
   console.log("room name", name)
   console.log("post page", post)
+
+  // console.log(safeParse(OrganPostUnstableSchema, post.content))
 
   if (!is(OrganPostUnstableSchema, post.content)) return "Post not valid :("
 
@@ -43,10 +49,10 @@ export default async function PostPage({
     <div className="w-full">
       <Link
         href={`/id/${slug}`}
-        className="bg-[#fff9] uppercase text-sm border rounded hover:border-primary px-2 py-1">
+        className="bg-[#fff9] font-medium text-sm border border-primary rounded hover:bg-primary px-2 py-1">
         &larr; {nameString}
       </Link>
-      <h1 className="py-4">{post.content?.title}</h1>
+      <h1 className="py-4 font-bold">{post.content?.title}</h1>
       <span className="mt-8 text-sm opacity-60">
         {getContextualDate(post.origin_server_ts)}
       </span>
