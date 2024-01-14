@@ -1,5 +1,6 @@
 "use client"
 
+import { Pre } from "@/components/styled/Pre"
 import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/hooks/useClient"
 import { useEffect, useState } from "react"
 
@@ -63,7 +64,7 @@ export default function RequestTester() {
         <select
           value={method}
           onChange={e => setMethod(e.target.value)}
-          className="border border-black rounded bg-slate-100 max-w-sm w-full"
+          className="w-full max-w-sm border border-black rounded bg-slate-100"
           required>
           <option></option>
           <option>GET</option>
@@ -75,7 +76,7 @@ export default function RequestTester() {
         endpoint
         <input
           value={endpoint}
-          className="border border-black rounded px-1 bg-slate-100 max-w-sm w-full"
+          className="w-full max-w-sm px-1 border border-black rounded bg-slate-100"
           onChange={event => setEndpoint(event.target.value)}
         />
       </label>
@@ -83,7 +84,7 @@ export default function RequestTester() {
         params
         <input
           value={params}
-          className="border border-black rounded px-1 bg-slate-100 max-w-sm w-full"
+          className="w-full max-w-sm px-1 border border-black rounded bg-slate-100"
           onChange={event => setParams(event.target.value)}
         />
       </label>
@@ -92,29 +93,29 @@ export default function RequestTester() {
         body:{" "}
         <input
           value={body}
-          className="border border-black rounded px-1 bg-slate-100 max-w-sm w-full"
+          className="w-full max-w-sm px-1 border border-black rounded bg-slate-100"
           onChange={event => setBody(event.target.value)}
         />
       </label>
-      <pre className="font-mono text-xs my-4 rounded bg-stone-100 border border-stone-300 p-2  overflow-scroll">
+      <Pre>
         {method}
         <br />
         {baseUrl}
         {endpoint}?{params}
         <br />
         {body}
-      </pre>
-      <button type="submit" className="border px-1 rounded self-end">
+      </Pre>
+      <button type="submit" className="self-end px-1 border rounded">
         Submit
       </button>
       {isLoading ||
         error ||
         (response && (
-          <pre className="font-mono text-xs my-4 rounded bg-slate-100 border border-slate-300 p-2 overflow-scroll">
+          <Pre>
             {isLoading && "Loading..."}
             {error && error}
             {response && response}
-          </pre>
+          </Pre>
         ))}
     </form>
   )
