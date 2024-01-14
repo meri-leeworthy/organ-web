@@ -251,6 +251,7 @@ export function xor(a: boolean, b: boolean) {
 }
 
 export function slug(roomId: string) {
+  if (!roomId || !roomId.includes(":") || !roomId.includes("!")) return roomId
   return roomId.split(":")[0].split("!")[1]
 }
 
