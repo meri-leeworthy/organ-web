@@ -57,10 +57,13 @@ const NewRoomPage = () => {
   }
 
   return (
-    <div>
-      <h1>Create Page</h1>
+    <div className="w-full max-w-md">
+      <h2>New Group Profile</h2>
+      <p>
+        Create a public profile for organisations, collectives, or other groups.
+      </p>
       <form onSubmit={handleSubmit} className="flex flex-col">
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="name">Name</label>
         <Input
           name="name"
           type="text"
@@ -68,7 +71,7 @@ const NewRoomPage = () => {
           onChange={handleNameChange}
         />
         <br />
-        <label htmlFor="description">About:</label>
+        <label htmlFor="description">About</label>
         <Textarea
           name="description"
           value={topic}
