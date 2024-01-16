@@ -3,14 +3,19 @@
 import { Button, Input } from "@/components/styled"
 import { useDebounce } from "@/hooks/useDebounce"
 import { IconCheck, IconX } from "@tabler/icons-react"
+import Link from "next/link"
 import React, { useState, useEffect } from "react"
-import { Client } from "simple-matrix-sdk"
+import { Client, ErrorSchema } from "simple-matrix-sdk"
+import { is } from "valibot"
 
 const SignupForm = () => {
   const [email, setEmail] = useState("")
   const [debouncedUsername, username, setUsername] = useDebounce("", 500)
   const [password, setPassword] = useState("")
   const [usernameAvailable, setUsernameAvailable] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -38,12 +43,15 @@ const SignupForm = () => {
   }
 
   const handleSignup = async () => {
+    setLoading(true)
     try {
       const user = await Client.register(
         username,
         password,
         "https://matrix.radical.directory"
       )
+      if (is(ErrorSchema, user)) throw new Error(user.error)
+
       console.log(user, "User registered successfully!")
 
       const { access_token: accessToken } = user
@@ -59,55 +67,102 @@ const SignupForm = () => {
         }
       )
 
-      // const 3pidResponse = client.add3pid()
+      const clientSecret = Math.random().toString(36).substring(2, 15)
+
+      console.log(clientSecret, "clientSecret")
+
+      const emailValidate = await client.requestTokenEmail(email, clientSecret)
+
+      if (is(ErrorSchema, emailValidate)) throw new Error(emailValidate.error)
+
+      console.log(emailValidate, "emailValidate")
+
+      setSuccess(true)
     } catch (error) {
-      console.error("Error registering user:", error)
+      console.log("Error registering user:", error)
+
+      const stringError =
+        (typeof error === "object" &&
+          error !== null &&
+          "message" in error &&
+          typeof error.message === "string" &&
+          error.message) ||
+        ""
+
+      setError(stringError as string)
     }
+    setLoading(false)
   }
 
   return (
     <div className="flex flex-col w-full max-w-sm gap-2">
       <h2 className="font-bold">New Account</h2>
-      <form className="*:flex flex flex-col gap-2 *:flex-col">
-        <label>
-          <span className="text-sm tracking-wider uppercase">Email</span>
-          <Input type="email" value={email} onChange={handleEmailChange} />
-        </label>
-        <label>
-          <div className="flex items-baseline justify-between">
-            <span className="text-sm tracking-wider uppercase">Username</span>
-            <p className="text-xs uppercase opacity-80">
-              {debouncedUsername &&
-                (usernameAvailable ? (
-                  <div className="flex items-center gap-1 text-green-600">
-                    {"available"}
-                    <IconCheck size={12} />
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-1 text-red-600">
-                    {"not available"}
-                    <IconX size={12} />
-                  </div>
-                ))}
-            </p>
-          </div>
-          <Input type="text" value={username} onChange={handleUsernameChange} />
-        </label>
-        <label className="mb-4">
-          <span className="text-sm tracking-wider uppercase">Password</span>
-          <Input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </label>
-        <Button
-          type="button"
-          onClick={handleSignup}
-          className="self-start border border-black hover:bg-primary hover:border-transparent">
-          Sign Up
-        </Button>
-      </form>
+      {success ? (
+        <p>
+          You did the form and an email has been sent to your account! Now
+          please click the link in the email to confirm 🧚 <br />
+          <Link href="/" className="block mt-2 hover:underline">
+            &larr; finished
+          </Link>
+        </p>
+      ) : (
+        <form className="*:flex flex flex-col gap-2 *:flex-col">
+          <label>
+            <span className="text-sm tracking-wider uppercase">Email</span>
+            <Input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              disabled={loading}
+            />
+          </label>
+          <label>
+            <div className="flex items-baseline justify-between">
+              <span className="text-sm tracking-wider uppercase">Username</span>
+              <p className="text-xs uppercase opacity-80">
+                {debouncedUsername &&
+                  (usernameAvailable ? (
+                    <span className="flex items-center gap-1 text-green-600">
+                      {"available"}
+                      <IconCheck size={12} />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-red-600">
+                      {"not available"}
+                      <IconX size={12} />
+                    </span>
+                  ))}
+              </p>
+            </div>
+            <Input
+              type="text"
+              value={username}
+              onChange={handleUsernameChange}
+              disabled={loading}
+            />
+          </label>
+          <label className="mb-4">
+            <span className="text-sm tracking-wider uppercase">Password</span>
+            <Input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              disabled={loading}
+            />
+          </label>
+          {error && (
+            <div className="p-2 mb-2 text-xs text-red-600 border border-red-300 border-dashed bg-red-50">
+              Yikes!! {error}
+            </div>
+          )}
+          <Button
+            type="button"
+            onClick={handleSignup}
+            className="self-start border border-black hover:bg-primary hover:border-transparent">
+            Sign Up
+          </Button>
+        </form>
+      )}
     </div>
   )
 }
