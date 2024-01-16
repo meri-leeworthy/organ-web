@@ -39,7 +39,7 @@ export async function EventPost({
         <Avatar url={avatarUrl} name={content?.host?.name} />
         <Link
           className="flex flex-wrap items-baseline gap-x-1"
-          href={`/id/${slug}/event/$${id}` || ""}>
+          href={`/id/${slug}/event/${id}` || ""}>
           {content?.host && (
             <>
               <h5 className="flex gap-2 text-sm font-medium">
