@@ -1,7 +1,14 @@
 "use client"
 
 import { Button } from "@/components/styled/Button"
-import { getRooms, register, joinRoomAction } from "./actions"
+import {
+  getRooms,
+  register,
+  joinRoomAction,
+  getStateAction,
+  setStateAction,
+  getStateTypeAction,
+} from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
 import { getSecretFromRoom, storeSecretInRoom } from "@/lib/roomSecretStore"
@@ -192,6 +199,96 @@ export function GetSecret() {
         className="border border-black"
       />
       <Button type="submit">get secret</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function GetState() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await getStateAction(formData)
+        setResult({ result })
+      }}>
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
+      <Button type="submit">get state</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function GetStateType() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await getStateTypeAction(formData)
+        setResult({ result })
+      }}>
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
+      <input
+        type="text"
+        name="stateType"
+        placeholder="stateType"
+        className="border border-black"
+      />
+      <Button type="submit">get state</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function SetState() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await setStateAction(formData)
+        setResult({ result })
+      }}>
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
+      <input
+        type="text"
+        name="stateType"
+        placeholder="stateType"
+        className="border border-black"
+      />
+      <input
+        type="text"
+        name="stateKey"
+        placeholder="stateKey"
+        className="border border-black"
+      />
+      <input
+        type="text"
+        name="content"
+        placeholder="content"
+        className="border border-black"
+      />
+      <Button type="submit">set state</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )

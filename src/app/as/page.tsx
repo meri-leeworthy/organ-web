@@ -6,6 +6,9 @@ import {
   CreateMailbox,
   SetSecret,
   GetSecret,
+  GetState,
+  SetState,
+  GetStateType,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE } = process.env
 
@@ -37,6 +40,15 @@ export default async function ApplicationServiceTest() {
 
           <h2>Get Secret</h2>
           <GetSecret />
+
+          <h2>Get State</h2>
+          <GetState />
+
+          <h2>Get State Type</h2>
+          <GetStateType />
+
+          <h2>Set State</h2>
+          <SetState />
         </div>
       )}
     </IfLoggedIn>

@@ -67,3 +67,61 @@ export async function getSpaceChildren(formData: FormData) {
 
   return children
 }
+
+export async function getStateAction(formData: FormData) {
+  const roomId = formData.get("room") as string
+
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch,
+    params: { user_id: "@_relay_bot:radical.directory" },
+  })
+  const room = new Room(roomId, client)
+
+  const state = await room.getState()
+
+  console.log("state", state)
+
+  return state
+}
+
+export async function getStateTypeAction(formData: FormData) {
+  const roomId = formData.get("room") as string
+  const stateType = formData.get("stateType") as string
+
+  console.log("stateType", stateType)
+
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch,
+    params: { user_id: "@_relay_bot:radical.directory" },
+  })
+  const room = new Room(roomId, client)
+
+  const state = await room.getStateEvent(stateType)
+
+  console.log("state", state)
+
+  return state
+}
+
+export async function setStateAction(formData: FormData) {
+  const roomId = formData.get("room") as string
+  const stateType = formData.get("stateType") as string
+  const stateKey = formData.get("stateKey") as string
+  const content = formData.get("content") as string
+
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch,
+    params: { user_id: "@_relay_bot:radical.directory" },
+  })
+  const room = new Room(roomId, client)
+
+  const state = await room.sendStateEvent(
+    stateType,
+    { type: content },
+    stateKey
+  )
+
+  console.log("state", state)
+
+  return state
+}
