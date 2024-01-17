@@ -18,7 +18,6 @@ import {
 import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
-import { deleteOldEdits } from "@/lib/deleteOldEdits"
 import { is, object, string } from "valibot"
 
 export default async function OrgSlugPage({
@@ -56,8 +55,6 @@ export default async function OrgSlugPage({
 
   const timeline = new Timeline(posts)
 
-  // const freshPosts = deleteOldEdits(posts)
-
   const avatar = messagesChunk.find(
     (message: ClientEventOutput) => message.type === "m.room.avatar"
   )
@@ -75,9 +72,6 @@ export default async function OrgSlugPage({
       : undefined
   const contactKVs = await fetchContactKVs(room)
   const topic = messagesChunk.find(message => message.type === "m.room.topic")
-
-  // console.log("messages", messages)
-  // console.log("posts", posts)
 
   return (
     <>
