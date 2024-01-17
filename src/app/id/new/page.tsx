@@ -8,6 +8,7 @@ import {
   ContactType,
   contactTypes,
   organMetaContactUnstable,
+  organRoomType,
 } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { is } from "valibot"
@@ -57,11 +58,18 @@ const NewRoomPage = () => {
         topic,
         initial_state: [
           {
-            type: organMetaContactUnstable,
-            state_key: contactTypes.email,
+            type: "m.room.power_levels",
+            state_key: "",
             content: {
-              type: contactTypes.email,
-              value: contactKVs[contactTypes.email],
+              users: { "@_relay_bot:radical.directory": 100 },
+            },
+          },
+          {
+            type: organRoomType,
+            state_key: "id",
+            content: {
+              type: organRoomType,
+              value: "id",
             },
           },
         ],
@@ -73,6 +81,13 @@ const NewRoomPage = () => {
 
       const join = await joinRoom(room.roomId, "bot")
       console.log("join", join)
+
+      const organRoomTypeStateResult = await room?.sendStateEvent(
+        organRoomType,
+        "id"
+      )
+
+      console.log("organRoomTypeStateResult", organRoomTypeStateResult)
 
       router.push(`/id/${slug(room?.roomId)}`)
     } catch (error) {
