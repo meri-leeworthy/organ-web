@@ -1,6 +1,7 @@
 "use client"
 
 import { Button, Input } from "@/components/styled"
+import { ErrorBox } from "@/components/ui/ErrorBox"
 import { useDebounce } from "@/hooks/useDebounce"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import Link from "next/link"
@@ -150,11 +151,7 @@ const SignupForm = () => {
               disabled={loading}
             />
           </label>
-          {error && (
-            <div className="p-2 mb-2 text-xs text-red-600 border border-red-300 border-dashed bg-red-50">
-              Yikes!! {error}
-            </div>
-          )}
+          <ErrorBox error={error} />
           <Button
             type="button"
             onClick={handleSignup}

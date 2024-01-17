@@ -9,15 +9,26 @@ import {
   contactTypes,
   organMetaContactUnstable,
 } from "@/lib/types"
+import { useRouter } from "next/navigation"
+import { is } from "valibot"
+import { ErrorSchema } from "simple-matrix-sdk"
+import { ErrorBox } from "@/components/ui/ErrorBox"
+import { slug } from "@/lib/utils"
+import { IconNorthStar } from "@tabler/icons-react"
+import { joinRoom } from "@/app/api/join/action"
 
 const NewRoomPage = () => {
   const client = useClient()
+
+  const router = useRouter()
 
   const [name, setName] = useState("")
   const [topic, setTopic] = useState("")
   const [contactKVs, setContactKVs] = useState<
     Record<string, string | undefined>
   >({})
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   function setContactKV(contactType: ContactType, contactValue?: string) {
     // console.log("setting contact kv", contactType, contactValue)
@@ -36,29 +47,53 @@ const NewRoomPage = () => {
     setTopic(event.target.value)
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     // Logic to create a new Matrix room with the provided inputs
     console.log("Creating new room...")
-    client?.createRoom({
-      name,
-      topic,
-      initial_state: [
-        {
-          type: organMetaContactUnstable,
-          state_key: contactTypes.email,
-          content: {
-            type: contactTypes.email,
-            value: contactKVs[contactTypes.email],
+    try {
+      const room = await client?.createRoom({
+        name,
+        topic,
+        initial_state: [
+          {
+            type: organMetaContactUnstable,
+            state_key: contactTypes.email,
+            content: {
+              type: contactTypes.email,
+              value: contactKVs[contactTypes.email],
+            },
           },
-        },
-      ],
-    })
+        ],
+        invite: ["@_relay_bot:radical.directory"],
+      })
+      if (!room) throw new Error("Failed to create room")
+      console.log("Created room", room)
+      if (is(ErrorSchema, room)) throw new Error(room.error)
+
+      const join = await joinRoom(room.roomId, "bot")
+      console.log("join", join)
+
+      router.push(`/id/${slug(room?.roomId)}`)
+    } catch (error) {
+      console.error(error)
+      const strErr =
+        (typeof error === "object" &&
+          error !== null &&
+          "message" in error &&
+          typeof error.message === "string" &&
+          error.message) ||
+        ""
+      setError(strErr)
+      return
+    }
   }
 
   return (
     <div className="w-full max-w-md">
-      <h2>New Group Profile</h2>
+      <h2 className="flex items-center gap-2 text-2xl font-medium">
+        <IconNorthStar size={24} /> New Group
+      </h2>
       <p>
         Create a public profile for organisations, collectives, or other groups.
       </p>
@@ -78,6 +113,8 @@ const NewRoomPage = () => {
           onChange={handleTopicChange}
         />
         <br />
+
+        <ErrorBox error={error} />
 
         {/* <br />
         <label>
