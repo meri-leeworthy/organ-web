@@ -2,6 +2,7 @@
 
 import { Client, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
+import { joinRoom } from "../api/join/action"
 const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 export async function register(formData: FormData) {
@@ -18,29 +19,11 @@ export async function register(formData: FormData) {
   return register
 }
 
-export async function joinRoom(formData: FormData) {
+export async function joinRoomAction(formData: FormData) {
   const room = formData.get("room") as string
   const user = (formData.get("user") as string) || "bot"
 
-  console.log("formData", formData, "room", room, "user", user)
-
-  for (const value of formData.values()) {
-    console.log("value", value)
-  }
-
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, { fetch })
-
-  const join = await client.post(
-    `join/${room}`,
-    {},
-    {
-      user_id: `@_relay_${user}:radical.directory`,
-    }
-  )
-
-  console.log("join", join)
-
-  return join
+  return joinRoom(room, user)
 }
 
 export async function getRooms(formData: FormData): Promise<RoomDebug[]> {

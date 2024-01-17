@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/styled/Button"
-import { getRooms, joinRoom, register } from "./actions"
+import { getRooms, register, joinRoomAction } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
 import { getSecretFromRoom, storeSecretInRoom } from "@/lib/roomSecretStore"
@@ -73,7 +73,7 @@ export function JoinRoom() {
   return (
     <form
       action={async (formData: FormData) => {
-        const result = await joinRoom(formData)
+        const result = await joinRoomAction(formData)
         setResult(result)
       }}>
       <input
