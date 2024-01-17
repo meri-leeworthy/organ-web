@@ -38,6 +38,7 @@ export const OrganCalEventUnstableSchema = object({
   allDay: optional(boolean()),
   location: optional(string()),
   avatar: optional(string()),
+  source: optional(string()),
 })
 
 export type OrganCalEventUnstable = Output<typeof OrganCalEventUnstableSchema>
@@ -51,6 +52,13 @@ export const organMetaContactUnstable = "organ.meta.contact.unstable"
 
 export const organPostUnstable = "organ.post.unstable"
 
+export const organRoomType = "organ.room.type"
+
+export const organRoomTypeValue = {
+  id: "id",
+  event: "event",
+} as const
+
 export const OrganPostUnstableSchema = object({
   title: string("title must be a string"),
   body: string("body must be a string"),
@@ -60,6 +68,7 @@ export const OrganPostUnstableSchema = object({
     name: string("author name must be a string"),
     id: string("author id must be string"),
   }),
+  source: optional(string()),
   media: optional(array(string("media must be an array of strings"))),
   "m.new_content": optional(
     record(string("m.new_content record key must be string"), any())
