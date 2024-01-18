@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Dropdown } from "."
+import { Dropdown, DropdownItem } from "."
 import { useRoom } from "@/hooks/useRoom"
 
 export function EditMenu({
@@ -24,10 +24,12 @@ export function EditMenu({
 
   return (
     <Dropdown>
-      <Link href={`/id/${slug}/${type}/${event_id}/edit`} className="right-0">
+      <DropdownItem href={`/id/${slug}/${type}/${event_id}/edit`}>
         Edit Post
-      </Link>
-      <button onClick={() => handlePostDelete(event_id)}>Delete Post</button>
+      </DropdownItem>
+      <DropdownItem onClick={() => handlePostDelete(event_id)}>
+        Delete Post
+      </DropdownItem>
     </Dropdown>
   )
 }
