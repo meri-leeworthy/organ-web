@@ -1,15 +1,21 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 
 export const CreatePageAccount = () => {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const accessToken =
     typeof localStorage !== "undefined" && localStorage.getItem("accessToken")
   const userId =
     typeof localStorage !== "undefined" && localStorage.getItem("userId")
 
-  const loggedIn = accessToken && userId && true
+  const loggedIn = isClient && accessToken && userId && true
 
   return (
     <Suspense fallback={<CreateAccount />}>
