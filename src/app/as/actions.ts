@@ -3,11 +3,14 @@
 import { Client, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
+import { noCacheFetch } from "@/lib/utils"
 const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 export async function register(formData: FormData) {
   const user = formData.get("user") as string
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, { fetch })
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch: noCacheFetch,
+  })
 
   const register = await client.post("register", {
     type: "m.login.application_service",
@@ -29,7 +32,7 @@ export async function joinRoomAction(formData: FormData) {
 export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
   const user = formData.get("user") as string
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch,
+    fetch: noCacheFetch,
     params: { user_id: `@_relay_${user}:radical.directory` },
   })
 
@@ -59,7 +62,9 @@ export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
 
 export async function getSpaceChildren(formData: FormData) {
   const space = formData.get("space") as string
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, { fetch })
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch: noCacheFetch,
+  })
 
   const children = await client.get(`rooms/${space}/children`)
 
@@ -72,7 +77,7 @@ export async function getStateAction(formData: FormData) {
   const roomId = formData.get("room") as string
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch,
+    fetch: noCacheFetch,
     params: { user_id: "@_relay_bot:radical.directory" },
   })
   const room = new Room(roomId, client)
@@ -91,7 +96,7 @@ export async function getStateTypeAction(formData: FormData) {
   console.log("stateType", stateType)
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch,
+    fetch: noCacheFetch,
     params: { user_id: "@_relay_bot:radical.directory" },
   })
   const room = new Room(roomId, client)
@@ -110,7 +115,7 @@ export async function setStateAction(formData: FormData) {
   const content = formData.get("content") as string
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch,
+    fetch: noCacheFetch,
     params: { user_id: "@_relay_bot:radical.directory" },
   })
   const room = new Room(roomId, client)
