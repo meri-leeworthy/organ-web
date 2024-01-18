@@ -43,6 +43,8 @@ async function sendEmailSendgrid(
 }
 
 export async function sendEmail(email: string, subject: string, body: string) {
+  console.log("email", email, "subject", subject, "body", body)
+
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
       user_id: "@_relay_bot:radical.directory",
@@ -58,7 +60,7 @@ export async function sendEmail(email: string, subject: string, body: string) {
 
   const room = new Room(roomId, client)
 
-  if (email.includes("@gmail.com") || email.includes("@hotmail.com")) {
+  if (isSensitive(email)) {
     //send using sendgrid
     sendEmailSendgrid(
       email,
@@ -152,10 +154,29 @@ export async function sendEmailFromMailbox(
 
   const room = new Room(roomId, client)
 
+  if (isSensitive(email)) {
+    sendEmailSendgrid(
+      email,
+      "notifications@matrix.radical.directory",
+      subject,
+      content
+    )
+
+    room.sendMessage({
+      msgtype: "m.text",
+      body: "sent using sendgrid to " + email + "\n" + subject + "\n" + content,
+    })
+    return
+  }
+
   const eventId = await room.sendMessage({
     msgtype: "m.text",
     body: "!pm send " + email + "\n" + subject + "\n" + content,
   })
 
   return eventId
+}
+
+function isSensitive(email: string) {
+  return email.includes("@gmail.com") || email.includes("@hotmail.com")
 }

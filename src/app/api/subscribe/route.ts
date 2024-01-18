@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     "You just signed up for Organ updates!",
     welcomeEmailContent
   )
-  console.log(result)
+  console.log("send email from mailbox result", result)
   const secretEvent = await getSecretFromRoom(
     "!NUVsYlMWcttFfEHkCj:radical.directory",
     "emails"

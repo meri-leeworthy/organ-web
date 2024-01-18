@@ -50,7 +50,7 @@ export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
   const roomsWithData: RoomDebug[] = await Promise.all(
     rooms.map(async (room: Room) => {
       const roomData = await room.getHierarchy()
-      console.log("roomData", roomData)
+      // console.log("roomData", roomData)
       return roomData
     })
   )
