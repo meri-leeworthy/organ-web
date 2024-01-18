@@ -97,13 +97,15 @@ export function AddButton({
 export function OptionsButton({
   onClick,
   label,
+  size,
 }: {
   onClick?: () => void
   label?: string
+  size?: number
 }) {
   return (
     <IconButton alt="Options" onClick={onClick} label={label} bg="hover">
-      <IconDotsVertical size={16} />
+      <IconDotsVertical size={size || 16} />
     </IconButton>
   )
 }
