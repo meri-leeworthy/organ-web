@@ -30,6 +30,8 @@ export default async function Home() {
 
   const space = new Room(HOME_SPACE!, client)
   const hierarchy = await space.getHierarchy()
+
+  // console.log("hierarchy", hierarchy)
   const children = hierarchy.filter(room => room.children_state.length === 0)
   const rooms = children
     .filter(r => r !== undefined)
@@ -47,9 +49,9 @@ export default async function Home() {
     })
   )
 
-  rooms.forEach(room => {
-    console.log("room name", room.name)
-  })
+  // rooms.forEach(room => {
+  //   console.log("room name", room.name)
+  // })
 
   const posts = (
     await Promise.all(
@@ -82,9 +84,9 @@ export default async function Home() {
   return (
     <main className="w-full max-w-lg">
       <WelcomeEmailSignup />
-      <h3 className="text-lg font-medium">Recent posts</h3>
+      <h3 className="mt-6 mb-4 text-lg font-medium">Recent posts</h3>
       <Posts posts={[...timeline.events.values()]} />
-      <h3 className="mt-6 font-medium">Collectives</h3>
+      <h3 className="mt-6 text-lg font-medium">Collectives</h3>
       <ul>
         {rooms.map((room, i) => (
           <li key={i}>
