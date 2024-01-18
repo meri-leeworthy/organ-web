@@ -1,12 +1,12 @@
 import LoginLogout from "@/components/ui/LoginLogout"
-import Link from "next/link"
+import { CreatePageAccount } from "./CreatePageAccount"
 
 export function Footer() {
   return (
-    <section className="text-sm leading-tight mt-24 w-full">
-      <div className="my-4 flex gap-2 items-center">
+    <section className="w-full mt-24 text-sm leading-tight">
+      <div className="flex items-center gap-2 my-4">
         <LoginLogout />
-        <Link href="/id/new">Create Page</Link>
+        <CreatePageAccount />
       </div>
 
       <P className="my-4">
