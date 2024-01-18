@@ -23,8 +23,10 @@ export default function OrgSlugDashboardPage({
   params: { slug: string }
 }) {
   const [editSection, setEditSection] = useState<SectionType>(null)
+
   const { slug } = params
   const router = useRouter()
+
   return (
     // <Redirect roomId={slug}>
     <IfModerator slug={slug}>
@@ -57,6 +59,8 @@ export default function OrgSlugDashboardPage({
           />
           <hr className="my-4" />
           <UserRoles slug={slug} />
+          <hr className="my-4" />
+          <RequestPublication slug={slug} />
         </div>
       </main>
     </IfModerator>
@@ -143,5 +147,36 @@ function UserRoles(props: { slug: string }) {
 function Badge({ label }: { label: string }) {
   return (
     <div className="px-1 text-xs uppercase rounded bg-primary">{label}</div>
+  )
+}
+
+function RequestPublication({ slug }: { slug: string }) {
+  const [requested, setRequested] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function requestPublication() {
+    const res = await fetch("/api/requestpub", {
+      method: "POST",
+      body: JSON.stringify({
+        roomId: `!${slug}:radical.directory`,
+      }),
+    })
+    console.log("res", res)
+    setRequested(true)
+  }
+
+  return (
+    <>
+      {requested ? (
+        <p>Requested!</p>
+      ) : (
+        <button
+          className="px-2 py-1 rounded bg-primary hover:bg-primarydark hover:text-white drop-shadow-sm disabled:opacity-60"
+          onClick={requestPublication}
+          disabled={isLoading}>
+          Request Publication to Homepage
+        </button>
+      )}
+    </>
   )
 }
