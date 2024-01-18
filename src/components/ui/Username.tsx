@@ -9,7 +9,7 @@ export const Username: React.FC = () => {
 
   if (client) {
     client.getProfile(client.userId).then(profile => {
-      console.log(profile)
+      // console.log(profile)
       setUsername(profile.displayname)
     })
   }

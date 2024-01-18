@@ -5,7 +5,7 @@ import { slug } from "@/lib/utils"
 import { Event } from "simple-matrix-sdk"
 
 export function Posts({ posts }: { posts: Event[] }) {
-  console.log("posts", posts)
+  // console.log("posts", posts)
 
   const sortedPosts = posts.sort((a, b) => {
     return b.originServerTs - a.originServerTs
