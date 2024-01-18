@@ -41,7 +41,7 @@ export function EditableTitle({
 
   if (editSection === sections.title)
     return (
-      <div className="flex gap-2 my-4">
+      <div className="flex gap-2">
         <input
           autoFocus
           className="self-start text-lg font-bold bg-transparent border border-[#1D170C33] px-2 rounded-md"
@@ -61,7 +61,7 @@ export function EditableTitle({
     )
   else
     return (
-      <h2 className="flex gap-2 items-center font-bold text-2xl my-4">
+      <h2 className="flex items-baseline self-center gap-2 text-2xl font-bold">
         {isLoading ? (
           <Spinner className="w-4 h-4 text-black animate-spin fill-pink-600" />
         ) : (

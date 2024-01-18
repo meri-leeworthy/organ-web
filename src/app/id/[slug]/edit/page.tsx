@@ -29,28 +29,35 @@ export default function OrgSlugDashboardPage({
     // <Redirect roomId={slug}>
     <IfModerator slug={slug}>
       <main className="flex flex-col w-full">
-        <div className="flex items-start justify-between">
-          <UploadOrShowAvatar slug={slug} />
+        <div className="p-4 mb-4 bg-white border rounded-lg">
+          <div className="flex items-start justify-between">
+            <div className="flex gap-4">
+              <UploadOrShowAvatar slug={slug} />
 
-          <Cancel onClick={() => router.push(`/id/${slug}`)} />
+              <EditableTitle {...{ editSection, setEditSection, slug }} />
+            </div>
+            <Cancel onClick={() => router.push(`/id/${slug}`)} />
+          </div>
+          <hr className="my-4" />
+          <EditableDescription
+            {...{
+              editSection,
+              setEditSection,
+              slug,
+            }}
+          />
+          <hr className="my-4" />
+          <h2 className="mb-2 text-base font-medium">Links</h2>
+          <EditableContactSection
+            {...{
+              editSection,
+              setEditSection,
+              slug,
+            }}
+          />
+          <hr className="my-4" />
+          <UserRoles slug={slug} />
         </div>
-        <EditableTitle {...{ editSection, setEditSection, slug }} />
-        <EditableDescription
-          {...{
-            editSection,
-            setEditSection,
-            slug,
-          }}
-        />
-
-        <EditableContactSection
-          {...{
-            editSection,
-            setEditSection,
-            slug,
-          }}
-        />
-        <UserRoles slug={slug} />
       </main>
     </IfModerator>
     // </Redirect>
@@ -98,7 +105,7 @@ function UserRoles(props: { slug: string }) {
 
   return (
     <div className="mt-6">
-      <h3 className="font-medium">Users</h3>
+      <h2 className="mb-2 text-base font-medium">Users</h2>
       <ul>
         {rolesArray.map(tuple => {
           const user = username(tuple[0])

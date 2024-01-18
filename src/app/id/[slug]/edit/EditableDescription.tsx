@@ -40,18 +40,20 @@ export function EditableDescription({
   }, [room, isLoading, description])
 
   return (
-    <div className="flex gap-2 py-4">
+    <div className="flex gap-2">
       {editSection === sections.description ? (
         <>
-          <textarea
-            autoFocus
-            className="self-start w-full text-base h-80 bg-transparent border border-[#1D170C33] px-2 rounded-md"
-            value={description}
-            id="description"
-            aria-label="group-description"
-            onChange={e => setDescription(e.target.value)}
-          />
-
+          <div className="flex flex-col gap-2O">
+            <h2 className="mb-2 text-base font-medium">Description</h2>
+            <textarea
+              autoFocus
+              className="self-start w-full text-base h-80 bg-transparent border border-[#1D170C33] px-2 rounded-md"
+              value={description}
+              id="description"
+              aria-label="group-description"
+              onChange={e => setDescription(e.target.value)}
+            />
+          </div>
           <DoneButton
             onClick={async () => {
               setIsLoading(true)
@@ -63,9 +65,12 @@ export function EditableDescription({
         </>
       ) : (
         <>
-          <p className="whitespace-pre-line italic opacity-80 text-sm">
-            {description?.trim() === "" ? "No description yet." : description}
-          </p>
+          <div className="flex flex-col gap-2O">
+            <h2 className="mb-2 text-base font-medium">Description</h2>
+            <p className="text-sm italic whitespace-pre-line opacity-80">
+              {description?.trim() === "" ? "No description yet." : description}
+            </p>
+          </div>
           {isLoading ? (
             <div className="flex items-center justify-center">
               <Spinner className="w-4 h-4 text-black animate-spin fill-pink-600" />
