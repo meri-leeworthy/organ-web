@@ -38,11 +38,11 @@ export function Footer() {
           github
         </a>
       </P>
-      <P className="my-4">
+      {/* <P className="my-4">
         <a href="http://enlacezapatista.ezln.org.mx/wp-content/uploads/2018/08/Manifiesto_Borrador-Final.pdf">
           &ldquo;for a world in which many worlds fit&rdquo;
         </a>
-      </P>
+      </P> */}
       <P className="my-4">made on unceded Wurundjeri land</P>
     </section>
   )
