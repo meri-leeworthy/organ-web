@@ -37,25 +37,32 @@ export default async function OrgSlugPage({
 
   const room = new Room(roomId, client)
 
-  console.log(await room.getName())
-
+  const nameResult = await room.getName()
+  const name =
+    typeof nameResult === "object" &&
+    nameResult !== null &&
+    "name" in nameResult &&
+    typeof nameResult.name === "string" &&
+    nameResult.name
   const messagesIterator = room.getMessagesAsyncGenerator()
+
   const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
     messagesIterator
-  )
-  const messages = messagesChunk.filter(
+  ).catch(e => console.log("eioranoeintr"))
+
+  const messages = messagesChunk?.filter(
     message => message.type === "m.room.message"
   )
 
-  const posts = messages.filter(
+  const posts = messages?.filter(
     message =>
       is(OrganPostUnstableSchema, message.content) ||
       is(OrganCalEventUnstableSchema, message.content)
   )
 
-  const timeline = new Timeline(posts)
+  const timeline = posts && new Timeline(posts)
 
-  const avatar = messagesChunk.find(
+  const avatar = messagesChunk?.find(
     (message: ClientEventOutput) => message.type === "m.room.avatar"
   )
   const imageUri: string | undefined = is(
@@ -71,7 +78,7 @@ export default async function OrgSlugPage({
       ? `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
       : undefined
   const contactKVs = await fetchContactKVs(room)
-  const topic = messagesChunk.find(message => message.type === "m.room.topic")
+  const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   return (
     <>
@@ -93,7 +100,7 @@ export default async function OrgSlugPage({
         <div className="flex flex-col justify-between gap-2 grow">
           <div className="flex items-end self-end justify-between gap-2 ml-auto justify-self-start"></div>
           <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
-            {room.name?.name}
+            {name}
           </h2>
         </div>
       </div>
@@ -114,7 +121,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <Posts posts={[...timeline.events.values()]} />
+          <Posts posts={[...timeline?.events.values()]} />
         </section>
       </main>
     </>
@@ -138,11 +145,11 @@ export async function generateMetadata({
       fetch,
     })
   )
-  console.log(await room.getName())
+
   const messagesIterator = await room.getMessagesAsyncGenerator()
   const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
     messagesIterator
-  )
+  ).catch(e => console.log("rnseiontersant"))
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   return {
