@@ -5,18 +5,24 @@ import { OptionsButton } from "../styled/IconButton"
 import Link from "next/link"
 import { useOutsideClick } from "@/hooks/useOutsideClick"
 
-export function Dropdown({ children }: { children: React.ReactNode }) {
+export function Dropdown({
+  children,
+  size,
+}: {
+  children: React.ReactNode
+  size?: number
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const ref = useOutsideClick(() => {
     setIsOpen(false)
   })
   return (
     <div className="relative justify-self-end ">
-      <OptionsButton onClick={() => setIsOpen(!isOpen)} />
+      <OptionsButton onClick={() => setIsOpen(!isOpen)} size={size} />
       {isOpen && (
         <div
           ref={ref}
-          className={`absolute drop-shadow right-0 mt-1 w-28 bg-white items-end rounded p-1 flex flex-col justify-center ${
+          className={`z-10 absolute drop-shadow right-0 mt-1 w-28 bg-white items-end rounded p-1 flex flex-col justify-center ${
             !isOpen && "hidden"
           }`}>
           {children}
@@ -40,7 +46,7 @@ export function DropdownItem(
     return (
       <Link
         href={props.href || ""}
-        className="w-full px-2 py-1 text-sm text-left text-black rounded-sm hover:bg-gray-100">
+        className="w-full px-1 text-sm text-left text-black rounded-sm hover:bg-gray-100">
         {props.children}
       </Link>
     )
