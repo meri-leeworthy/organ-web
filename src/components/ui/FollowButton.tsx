@@ -39,7 +39,7 @@ export function FollowButton({ slug }: { slug: string }) {
     <button
       onClick={handleJoinRoom}
       disabled={isFollowing}
-      className="flex items-center justify-center px-1 text-sm font-medium text-white border border-transparent bg-[#8258ff] disabled:border-[#8258ff] disabled:bg-white disabled:text-black disabled:opacity-60  rounded">
+      className="flex items-center justify-center px-1 text-sm font-medium text-white border border-transparent rounded bg-primarydark disabled:border-primarydark disabled:bg-white disabled:text-black disabled:opacity-60">
       <span className="mr-1 text-xs uppercase">
         {isFollowing ? "Following" : "Follow"}
       </span>

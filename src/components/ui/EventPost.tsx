@@ -58,7 +58,7 @@ export async function EventPost({
           </IfLoggedIn>
         </div>
       </div>
-      <div className="flex flex-col justify-between w-full gap-2 p-2 mt-2 mb-1 border rounded-lg">
+      <div className="flex flex-col justify-between w-full gap-2 p-2 mt-2 mb-1 bg-white border rounded-lg drop-shadow-sm">
         {content.avatar && (
           <div className="flex items-center justify-center grow">
             <img

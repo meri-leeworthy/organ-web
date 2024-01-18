@@ -49,14 +49,16 @@ export default async function PostPage({
     <div className="w-full">
       <Link
         href={`/id/${slug}`}
-        className="bg-[#fff9] font-medium text-sm border border-primary rounded hover:bg-primary px-2 py-1">
+        className="px-2 py-1 text-sm font-medium border rounded border-primary hover:bg-primary">
         &larr; {nameString}
       </Link>
-      <h1 className="py-4 font-bold">{post.content?.title}</h1>
-      <span className="mt-8 text-sm opacity-60">
-        {getContextualDate(post.origin_server_ts)}
-      </span>
-      <p className="py-2 whitespace-pre-line">{post.content?.body}</p>
+      <article className="px-4 mt-4 bg-white rounded-lg drop-shadow-sm">
+        <h1 className="py-4 font-bold">{post.content?.title}</h1>
+        <span className="mt-8 text-sm opacity-60">
+          {getContextualDate(post.origin_server_ts)}
+        </span>
+        <p className="py-4 whitespace-pre-line">{post.content?.body}</p>
+      </article>
     </div>
   )
 }

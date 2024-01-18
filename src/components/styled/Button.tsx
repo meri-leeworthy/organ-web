@@ -8,7 +8,7 @@ export function Button({
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const classes =
     `rounded-[100%] px-2 py-1 ${className} ` +
-    (className === undefined && "border border-black")
+    (className === undefined && "border border-black hover:border-dashed")
   return (
     <button className={classes} {...props}>
       {children}

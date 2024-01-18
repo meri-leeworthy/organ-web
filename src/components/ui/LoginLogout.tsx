@@ -8,10 +8,14 @@ const LoginLogout = () => {
   const router = useRouter()
   const accessToken =
     typeof localStorage !== "undefined" && localStorage.getItem("accessToken")
+  const userId =
+    typeof localStorage !== "undefined" && localStorage.getItem("userId")
+
+  const loggedIn = accessToken && userId && true
 
   const handleLogout = () => {
     if (typeof window === "undefined") return null
-    if (accessToken) {
+    if (loggedIn) {
       localStorage.removeItem("accessToken")
       location.reload()
     } else {
@@ -21,7 +25,7 @@ const LoginLogout = () => {
 
   return (
     <Button onClick={handleLogout}>
-      <Suspense fallback="login">{accessToken ? "logout" : "login"}</Suspense>
+      <Suspense fallback="login">{loggedIn ? "logout" : "login"}</Suspense>
     </Button>
   )
 }

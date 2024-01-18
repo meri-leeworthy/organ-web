@@ -98,9 +98,9 @@ export default async function OrgSlugPage({
         </div>
       </div>
 
-      <main className="flex flex-col w-full gap-4 lg:flex-row-reverse">
-        <section className="flex flex-col justify-start w-full lg:w-48 lg:flex-col-reverse lg:justify-end">
-          <p className="py-3 text-sm italic whitespace-pre-line lg:opacity-80 lg:text-xs">
+      <main className="flex flex-col w-full gap-4 lg:flex-row-reverse xl:gap-6">
+        <section className="flex flex-col justify-start w-full lg:w-48 xl:w-64 lg:flex-col-reverse lg:justify-end">
+          <p className="text-sm italic whitespace-pre-line lg:opacity-80 lg:text-xs xl:text-sm">
             {is(object({ topic: string() }), topic?.content) &&
               topic.content.topic}
           </p>

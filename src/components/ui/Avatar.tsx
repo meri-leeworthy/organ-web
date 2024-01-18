@@ -12,7 +12,7 @@ export function Avatar({
       {url ? (
         <img className="" src={getMxcUrl(url)} alt={name} />
       ) : (
-        <span className="font-medium opacity-60">
+        <span className="font-medium text-primarydark">
           {(name && name[0]) || ""}
         </span>
       )}

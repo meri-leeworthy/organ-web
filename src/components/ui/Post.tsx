@@ -28,7 +28,7 @@ export async function Post({
   const room = new Room(`!${slug}:radical.directory`, client)
   const avatarUrl = await room.getAvatarMxc()
   return (
-    <article className="flex flex-col items-start p-2 pb-4 mt-6 border rounded-lg">
+    <article className="flex flex-col items-start p-3 mb-6 bg-white border rounded-lg drop-shadow-sm">
       <div className="flex items-center w-full gap-2">
         <Link className="flex items-center gap-2" href={`/id/${slug}` || ""}>
           {content?.author && (
@@ -49,7 +49,7 @@ export async function Post({
           </IfLoggedIn>
         </div>
       </div>
-      <div className="flex flex-col justify-between gap-2 mt-2 mb-1">
+      <div className="flex flex-col justify-between gap-2 mt-2">
         {content && "title" in content && content?.title && (
           <div className="flex items-center gap-2">
             <Link href={`/id/${slug}/post/${id}`}>

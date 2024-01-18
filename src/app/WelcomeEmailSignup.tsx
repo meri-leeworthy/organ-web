@@ -11,7 +11,7 @@ export function WelcomeEmailSignup() {
   if (!open) return null
 
   return (
-    <div className="flex flex-col gap-2 p-3 mb-4 rounded bg-primary">
+    <div className="flex flex-col gap-2 p-3 mb-4 rounded bg-primary drop-shadow-sm">
       <h3 className="flex w-full text-base font-medium">
         🐣 Hello, thanks for visiting!
         <button className="ml-auto" onClick={() => setOpen(false)}>

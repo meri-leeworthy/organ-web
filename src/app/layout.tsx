@@ -17,14 +17,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="w-screen flex justify-center min-h-screen">
+      <body className="flex justify-center w-screen min-h-screen bg-gray-100">
         {process.env.NODE_ENV === "development" && (
           <Script src="http://localhost:8097" />
         )}
-        <div className="max-w-xl lg:max-w-3xl w-full p-2 lg:p-4 flex flex-col items-center">
-          <header className="pb-4 mb-4 flex justify-between w-full">
+        <div className="flex flex-col items-center w-full max-w-xl p-2 lg:max-w-3xl lg:p-4">
+          <header className="flex justify-between w-full pb-4 mb-4">
             <Link href="/">
-              <h1 className="text-xl border border-black py-1 px-2 font-black leading-4">
+              <h1 className="px-2 py-1 pb-2 text-xl font-black leading-4">
                 organ
               </h1>
             </Link>

@@ -96,7 +96,7 @@ const SignupForm = () => {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-sm gap-2">
+    <div className="flex flex-col w-full max-w-sm gap-2 p-4 bg-white rounded drop-shadow-sm">
       <h2 className="font-bold">New Account</h2>
       {success ? (
         <p>
@@ -155,7 +155,7 @@ const SignupForm = () => {
           <Button
             type="button"
             onClick={handleSignup}
-            className="self-start border border-black hover:bg-primary hover:border-transparent">
+            className="self-end border border-black hover:border-dashed">
             Sign Up
           </Button>
         </form>
