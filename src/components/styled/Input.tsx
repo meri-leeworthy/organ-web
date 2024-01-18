@@ -9,7 +9,7 @@ export function Input(
 ) {
   return (
     <input
-      className="grow font-medium px-1 placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary disabled:opacity-50"
+      className="grow font-medium px-1 placeholder:text-[#8258ff] placeholder:opacity-40 bg-white border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary disabled:opacity-50"
       disabled={props.disabled || false}
       {...props}
     />

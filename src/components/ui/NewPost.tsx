@@ -47,7 +47,7 @@ export function Description(props: {
               : ""
           )
         }
-        className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-transparent border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+        className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-white border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
       />
     </div>
   )
@@ -147,7 +147,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
   }
 
   return (
-    <div className="rounded bg-[#fff3] flex flex-col gap-2">
+    <div className="flex flex-col gap-2 p-3 mb-6 bg-white border rounded-lg drop-shadow-sm border-primary">
       {imageSrcs[0] && (
         <div className="flex items-center justify-center grow">
           <img
@@ -200,7 +200,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                   onChange={e =>
                     setStartDate(toValidDateString(new Date(e.target.value)))
                   }
-                  className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+                  className="font-medium px-1 text-[#8258ff] bg-white text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
                 />
                 {!allDay && (
                   <input
@@ -211,7 +211,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                       setStartTime(e.currentTarget.value)
                     }}
                     step="300"
-                    className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+                    className="font-medium px-1 text-[#8258ff] bg-white text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
                   />
                 )}
 
@@ -237,7 +237,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
 
               <Button
                 type="submit"
-                className="rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center">
+                className="rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center hover:border-dashed bg-white">
                 Share
               </Button>
             </div>
