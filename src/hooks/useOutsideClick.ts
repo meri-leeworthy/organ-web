@@ -4,11 +4,13 @@ import { useEffect, useRef } from "react"
 //didn't quite finish getting this to work
 
 export const useOutsideClick = (callback: () => void) => {
-  const ref = useRef<HTMLButtonElement>()
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClick = (event: any) => {
-      callback()
+      if (!ref.current?.contains(event.target)) {
+        callback()
+      }
     }
 
     document.addEventListener("click", handleClick)
@@ -16,7 +18,7 @@ export const useOutsideClick = (callback: () => void) => {
     return () => {
       document.removeEventListener("click", handleClick)
     }
-  }, [])
+  }, [callback])
 
   return ref
 }
