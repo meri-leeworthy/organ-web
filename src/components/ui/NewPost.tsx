@@ -161,14 +161,14 @@ export const NewPost = ({ slug }: { slug: string }) => {
         </div>
       )}
       <form onSubmit={handlePostSubmit} className="flex flex-col gap-2 grow">
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1 gap-y-2">
           <PostTypeButton type={type} thisType="post" setType={setType}>
             <IconNorthStar size={16} /> Post
           </PostTypeButton>
           <PostTypeButton type={type} thisType="event" setType={setType}>
             <IconCalendarEvent size={16} /> Event
           </PostTypeButton>
-          {type === "event" && (
+          {(title || type === "event") && (
             <Input
               type="text"
               id="title"
@@ -193,7 +193,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
             />
           )}
 
-          <div className="flex items-center gap-2 ">
+          <div className="flex flex-wrap items-center gap-2">
             {type === "event" && (
               <>
                 <input
