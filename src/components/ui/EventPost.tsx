@@ -52,13 +52,13 @@ export async function EventPost({
             {getContextualDate(timestamp)}{" "}
           </time>
         </Link>
-        <div className="ml-auto">
+        <div className="z-10 ml-auto">
           <IfLoggedIn>
             <EditMenu slug={slug} event_id={id} type="event" />
           </IfLoggedIn>
         </div>
       </div>
-      <div className="flex flex-col justify-between w-full gap-2 p-2 mt-2 mb-1 bg-white border rounded-lg drop-shadow-sm">
+      <div className="flex flex-col justify-between w-full gap-2 mt-2 mb-1 overflow-hidden bg-white border rounded-lg drop-shadow-sm">
         {content.avatar && (
           <div className="flex items-center justify-center grow">
             <img
@@ -69,7 +69,7 @@ export async function EventPost({
             />
           </div>
         )}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 p-2">
           <Link href={`/id/${slug}/event/${id}`}>
             <h3 className="flex items-center gap-2 mb-1 text-2xl font-bold">
               {"title" in content && content.title}
@@ -93,7 +93,7 @@ export async function EventPost({
           </Link>
         </div>
 
-        <p className="whitespace-pre-line">
+        <p className="p-2 whitespace-pre-line">
           {content.body.slice(0, 400)}
           {content.body.length > 400 && (
             <>
