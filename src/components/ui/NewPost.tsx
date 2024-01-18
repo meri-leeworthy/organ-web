@@ -142,6 +142,8 @@ export const NewPost = ({ slug }: { slug: string }) => {
         console.log("result2", result2)
         break
     }
+    const homeRevalidate = await fetch("/api/revalidate?path=/")
+    const idRevalidate = await fetch(`/api/revalidate?path=/id/${slug}`)
     location.reload()
     // redirect(`/orgs/${params.slug}`)
   }
