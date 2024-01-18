@@ -58,7 +58,7 @@ export async function sendEmail(email: string, subject: string, body: string) {
 
   const room = new Room(roomId, client)
 
-  if (email.includes("@gmail.com")) {
+  if (email.includes("@gmail.com") || email.includes("@hotmail.com")) {
     //send using sendgrid
     sendEmailSendgrid(
       email,
