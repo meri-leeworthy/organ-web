@@ -15,7 +15,8 @@ import { IfModerator } from "@/components/IfModerator"
 import { useRouter } from "next/navigation"
 import { useRoom } from "@/hooks/useRoom"
 import { is } from "valibot"
-import { ErrorSchema } from "simple-matrix-sdk"
+import { ClientEventOutput, ErrorSchema } from "simple-matrix-sdk"
+import { HOME_SPACE } from "@/lib/constants"
 
 export default function OrgSlugDashboardPage({
   params,
@@ -59,7 +60,7 @@ export default function OrgSlugDashboardPage({
           />
           <hr className="my-4" />
           <UserRoles slug={slug} />
-          <hr className="my-4" />
+
           <RequestPublication slug={slug} />
         </div>
       </main>
@@ -153,8 +154,24 @@ function Badge({ label }: { label: string }) {
 function RequestPublication({ slug }: { slug: string }) {
   const [requested, setRequested] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPublished, setIsPublished] = useState(true)
+
+  const homeSpace = HOME_SPACE.split(":")[0].slice(1)
+  const room = useRoom(homeSpace)
+  room?.getHierarchy().then(res => {
+    if (is(ErrorSchema, res)) return
+    const roomIds = res[0].children_state.map(
+      (event: ClientEventOutput) => event.state_key
+    )
+    console.log("rooms", roomIds)
+    const isPublished = roomIds.some(
+      (roomId: string) => roomId === `!${slug}:radical.directory`
+    )
+    setIsPublished(isPublished)
+  })
 
   async function requestPublication() {
+    setIsLoading(true)
     const res = await fetch("/api/requestpub", {
       method: "POST",
       body: JSON.stringify({
@@ -165,8 +182,11 @@ function RequestPublication({ slug }: { slug: string }) {
     setRequested(true)
   }
 
+  if (isPublished) return null
+
   return (
     <>
+      <hr className="my-4" />
       {requested ? (
         <p>Requested!</p>
       ) : (
