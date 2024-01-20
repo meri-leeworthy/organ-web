@@ -5,8 +5,8 @@ const { AS_TOKEN, MATRIX_BASE_URL } = process.env
 import { Client, Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
-import { OrganPostUnstableSchema, organPostUnstable } from "@/lib/types"
-import { is, safeParse } from "valibot"
+import { OrganPostUnstableSchema } from "@/lib/types"
+import { is } from "valibot"
 
 export default async function PostPage({
   params,
