@@ -69,7 +69,7 @@ export default async function EventPage({
     //   </span>
     //   <p className="py-2 whitespace-pre-line">{post.content?.body}</p>
     // </div>
-    <article className="flex flex-col items-start pb-4 mt-6">
+    <div className="flex flex-col items-start pb-4 mt-6">
       <Link
         href={`/id/${slug}`}
         className="bg-[#fff9] uppercase text-sm border rounded hover:border-primary px-2 py-1">
@@ -90,14 +90,14 @@ export default async function EventPage({
           {getContextualDate(timestamp)}{" "}
         </time>
       </div> */}
-      <div className="flex flex-col justify-between w-full gap-2 px-2 mt-2 mb-1">
+      <article className="flex flex-col justify-between w-full gap-2 p-4 mt-2 mb-1 bg-white rounded-lg drop-shadow-sm">
         {content.avatar && (
           <div className="flex items-center justify-center grow">
             <img
               src={content.avatar}
               alt="post"
               key={content.avatar}
-              className="h-72"
+              className="w-full max-w-lg"
             />
           </div>
         )}
@@ -131,7 +131,7 @@ export default async function EventPage({
         </div>
 
         <p className="whitespace-pre-line">{content.body}</p>
-      </div>
-    </article>
+      </article>
+    </div>
   )
 }
