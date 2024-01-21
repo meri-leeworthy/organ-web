@@ -34,7 +34,7 @@ export async function EventPost({
   const avatarUrl = await room.getAvatarMxc()
 
   return (
-    <article className="flex flex-col items-start pb-4 mt-6">
+    <article className="flex flex-col items-start pb-4">
       <div className="flex items-center w-full gap-2">
         <Avatar url={avatarUrl} name={content?.host?.name} />
         <Link
