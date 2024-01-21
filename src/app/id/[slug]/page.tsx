@@ -80,19 +80,13 @@ export default async function OrgSlugPage({
   const contactKVs = await fetchContactKVs(room)
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
+  const members = await room.getMembers()
+  console.log("members", members)
+
+  const memberCount = ("chunk" in members && members.chunk.length) || 0
+
   return (
     <>
-      <div className="flex items-center justify-end w-full gap-2">
-        <FollowButton slug={slug} />
-        <IfModerator slug={slug}>
-          <Link
-            href={`/id/${slug}/edit`}
-            aria-label="Edit Page"
-            className="flex items-center p-1 text-xs border-0 rounded-full opacity-60 hover:bg-primary">
-            <IconSettings size={16} />
-          </Link>
-        </IfModerator>
-      </div>
       <div className={`flex my-6 w-full mb-10 ${avatarUrl && "gap-4"}`}>
         <Suspense fallback={<div>loading...</div>}>
           <AvatarFull url={avatarUrl} />
@@ -102,6 +96,22 @@ export default async function OrgSlugPage({
           <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
             {name}
           </h2>
+        </div>
+        <div className="flex flex-col items-end gap-1 justify-between">
+          <IfModerator slug={slug}>
+            <Link
+              href={`/id/${slug}/edit`}
+              aria-label="Edit Page"
+              className="flex items-center p-1 text-xs border-0 rounded-full opacity-60 hover:bg-primary">
+              <IconSettings size={16} />
+            </Link>
+          </IfModerator>
+          <div className="flex flex-col items-end gap-1">
+            <span className="uppercase text-xs opacity-60">
+              <strong>{memberCount - 1}</strong> followers
+            </span>
+            <FollowButton slug={slug} />
+          </div>
         </div>
       </div>
 

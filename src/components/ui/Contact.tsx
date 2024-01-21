@@ -26,12 +26,13 @@ export function Contact({
         </li>
       ))} */}
       {contactKVs.link?.map((link, i) => (
-        <li key={link}>
+        <li key={link} className="w-full relative">
           <ContactItem
             contactType="link"
             contactValue={contactKVs.link}
             i={i}
           />
+          <div className="absolute pointer-events-none inset-0 bg-gradient-to-r from-90% from-transparent to-gray-100"></div>
         </li>
       ))}
     </ul>
@@ -50,15 +51,17 @@ export function ContactItem({
   if (!contactValue) return null
   if (!contactValue[i]) return null
   const link = contactValue[i]
-  const truncatedLink = link.includes("://")
+  const truncatedLink = link.includes("://www.")
+    ? link.split("://www.")[1]
+    : link.includes("://")
     ? link.split("://")[1]
     : link.includes("mailto:")
     ? link.split("mailto:")[1]
     : link
   return (
     <a href={contactValue && contactValue[i]}>
-      <div className="flex rounded-full uppercase opacity-70 text-xs p-1 justify-start items-center gap-1 overflow-hidden">
-        <div className="text-black">{getIcon(contactType)} </div>
+      <div className="flex uppercase opacity-70 hover:opacity-100 text-xs p-1 items-center gap-1 overflow-hidden text-nowrap whitespace-nowrap">
+        <div className="text-black ">{getIcon(contactType)} </div>
         {getLabel(contactType, truncatedLink || "")}
       </div>
     </a>
