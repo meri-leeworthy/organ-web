@@ -6,9 +6,11 @@ import { useState, useEffect } from "react"
 export function IfModerator({
   slug,
   children,
+  fallback,
 }: {
   slug: string
   children: React.ReactNode
+  fallback?: React.ReactNode
 }) {
   const [isModerator, setIsModerator] = useState(false)
   const room = useRoom(slug)
@@ -26,10 +28,10 @@ export function IfModerator({
       .catch(() => setIsModerator(false))
   }, [room])
 
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") return fallback ? <>{fallback}</> : null
   const accessToken = localStorage?.getItem("accessToken")
   const userId = localStorage?.getItem("userId")
 
   if (isModerator && accessToken && userId) return <>{children}</>
-  return null
+  return fallback ? <>{fallback}</> : null
 }
