@@ -35,6 +35,8 @@ export function FollowButton({ slug }: { slug: string }) {
       .catch((err: any) => console.error("error joining room", err))
   }
 
+  if (!client) return null
+
   return (
     <button
       onClick={handleJoinRoom}
