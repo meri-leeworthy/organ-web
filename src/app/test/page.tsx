@@ -1,7 +1,7 @@
 "use client"
 
 import { Pre } from "@/components/styled/Pre"
-import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/hooks/useClient"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { useEffect, useState } from "react"
 
 export default function RequestTester() {

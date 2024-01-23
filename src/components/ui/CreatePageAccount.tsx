@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 
 export const CreatePageAccount = () => {
   const [isClient, setIsClient] = useState(false)
@@ -11,9 +12,11 @@ export const CreatePageAccount = () => {
   }, [])
 
   const accessToken =
-    typeof localStorage !== "undefined" && localStorage.getItem("accessToken")
+    typeof localStorage !== "undefined" &&
+    localStorage.getItem(ACCESSTOKEN_STORAGE_KEY)
   const userId =
-    typeof localStorage !== "undefined" && localStorage.getItem("userId")
+    typeof localStorage !== "undefined" &&
+    localStorage.getItem(USERID_STORAGE_KEY)
 
   const loggedIn = isClient && accessToken && userId && true
 

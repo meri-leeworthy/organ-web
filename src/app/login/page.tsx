@@ -9,6 +9,7 @@ import { Button } from "@/components/styled/Button"
 import { set } from "valibot"
 import { ErrorBox } from "@/components/ui/ErrorBox"
 import { Input } from "@/components/styled"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 
 const LoginPage = () => {
   const [username, setUsername] = useState("")
@@ -27,8 +28,8 @@ const LoginPage = () => {
         username,
         password
       )
-      localStorage.setItem("accessToken", accessToken)
-      localStorage.setItem("userId", `@${username}:radical.directory`)
+      localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
+      localStorage.setItem(USERID_STORAGE_KEY, `@${username}:radical.directory`)
       router.push("/")
     } catch (error) {
       console.error("Error logging in:", error)

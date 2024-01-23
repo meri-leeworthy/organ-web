@@ -1,9 +1,10 @@
 import { Client, Room } from "simple-matrix-sdk"
 import { useEffect, useMemo, useState } from "react"
-
-export const BASE_URL = "https://matrix.radical.directory"
-export const ACCESSTOKEN_STORAGE_KEY = "accessToken"
-export const USERID_STORAGE_KEY = "userId"
+import {
+  ACCESSTOKEN_STORAGE_KEY,
+  BASE_URL,
+  USERID_STORAGE_KEY,
+} from "@/lib/constants"
 
 export function useRoom(slug: string) {
   const [room, setRoom] = useState<Room | null>(null)

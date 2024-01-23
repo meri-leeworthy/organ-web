@@ -2,6 +2,7 @@
 
 import { useRoom } from "@/hooks/useRoom"
 import { useState, useEffect } from "react"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 
 export function IfModerator({
   slug,
@@ -29,8 +30,8 @@ export function IfModerator({
   }, [room])
 
   if (typeof window === "undefined") return fallback ? <>{fallback}</> : null
-  const accessToken = localStorage?.getItem("accessToken")
-  const userId = localStorage?.getItem("userId")
+  const accessToken = localStorage?.getItem(ACCESSTOKEN_STORAGE_KEY)
+  const userId = localStorage?.getItem(USERID_STORAGE_KEY)
 
   if (isModerator && accessToken && userId) return <>{children}</>
   return fallback ? <>{fallback}</> : null

@@ -1,9 +1,10 @@
+import {
+  ACCESSTOKEN_STORAGE_KEY,
+  BASE_URL,
+  USERID_STORAGE_KEY,
+} from "@/lib/constants"
 import { useEffect, useMemo, useState } from "react"
 import { Client } from "simple-matrix-sdk"
-
-export const BASE_URL = "https://matrix.radical.directory"
-export const ACCESSTOKEN_STORAGE_KEY = "accessToken"
-export const USERID_STORAGE_KEY = "userId"
 
 export function useClient() {
   const [client, setClient] = useState<Client | null>(null)
