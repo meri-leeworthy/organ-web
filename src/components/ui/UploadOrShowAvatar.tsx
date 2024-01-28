@@ -69,7 +69,7 @@ export function UploadAvatar({
 
   const handleFileChange = handler || defaultHandler
   return (
-    <form className={`flex mt-2 ${edit ? "absolute top-2 left-2" : "w-72 "}`}>
+    <div className={`flex mt-2 ${edit ? "absolute top-2 left-2" : "w-72 "}`}>
       <label
         htmlFor="file"
         className={`flex gap-1 text-xs items-center border border-transparent bg-[#ffffffcc] hover:border-white rounded uppercase px-1 ${
@@ -85,6 +85,6 @@ export function UploadAvatar({
         aria-label="Upload Avatar"
         className="w-0 h-0 opacity-0 file:opacity-0"
       />
-    </form>
+    </div>
   )
 }
