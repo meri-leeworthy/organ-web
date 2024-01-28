@@ -2,14 +2,14 @@
 
 const MATRIX_BASE_URL = "https://matrix.radical.directory"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Client } from "simple-matrix-sdk"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/styled/Button"
-import { set } from "valibot"
 import { ErrorBox } from "@/components/ui/ErrorBox"
 import { Input } from "@/components/styled"
 import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
+import { useClient } from "@/hooks/useClient"
 
 const LoginPage = () => {
   const [username, setUsername] = useState("")
@@ -17,6 +17,11 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
+  const client = useClient()
+
+  useEffect(() => {
+    if (client) router.push("/")
+  }, [client, router])
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -30,7 +35,7 @@ const LoginPage = () => {
       )
       localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
       localStorage.setItem(USERID_STORAGE_KEY, `@${username}:radical.directory`)
-      router.push("/")
+      router.refresh()
     } catch (error) {
       console.error("Error logging in:", error)
       const stringError =
@@ -79,7 +84,7 @@ const LoginPage = () => {
         <Button
           type="submit"
           className="self-end border border-black hover:border-dashed">
-          Sign Up
+          Login
         </Button>
       </form>
     </div>
