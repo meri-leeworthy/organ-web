@@ -8,15 +8,22 @@ import { Client } from "simple-matrix-sdk"
 
 export function useClient() {
   const [client, setClient] = useState<Client | null>(null)
-  useEffect(() => {
-    const accessToken = localStorage.getItem(ACCESSTOKEN_STORAGE_KEY)
-    const userId = localStorage.getItem(USERID_STORAGE_KEY)
 
+  const accessToken =
+    typeof localStorage !== "undefined" &&
+    localStorage.getItem(ACCESSTOKEN_STORAGE_KEY)
+  const userId =
+    typeof localStorage !== "undefined" &&
+    localStorage.getItem(USERID_STORAGE_KEY)
+
+  const loggedIn = accessToken && userId && true
+
+  useEffect(() => {
     if (accessToken && userId) {
       const client = new Client(BASE_URL, accessToken, { userId, fetch })
       setClient(client)
     }
-  }, [])
+  }, [accessToken, userId])
   const memoizedClient = useMemo(() => client, [client])
 
   return memoizedClient
