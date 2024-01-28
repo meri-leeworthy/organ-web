@@ -46,7 +46,7 @@ export function DropdownItem(
     return (
       <Link
         href={props.href || ""}
-        className="w-full px-1 text-sm text-left text-black rounded-sm hover:bg-gray-100">
+        className="w-full px-2 py-1 text-sm text-left text-black rounded-sm hover:bg-gray-100">
         {props.children}
       </Link>
     )
