@@ -1,17 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useClient } from "@/hooks/useClient"
 
-export function IfLoggedIn({ children }: { children: React.ReactNode }) {
-  const [isClient, setIsClient] = useState(false)
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
+export function IfLoggedIn({
+  children,
+  fallback,
+}: {
+  children: React.ReactNode
+  fallback?: React.ReactNode
+}) {
+  const client = useClient()
 
-  if (typeof window === "undefined") return
-  const accessToken = localStorage?.getItem("accessToken")
-  const userId = localStorage?.getItem("userId")
-
-  if (isClient && accessToken && userId) return <>{children}</>
-  return null
+  if (client) return <>{children}</>
+  return fallback ? <>{fallback}</> : null
 }
