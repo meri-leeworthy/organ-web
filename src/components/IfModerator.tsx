@@ -29,10 +29,7 @@ export function IfModerator({
       .catch(() => setIsModerator(false))
   }, [room])
 
-  if (typeof window === "undefined") return fallback ? <>{fallback}</> : null
-  const accessToken = localStorage?.getItem(ACCESSTOKEN_STORAGE_KEY)
-  const userId = localStorage?.getItem(USERID_STORAGE_KEY)
-
-  if (isModerator && accessToken && userId) return <>{children}</>
+  if (!room) return fallback ? <>{fallback}</> : null
+  if (isModerator) return <>{children}</>
   return fallback ? <>{fallback}</> : null
 }
