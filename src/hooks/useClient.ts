@@ -16,8 +16,6 @@ export function useClient() {
     typeof localStorage !== "undefined" &&
     localStorage.getItem(USERID_STORAGE_KEY)
 
-  const loggedIn = accessToken && userId && true
-
   useEffect(() => {
     if (accessToken && userId) {
       const client = new Client(BASE_URL, accessToken, { userId, fetch })
