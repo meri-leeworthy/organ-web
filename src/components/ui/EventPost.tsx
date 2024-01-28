@@ -8,6 +8,7 @@ import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { Avatar } from "@/components/ui/Avatar"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
 import { Client, Room } from "simple-matrix-sdk"
+import { IfModerator } from "../IfModerator"
 
 export async function EventPost({
   content,
@@ -53,9 +54,9 @@ export async function EventPost({
           </time>
         </Link>
         <div className="z-10 ml-auto">
-          <IfLoggedIn>
+          <IfModerator slug={slug}>
             <EditMenu slug={slug} event_id={id} type="event" />
-          </IfLoggedIn>
+          </IfModerator>
         </div>
       </div>
       <div className="flex flex-col justify-between w-full gap-2 mt-2 mb-1 overflow-hidden bg-white border rounded-lg drop-shadow-sm">

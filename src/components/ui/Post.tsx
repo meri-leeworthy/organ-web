@@ -3,9 +3,9 @@ const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 import { getContextualDate } from "@/lib/utils"
 import Link from "next/link"
 import { EditMenu } from "@/components/ui/EditMenu"
-import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { Avatar } from "@/components/ui/Avatar"
 import { Client, Room } from "simple-matrix-sdk"
+import { IfModerator } from "../IfModerator"
 
 export async function Post({
   content,
@@ -44,9 +44,9 @@ export async function Post({
           </time>
         </Link>
         <div className="ml-auto">
-          <IfLoggedIn>
+          <IfModerator slug={slug}>
             <EditMenu slug={slug} event_id={id} type="post" />
-          </IfLoggedIn>
+          </IfModerator>
         </div>
       </div>
       <div className="flex flex-col justify-between gap-2 mt-2">
