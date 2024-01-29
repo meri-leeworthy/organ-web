@@ -3,21 +3,26 @@
 import { useEffect } from "react"
 import { redirect } from "next/navigation"
 import { useClient } from "@/hooks/useClient"
+import { useRouter } from "next/navigation"
 
 const Redirect = ({
-  roomId,
   children,
+  redirect,
 }: {
-  roomId: string
   children: JSX.Element
+  redirect: string
 }) => {
   const client = useClient()
+  const router = useRouter()
+
   useEffect(() => {
-    if (!client) return
-    client.getJoinedRooms().then(rooms => {
-      if (!rooms.joined_rooms.includes(roomId)) redirect("/")
-    })
-  }, [client, roomId])
+    const debounce = setTimeout(() => {
+      if (!client) router.push(redirect)
+    }, 2000)
+    return () => {
+      clearTimeout(debounce)
+    }
+  }, [redirect, client, router])
 
   return children
 }
