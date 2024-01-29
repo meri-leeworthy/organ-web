@@ -3,8 +3,8 @@ import {
   BASE_URL,
   USERID_STORAGE_KEY,
 } from "@/lib/constants"
-import { useEffect, useMemo, useState } from "react"
 import { Client } from "simple-matrix-sdk"
+import { useEffect, useMemo, useState } from "react"
 
 export function useClient() {
   const [client, setClient] = useState<Client | null>(null)
