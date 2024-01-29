@@ -2,12 +2,14 @@
 
 import { Button, Input } from "@/components/styled"
 import { ErrorBox } from "@/components/ui/ErrorBox"
+import { useClient } from "@/hooks/useClient"
 import { useDebounce } from "@/hooks/useDebounce"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { IconCheck, IconX } from "@tabler/icons-react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { Client, ErrorSchema } from "simple-matrix-sdk"
-import { is } from "valibot"
+import { is, set } from "valibot"
 
 const SignupForm = () => {
   const [email, setEmail] = useState("")
@@ -17,6 +19,13 @@ const SignupForm = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false)
+  const client = useClient()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (client && !awaitingConfirmation) router.push("/")
+  }, [client, router, awaitingConfirmation])
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -57,8 +66,8 @@ const SignupForm = () => {
 
       const { access_token: accessToken } = user
 
-      window.localStorage.setItem("accessToken", accessToken)
-      window.localStorage.setItem("userId", user.user_id)
+      window.localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
+      window.localStorage.setItem(USERID_STORAGE_KEY, user.user_id)
 
       const client = new Client(
         "https://matrix.radical.directory",
@@ -78,6 +87,7 @@ const SignupForm = () => {
 
       console.log(emailValidate, "emailValidate")
 
+      setAwaitingConfirmation(true)
       setSuccess(true)
     } catch (error) {
       console.log("Error registering user:", error)
@@ -102,9 +112,14 @@ const SignupForm = () => {
         <p>
           You did the form and an email has been sent to your account! Now
           please click the link in the email to confirm 🧚 <br />
-          <Link href="/" className="block mt-2 hover:underline">
-            &larr; finished
-          </Link>
+          <button
+            onClick={() => {
+              setAwaitingConfirmation(false)
+              router.refresh()
+            }}
+            className="block mt-2 hover:underline">
+            finished &rarr;
+          </button>
         </p>
       ) : (
         <form className="*:flex flex flex-col gap-2 *:flex-col">
