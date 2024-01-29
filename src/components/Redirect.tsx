@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect } from "react"
-import { redirect } from "next/navigation"
 import { useClient } from "@/hooks/useClient"
 import { useRouter } from "next/navigation"
 
