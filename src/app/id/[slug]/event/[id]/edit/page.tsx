@@ -2,8 +2,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useClient } from "@/hooks/useClient"
-import { Room } from "simple-matrix-sdk"
 import { IconCalendarEvent } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { OrganCalEventUnstableSchema, organCalEventUnstable } from "@/lib/types"
@@ -16,6 +14,9 @@ import {
 } from "@/components/ui"
 import { Button, Input } from "@/components/styled"
 import { getMxcUrl, toValidDateString } from "@/lib/utils"
+import { useRoom } from "@/hooks/useRoom"
+import { IfModerator } from "@/components/IfModerator"
+import Redirect from "@/components/Redirect"
 
 export default function EditEventPage({
   params,
@@ -37,12 +38,7 @@ export default function EditEventPage({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
-
-  const client = useClient()
-
-  const room = client
-    ? new Room(`!${params.slug}:radical.directory`, client)
-    : undefined
+  const room = useRoom(params.slug)
 
   useEffect(() => {
     room?.getEvent(`$${params.id}`).then(post => {
@@ -63,9 +59,14 @@ export default function EditEventPage({
       setAllDay(post.content?.allDay || false)
       setAvatar(post.content?.avatar || "")
     })
-  }, [client])
+  }, [params.id, params.slug, room, router])
 
-  if (!client) return "loading..."
+  if (!room)
+    return (
+      <Redirect redirect="/">
+        <div>loading...</div>
+      </Redirect>
+    )
   if (error) return `error! ${error} :(`
 
   async function handlePostSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -113,48 +114,49 @@ export default function EditEventPage({
   const handler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0]
-      const result = file && (await client?.uploadFile(file))
+      const result = file && (await room.client?.uploadFile(file))
       console.log("result", result)
       setAvatar(getMxcUrl(result.content_uri))
     }
   }
 
   return (
-    <div className="mt-3 p-1 bg-[#fff3] flex flex-col w-full">
-      <form onSubmit={handlePostSubmit} className="flex flex-col gap-2">
-        {avatar ? (
-          <div className="relative flex items-end mx-auto">
-            <img src={avatar} alt="avatar" width="250" />
-            <UploadAvatar slug={params.slug} handler={handler} edit />
+    <IfModerator slug={params.slug} redirect="/">
+      <div className="mt-3 p-1 bg-[#fff3] flex flex-col w-full">
+        <form onSubmit={handlePostSubmit} className="flex flex-col gap-2">
+          {avatar ? (
+            <div className="relative flex items-end mx-auto">
+              <img src={avatar} alt="avatar" width="250" />
+              <UploadAvatar slug={params.slug} handler={handler} edit />
+            </div>
+          ) : (
+            // <div className="flex items-center justify-center grow">
+            //   <img src={avatar} alt="post" key={avatar} className="h-72" />
+            // </div>
+            <UploadAvatar slug={params.slug} handler={handler} />
+          )}
+
+          <div className="flex gap-1">
+            <PostTypeButton type="event" thisType="event" setType={() => {}}>
+              <IconCalendarEvent size={16} /> Event
+            </PostTypeButton>
+            <Input
+              type="text"
+              id="title"
+              placeholder="Title"
+              aria-label="title"
+              value={title}
+              onChange={handleTitleChange}
+            />
           </div>
-        ) : (
-          // <div className="flex items-center justify-center grow">
-          //   <img src={avatar} alt="post" key={avatar} className="h-72" />
-          // </div>
-          <UploadAvatar slug={params.slug} handler={handler} />
-        )}
 
-        <div className="flex gap-1">
-          <PostTypeButton type="event" thisType="event" setType={() => {}}>
-            <IconCalendarEvent size={16} /> Event
-          </PostTypeButton>
-          <Input
-            type="text"
-            id="title"
-            placeholder="Title"
-            aria-label="title"
-            value={title}
-            onChange={handleTitleChange}
+          <Description
+            type="event"
+            content={content}
+            setContent={setContent}
+            rows={20}
           />
-        </div>
-
-        <Description
-          type="event"
-          content={content}
-          setContent={setContent}
-          rows={20}
-        />
-        {/* <div className="flex flex-col">
+          {/* <div className="flex flex-col">
           <textarea
             id="content"
             aria-label="content"
@@ -167,67 +169,68 @@ export default function EditEventPage({
             }`}
           />
         </div> */}
-        <div className="flex flex-col gap-2">
-          <Input
-            type="text"
-            id="location"
-            placeholder="Location"
-            aria-label="location"
-            value={place}
-            onChange={e => setPlace((e.target as HTMLInputElement).value)}
-          />
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              type="date"
-              value={startDate}
-              onChange={e =>
-                setStartDate(toValidDateString(new Date(e.target.value)))
-              }
-              className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+          <div className="flex flex-col gap-2">
+            <Input
+              type="text"
+              id="location"
+              placeholder="Location"
+              aria-label="location"
+              value={place}
+              onChange={e => setPlace((e.target as HTMLInputElement).value)}
             />
-            {!allDay && (
+            <div className="flex flex-wrap items-center gap-2">
               <input
-                type="time"
-                value={startTime}
-                onChange={e => {
-                  console.log("e", e)
-                  setStartTime(e.currentTarget.value)
-                }}
-                step="300"
+                type="date"
+                value={startDate}
+                onChange={e =>
+                  setStartDate(toValidDateString(new Date(e.target.value)))
+                }
                 className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
               />
-            )}
-
-            <label className="flex items-center gap-2 text-xs uppercase opacity-80">
-              All Day?
-              <input
-                type="checkbox"
-                id="allday"
-                name="allday"
-                checked={allDay}
-                onChange={e => setAllDay(e.target.checked)}
-                className="mr-1 outline-4 outline-primary checked:bg-primary"
-              />
-            </label>
-            <div className="flex items-center justify-end gap-2 ml-auto">
-              {!avatar && (
-                <UploadImageButton
-                  imageSrcs={avatar}
-                  setImageSrcs={setAvatar}
+              {!allDay && (
+                <input
+                  type="time"
+                  value={startTime}
+                  onChange={e => {
+                    console.log("e", e)
+                    setStartTime(e.currentTarget.value)
+                  }}
+                  step="300"
+                  className="font-medium px-1 text-[#8258ff] bg-transparent text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
                 />
               )}
-              <Button
-                type="submit"
-                className={`rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center ${
-                  isLoading && "opacity-50"
-                }`}>
-                Save
-              </Button>
+
+              <label className="flex items-center gap-2 text-xs uppercase opacity-80">
+                All Day?
+                <input
+                  type="checkbox"
+                  id="allday"
+                  name="allday"
+                  checked={allDay}
+                  onChange={e => setAllDay(e.target.checked)}
+                  className="mr-1 outline-4 outline-primary checked:bg-primary"
+                />
+              </label>
+              <div className="flex items-center justify-end gap-2 ml-auto">
+                {!avatar && (
+                  <UploadImageButton
+                    imageSrcs={avatar}
+                    setImageSrcs={setAvatar}
+                  />
+                )}
+                <Button
+                  type="submit"
+                  className={`rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center ${
+                    isLoading && "opacity-50"
+                  }`}>
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-      {/* <NewPost slug={slug} /> */}
-    </div>
+        </form>
+        {/* <NewPost slug={slug} /> */}
+      </div>
+    </IfModerator>
   )
 }
