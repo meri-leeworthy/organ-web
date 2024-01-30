@@ -66,7 +66,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
   const [author, setAuthor] = useState<[Room, string]>()
   const [allDay, setAllDay] = useState(false)
 
-  console.log("imageSrcs", imageSrcs)
+  // console.log("imageSrcs", imageSrcs)
 
   const client = useClient()
   const room = useMemo(() => {
@@ -76,7 +76,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
 
   useEffect(() => {
     if (!room) return
-    room.getName().then(value => {
+    room.getName().then((value: any) => {
       const name =
         typeof value === "object" &&
         value !== null &&
@@ -90,7 +90,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
 
   if (!client) return "loading..."
 
-  console.log("datetime", startTime, startDate)
+  // console.log("datetime", startTime, startDate)
 
   async function handlePostSubmit(event: React.FormEvent<HTMLFormElement>) {
     // const authorRoom = new Room(content?.author, client)
@@ -112,38 +112,42 @@ export const NewPost = ({ slug }: { slug: string }) => {
     const roomId = authorRoom.roomId
     const authorKV = { name: authorName, id: roomId }
 
-    switch (type) {
-      case "post":
-        const messageEvent: OrganPostUnstable = {
-          msgtype: organPostUnstable,
-          title,
-          body: content,
-          author: authorKV,
-          tags: [],
-          media: imageSrcs,
-        }
-        const result = await room?.sendMessage(messageEvent)
-        console.log("result", result)
-        break
-      case "event":
-        const eventEvent: OrganCalEventUnstable = {
-          msgtype: organCalEventUnstable,
-          title,
-          body: content,
-          host: authorKV,
-          tags: [],
-          start: `${startDate}T${startTime}`,
-          end: `${endDate}T${endTime}`,
-          allDay,
-          avatar: imageSrcs[0],
-          location: place,
-        }
-        const result2 = await room?.sendMessage(eventEvent)
-        console.log("result2", result2)
-        break
-    }
+    const postEvent: OrganPostUnstable | OrganCalEventUnstable =
+      type === "post"
+        ? {
+            msgtype: organPostUnstable,
+            title,
+            body: content,
+            author: authorKV,
+            tags: [],
+            media: imageSrcs,
+          }
+        : {
+            msgtype: organCalEventUnstable,
+            title,
+            body: content,
+            host: authorKV,
+            tags: [],
+            start: `${startDate}T${startTime}`,
+            end: `${endDate}T${endTime}`,
+            allDay,
+            avatar: imageSrcs[0],
+            location: place,
+          }
+
+    const result = await room?.sendMessage(postEvent)
+
     const homeRevalidate = await fetch("/api/revalidate?path=/")
     const idRevalidate = await fetch(`/api/revalidate?path=/id/${slug}`)
+
+    const dispatchEmails = await fetch("/api/email-dispatch", {
+      method: "POST",
+      body: JSON.stringify({
+        roomId: room?.roomId,
+        post: postEvent,
+      }),
+    })
+
     location.reload()
     // redirect(`/orgs/${params.slug}`)
   }
@@ -209,7 +213,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                     type="time"
                     value={startTime}
                     onChange={e => {
-                      console.log("e", e)
+                      // console.log("e", e)
                       setStartTime(e.currentTarget.value)
                     }}
                     step="300"
@@ -274,7 +278,7 @@ export function UploadImageButton({
   useEffect(() => {
     try {
       file &&
-        client?.uploadFile(file).then(result => {
+        client?.uploadFile(file).then((result: any) => {
           console.log("result", result)
           if (typeof imageSrcs === "string") {
             const newImageSrc = getMxcUrl(result.content_uri)
