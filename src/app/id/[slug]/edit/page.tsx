@@ -83,9 +83,9 @@ function UserRoles(props: { slug: string }) {
         room?.getMembers().then(res => {
           if (is(ErrorSchema, res)) return
           const members = res.chunk.map(event => event.state_key)
-          console.log("members", members)
+          // console.log("members", members)
           for (const member of members) {
-            console.log("member", member)
+            // console.log("member", member)
             if (!member) continue
             if (!roles.has(member)) {
               roles.set(member, 0)
