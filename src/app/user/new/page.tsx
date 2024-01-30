@@ -67,7 +67,10 @@ const SignupForm = () => {
       const { access_token: accessToken } = user
 
       window.localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
-      window.localStorage.setItem(USERID_STORAGE_KEY, user.user_id)
+      window.localStorage.setItem(
+        USERID_STORAGE_KEY,
+        user.user_id.trim().toLowerCase()
+      )
 
       const client = new Client(
         "https://matrix.radical.directory",

@@ -21,7 +21,7 @@ export default function RequestTester() {
     const userId = localStorage.getItem(USERID_STORAGE_KEY)
 
     setAccessToken(accessToken || "")
-    setUserId(userId || "")
+    setUserId(userId ? userId.trim().toLowerCase() : "")
   }, [])
 
   async function handleRequestSubmit(event: React.FormEvent<HTMLFormElement>) {

@@ -34,7 +34,10 @@ const LoginPage = () => {
         password
       )
       localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
-      localStorage.setItem(USERID_STORAGE_KEY, `@${username}:radical.directory`)
+      localStorage.setItem(
+        USERID_STORAGE_KEY,
+        `@${username.trim().toLowerCase()}:radical.directory`
+      )
       router.refresh()
     } catch (error) {
       console.error("Error logging in:", error)
