@@ -124,8 +124,8 @@ export function CreateMailbox() {
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await getOrCreateMailboxId(
-          formData.get("user") as string,
-          formData.get("email") as string
+          formData.get("email") as string,
+          formData.get("user") as string
         )
         setResult(result)
       }}>
@@ -150,17 +150,26 @@ export function CreateMailbox() {
 export function SetSecret() {
   const [result, setResult] = useState({})
 
+  // secrets room (test? what is it for?)
+  // "!NUVsYlMWcttFfEHkCj:radical.directory",
+
   return (
     <form
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await storeSecretInRoom(
-          "!NUVsYlMWcttFfEHkCj:radical.directory",
+          formData.get("room") as string,
           formData.get("key") as string,
           formData.get("value") as string
         )
         setResult(result)
       }}>
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
       <input
         type="text"
         name="key"
@@ -187,11 +196,17 @@ export function GetSecret() {
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await getSecretFromRoom(
-          "!NUVsYlMWcttFfEHkCj:radical.directory",
+          formData.get("room") as string,
           formData.get("key") as string
         )
         setResult({ result })
       }}>
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
       <input
         type="text"
         name="key"
