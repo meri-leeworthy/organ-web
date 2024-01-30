@@ -52,7 +52,11 @@ export const organMetaContactUnstable = "organ.meta.contact.unstable"
 
 export const organPostUnstable = "organ.post.unstable"
 
+export const organRoomUserNotifications = "organ.room.user.notifications"
+
 export const organRoomType = "organ.room.type"
+
+export const organRoomSecretEmail = "organ.room.secret.email"
 
 export const organRoomTypeValue = {
   id: "id",
