@@ -19,6 +19,7 @@ import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
 import { is, object, string } from "valibot"
+import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 
 export default async function OrgSlugPage({
   params,
@@ -81,24 +82,31 @@ export default async function OrgSlugPage({
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   const members = await room.getMembers()
-  console.log("members", members)
+  // console.log("members", members)
 
   const memberCount = ("chunk" in members && members.chunk.length) || 0
 
   return (
     <>
-      <div className={`flex my-6 w-full mb-10 ${avatarUrl && "gap-4"}`}>
-        <Suspense fallback={<div>loading...</div>}>
-          <AvatarFull url={avatarUrl} />
-        </Suspense>
-        <div className="flex flex-col justify-between gap-2 grow">
-          <div className="flex items-end self-end justify-between gap-2 ml-auto justify-self-start"></div>
-          <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
-            {name}
-          </h2>
+      <div
+        className={`flex flex-col sm:flex-row my-6 w-full mb-8 ${
+          avatarUrl && "sm:gap-4"
+        }`}>
+        <div className={`flex ${avatarUrl && "gap-4"}`}>
+          <Suspense fallback={<div>loading...</div>}>
+            <AvatarFull url={avatarUrl} />
+          </Suspense>
+          <div className="flex items-end justify-between gap-2 sm:grow">
+            {/* <div className="flex items-end self-end justify-between gap-2 ml-auto justify-self-start">
+            hello
+          </div> */}
+            <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
+              {name}
+            </h2>
+          </div>
         </div>
-        <div className="flex flex-col items-end gap-1 justify-between">
-          <IfModerator slug={slug}>
+        <div className="flex flex-col self-end sm:ml-auto items-end gap-1 justify-between">
+          <IfModerator slug={slug} fallback={<br />}>
             <Link
               href={`/id/${slug}/edit`}
               aria-label="Edit Page"
@@ -114,6 +122,8 @@ export default async function OrgSlugPage({
           </div>
         </div>
       </div>
+
+      <EmailSubscribe slug={slug} />
 
       <main className="flex flex-col w-full gap-4 lg:flex-row-reverse xl:gap-6">
         <section className="flex flex-col justify-start w-full lg:w-48 xl:w-64 lg:flex-col-reverse lg:justify-end">
@@ -171,7 +181,7 @@ export async function generateMetadata({
 
 function AvatarFull({ url }: { url: string | undefined }) {
   return (
-    <div className="relative">
+    <div className="relative min-w-20">
       <div
         className={`absolute w-full h-full ${
           url ? "bg-transparent" : "bg-[#1D170C33]"
