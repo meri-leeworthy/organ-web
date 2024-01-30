@@ -4,6 +4,8 @@ const { MATRIX_BASE_URL, AS_TOKEN, SENDGRID_API_KEY } = process.env
 
 import { Client, Room } from "simple-matrix-sdk"
 import { getHmac32 } from "./getHmac"
+import { storeSecretInRoom } from "./roomSecretStore"
+import { organRoomSecretEmail } from "./types"
 
 async function sendEmailSendgrid(
   to: string,
@@ -84,7 +86,7 @@ export async function sendEmail(email: string, subject: string, body: string) {
   return roomId
 }
 
-export async function getOrCreateMailboxId(username: string, email: string) {
+export async function getOrCreateMailboxId(email: string, username?: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
       user_id: "@_relay_bot:radical.directory",
@@ -103,26 +105,38 @@ export async function getOrCreateMailboxId(username: string, email: string) {
 
   if (roomIfExists) return roomIfExists
 
-  const roomId = await client.createRoom({
-    name: `${username} Mailbox`,
+  const room = await client.createRoom({
+    name: `${username || hash} Mailbox`,
     invite: ["@email:radical.directory", "@meri:radical.directory"],
     room_alias_name: `relay_${hash}`,
   })
 
-  if (!("room_id" in roomId)) throw new Error("No room_id in response")
+  if ("errcode" in room) {
+    console.error("Couldn't create room", room)
+    throw new Error("No room_id in response")
+  }
 
-  const room = new Room(roomId.room_id as string, client)
+  if (username) {
+    const aliasUsernameResponse = await room.setAlias(
+      `%23relay_${username}%3Aradical.directory`
+    )
+  }
 
-  const aliasUsernameResponse = await room.setAlias(
-    `%23relay_${username}%3Aradical.directory`
+  // do i need to add the email as a 'secret' in the room here?
+
+  const stored = await storeSecretInRoom(
+    room.roomId as string,
+    organRoomSecretEmail,
+    email
   )
+  console.log("stored", stored)
 
   const createMailboxResponse = await room.sendMessage({
     msgtype: "m.text",
-    body: "!pm mailbox " + username,
+    body: "!pm mailbox " + username || hash,
   })
 
-  return roomId
+  return room
 }
 
 // const getRoomIdFromAlias = await sendEmail(
