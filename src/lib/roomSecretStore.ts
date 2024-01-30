@@ -1,6 +1,6 @@
 "use server"
 
-import { Client, Room } from "simple-matrix-sdk"
+import { Client, ErrorOutput, Room } from "simple-matrix-sdk"
 import { noCacheFetch } from "./utils"
 
 const { MATRIX_BASE_URL, AS_TOKEN } = process.env
@@ -30,7 +30,10 @@ export async function storeSecretInRoom(
   return { stateEventId, eventId }
 }
 
-export async function getSecretFromRoom(roomId: string, key: string) {
+export async function getSecretFromRoom(
+  roomId: string,
+  key: string
+): Promise<{ body: string } | ErrorOutput> {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
       user_id: "@_relay_bot:radical.directory",
@@ -45,6 +48,7 @@ export async function getSecretFromRoom(roomId: string, key: string) {
   console.log("eventId", stateEventId)
 
   const message = await room.getEvent(stateEventId.event_id)
+  if ("errcode" in message) return message as ErrorOutput
 
-  return message
+  return message?.content as { body: string }
 }
