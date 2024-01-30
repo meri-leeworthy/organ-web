@@ -1,44 +1,71 @@
 import { getSecretFromRoom, storeSecretInRoom } from "@/lib/roomSecretStore"
 import { sendEmailFromMailbox } from "@/lib/sendEmail"
 import { NextRequest, NextResponse } from "next/server"
+import { subscribeEmailToRoom } from "./actions"
+import { getHmac32 } from "@/lib/getHmac"
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
-  const { email }: { email: string } = body
+  const { email, slug }: { email: string; slug?: string } = body
 
-  const result = await sendEmailFromMailbox(
-    "updates",
-    email as string,
-    "You just signed up for Organ updates!",
-    welcomeEmailContent
-  )
-  console.log("send email from mailbox result", result)
-  const secretEvent = await getSecretFromRoom(
-    "!NUVsYlMWcttFfEHkCj:radical.directory",
-    "emails"
-  )
-  const secret =
-    secretEvent.content &&
-    typeof secretEvent.content === "object" &&
-    "body" in secretEvent.content &&
-    secretEvent.content.body
+  //if slug is defined, this endpoint is to send a custom event into the room
 
-  const json = JSON.parse(secret as string) as string[]
+  const hash = getHmac32(email)
 
-  const set = new Set(json)
-  set.add(email)
+  if (slug) {
+    const res = subscribeEmailToRoom(`!${slug}:radical.directory`, hash)
+    if ("errcode" in res)
+      return NextResponse.json({
+        now: Date.now(),
+        message: "Failed to join room!",
+        errcode: res.errcode,
+        error: "error" in res && res.error,
+      })
+    //send confirmation email to user
 
-  console.log("secret", json)
-  const store = await storeSecretInRoom(
-    "!NUVsYlMWcttFfEHkCj:radical.directory",
-    "emails",
-    JSON.stringify([...set.values()])
-  )
+    const result = await sendEmailFromMailbox(
+      `relay_${hash}`,
+      email as string,
+      "You just signed up for updates for a specific page on Organ!",
+      welcomeEmailContent
+    )
 
-  return NextResponse.json({
-    now: Date.now(),
-    message: "Subscribed!",
-  })
+    return NextResponse.json({
+      now: Date.now(),
+      message: "Subscribed!",
+    })
+  } else {
+    const result = await sendEmailFromMailbox(
+      `relay_${hash}`,
+      email as string,
+      "You just signed up for Organ updates!",
+      welcomeEmailContent
+    )
+    console.log("send email from mailbox result", result)
+    const secretEvent = await getSecretFromRoom(
+      "!NUVsYlMWcttFfEHkCj:radical.directory",
+      "emails"
+    )
+    if ("errcode" in secretEvent) throw new Error("No emails secret found")
+    const secret = secretEvent.body
+
+    const json = JSON.parse(secret as string) as string[]
+
+    const set = new Set(json)
+    set.add(email)
+
+    console.log("secret", json)
+    const store = await storeSecretInRoom(
+      "!NUVsYlMWcttFfEHkCj:radical.directory", //chamber of secrets
+      "emails",
+      JSON.stringify([...set.values()])
+    )
+
+    return NextResponse.json({
+      now: Date.now(),
+      message: "Subscribed!",
+    })
+  }
 }
 
 const welcomeEmailContent = `
