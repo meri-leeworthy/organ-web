@@ -1,3 +1,10 @@
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
 import next from "next"
 import { Room, Event } from "simple-matrix-sdk"
 const { NEXT_PUBLIC_MATRIX_BASE_URL } = process.env
