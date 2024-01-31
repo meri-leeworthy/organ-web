@@ -39,7 +39,7 @@ export function WelcomeEmailSignup() {
             const email = formData.get("email")
             const result = await fetch("/api/subscribe", {
               method: "POST",
-              body: JSON.stringify({ email }),
+              body: JSON.stringify({ email, slug: "TsXqgBBNBLnfASIfXn" }),
             })
             const json = await result.json()
             // console.log("json", json)
