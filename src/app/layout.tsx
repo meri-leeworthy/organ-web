@@ -24,9 +24,7 @@ export default function RootLayout({
         <div className="flex flex-col items-center w-full max-w-xl p-2 lg:max-w-3xl lg:p-4">
           <header className="flex justify-between w-full pb-4 mb-4">
             <Link href="/">
-              <h1 className="px-2 py-1 pb-2 text-xl font-black leading-4">
-                organ
-              </h1>
+              <h1 className="py-1 text-xl font-black leading-4">organ</h1>
             </Link>
             <Username />
           </header>
