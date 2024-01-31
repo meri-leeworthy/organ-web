@@ -7,10 +7,10 @@ import { Room, Client, ClientEventOutput, Timeline } from "simple-matrix-sdk"
 import { getMessagesChunk, noCacheFetch } from "@/lib/utils"
 import { Contact } from "@/components/ui/Contact"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
-import { IconSettings } from "@tabler/icons-react"
+import { IconDotsVertical, IconSettings } from "@tabler/icons-react"
 import Link from "next/link"
 import { IfModerator } from "@/components/IfModerator"
-import { NewPost } from "@/components/ui"
+import { Dropdown, DropdownItem, NewPost } from "@/components/ui"
 import {
   OrganPostUnstableSchema,
   OrganCalEventUnstableSchema,
@@ -20,6 +20,7 @@ import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
 import { is, object, string } from "valibot"
 import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
+import { IfRoomMember } from "@/components/IfRoomMember"
 
 export default async function OrgSlugPage({
   params,
@@ -49,7 +50,7 @@ export default async function OrgSlugPage({
 
   const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
     messagesIterator
-  ).catch(e => console.log("eioranoeintr"))
+  ).catch(() => console.error("error getting messages"))
 
   const messages = messagesChunk?.filter(
     message => message.type === "m.room.message"
@@ -84,46 +85,51 @@ export default async function OrgSlugPage({
   const members = await room.getMembers()
   // console.log("members", members)
 
+  // note that email subscribers should be counted too
   const memberCount = ("chunk" in members && members.chunk.length) || 0
 
   return (
     <>
-      <div
-        className={`flex flex-col sm:flex-row my-6 w-full mb-8 ${
-          avatarUrl && "sm:gap-4"
-        }`}>
+      <div className="flex flex-col sm:flex-row-reverse my-6 w-full mb-8 gap-4">
+        <div className="flex items-center sm:flex-col-reverse sm:ml-auto sm:items-end gap-1 justify-between">
+          {/* <IfModerator slug={slug} fallback={<br />}>
+            <Link
+              href={`/id/${slug}/edit`}
+              aria-label="Edit Page"
+              className="flex items-center p-1 text-xs border-0 rounded-full opacity-60 hover:bg-primary">
+              <IconDotsVertical size={16} />
+            </Link>
+          </IfModerator> */}
+          <span className="uppercase text-xs opacity-60">
+            <strong>{memberCount - 1}</strong> followers
+          </span>
+          <div className="flex flex-row-reverse flex-wrap items-center gap-2">
+            <IfRoomMember slug={slug}>
+              <Dropdown>
+                <DropdownItem href={`/id/${slug}/notifications`}>
+                  Notification Settings
+                </DropdownItem>
+                <IfModerator slug={slug}>
+                  <DropdownItem href={`/id/${slug}/edit`}>
+                    Page Settings
+                  </DropdownItem>
+                </IfModerator>
+              </Dropdown>
+            </IfRoomMember>
+            <FollowButton slug={slug} />
+          </div>
+        </div>
         <div className={`flex ${avatarUrl && "gap-4"}`}>
           <Suspense fallback={<div>loading...</div>}>
             <AvatarFull url={avatarUrl} />
           </Suspense>
           <div className="flex items-end justify-between gap-2 sm:grow">
-            {/* <div className="flex items-end self-end justify-between gap-2 ml-auto justify-self-start">
-            hello
-          </div> */}
             <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
               {name}
             </h2>
           </div>
         </div>
-        <div className="flex flex-col self-end sm:ml-auto items-end gap-1 justify-between">
-          <IfModerator slug={slug} fallback={<br />}>
-            <Link
-              href={`/id/${slug}/edit`}
-              aria-label="Edit Page"
-              className="flex items-center p-1 text-xs border-0 rounded-full opacity-60 hover:bg-primary">
-              <IconSettings size={16} />
-            </Link>
-          </IfModerator>
-          <div className="flex flex-col items-end gap-1">
-            <span className="uppercase text-xs opacity-60">
-              <strong>{memberCount - 1}</strong> followers
-            </span>
-            <FollowButton slug={slug} />
-          </div>
-        </div>
       </div>
-
-      <EmailSubscribe slug={slug} />
 
       <main className="flex flex-col w-full gap-4 lg:flex-row-reverse xl:gap-6">
         <section className="flex flex-col justify-start w-full lg:w-48 xl:w-64 lg:flex-col-reverse lg:justify-end">
@@ -134,7 +140,9 @@ export default async function OrgSlugPage({
           <Contact contactKVs={contactKVs} />
         </section>
 
-        <section className="w-full">
+        <section className="w-full flex flex-col gap-4">
+          <EmailSubscribe slug={slug} dismissable />
+
           <Suspense fallback={<div>loading...</div>}>
             <IfModerator slug={slug}>
               <NewPost slug={slug} />
@@ -166,10 +174,10 @@ export async function generateMetadata({
     })
   )
 
-  const messagesIterator = await room.getMessagesAsyncGenerator()
+  const messagesIterator = room.getMessagesAsyncGenerator()
   const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
     messagesIterator
-  ).catch(e => console.log("rnseiontersant"))
+  ).catch(() => console.error("error getting messages"))
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   return {
