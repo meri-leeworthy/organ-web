@@ -1,75 +1,164 @@
 "use client"
 
 import { useRoom } from "@/hooks/useRoom"
+// import { organRoomUserNotifications } from "@/lib/types"
+import { IconMail, IconX } from "@tabler/icons-react"
+import { useEffect, useState } from "react"
+import { Alert, AlertDescription, AlertTitle } from "./alert"
+import { Input } from "./input"
+import { Button } from "./button"
+import { Switch } from "./switch"
 import { organRoomUserNotifications } from "@/lib/types"
-import { IconX } from "@tabler/icons-react"
-import { useState } from "react"
+import { set } from "valibot"
 
-export function EmailSubscribe({ slug }: { slug: string }) {
+export function EmailSubscribe({
+  slug,
+  dismissable,
+}: {
+  slug: string
+  dismissable?: boolean
+}) {
   const room = useRoom(slug)
 
   const [open, setOpen] = useState(true)
   const [email, setEmail] = useState("")
+  const [subscribed, setSubscribed] = useState(false)
+  const [hash, setHash] = useState("")
+
+  useEffect(() => {
+    if (!room) return
+    room.client.getUser3pids().then((res: any) => {
+      const email = res.threepids.find((id: any) => id.medium === "email")
+      if (email) {
+        setEmail(email.address)
+        fetch("/api/hash?value=" + email.address)
+          .then(res => res.json())
+          .then(res => {
+            console.log(res)
+            setHash(res.hmac.slice(0, 32))
+          })
+      }
+    })
+  }, [room])
+
+  useEffect(() => {
+    console.log("running hash useeffect")
+    if (!hash || !room) return
+    console.log("getting state")
+    room.getState().then(res => {
+      if (
+        res.some(
+          (stateEvent: any) =>
+            stateEvent.type === organRoomUserNotifications &&
+            stateEvent.state_key === hash
+        )
+      ) {
+        console.log("user is subscribed. found hash " + hash)
+        setSubscribed(true)
+      } else {
+        console.log("didn't find hash " + hash)
+      }
+      console.log(res)
+      const notificationsEvents = res.filter(
+        (stateEvent: any) => stateEvent.type === organRoomUserNotifications
+      )
+      console.log(notificationsEvents)
+    })
+  }, [hash, room])
 
   if (!open) return null
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  function handleSubscribe(e?: React.FormEvent<HTMLFormElement>) {
+    e?.preventDefault()
     if (!email) return
 
-    const res = fetch(`/api/mailbox?email=${email}`)
+    fetch(`/api/subscribe`, {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        slug,
+      }),
+    })
       .then(res => res.json())
-      .then((res: any) => {
+      .then(res => {
         console.log(res)
-        fetch(`/api/subscribe`, {
-          method: "POST",
-          body: JSON.stringify({
-            email,
-            slug,
-          }),
-        })
       })
+
+    //would be good to set something in localstorage
+  }
+
+  function handleToggle(checked: boolean) {
+    setSubscribed(checked)
+    if (checked) {
+      handleSubscribe()
+      return
+    }
+    fetch(`/api/unsubscribe`, {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        slug,
+      }),
+    }).then(res => {
+      console.log(res)
+    })
   }
 
   return (
-    <form
-      className="bg-primary rounded-lg px-2 py-2 flex flex-col gap-1 w-full justify-between drop-shadow-sm  mb-4"
-      onSubmit={handleSubmit}>
-      <div className="flex flex-col relative sm:flex-row gap-1 sm:pr-6 sm:gap-2 justify-between sm:items-start w-full">
-        <label
-          className="text-xs font-medium opacity-80 lg:mr-8 uppercase flex w-full sm:w-48 shrink sm:gap-0 items-baseline sm:items-stretch flex-col"
-          htmlFor="email">
-          Get email notifications
-          <div>
-            <span className="text-xs opacity-60 italic normal-case mr-1 sm:block">
-              No account needed.
-            </span>
-            <span className="text-xs opacity-60 italic normal-case sm:block">
-              Unsubscribe anytime.
-            </span>
+    <Alert className="">
+      <IconMail size={20} />
+      <AlertTitle>Get email notifications</AlertTitle>
+      <AlertDescription>
+        {room ? (
+          <>
+            Every time a post is made, you will get an email at{" "}
+            <strong className="font-medium">{email}</strong>.
+          </>
+        ) : (
+          "No account needed. Unsubscribe anytime. "
+        )}
+      </AlertDescription>
+      <form className="flex gap-1 w-full mt-2" onSubmit={handleSubscribe}>
+        {room ? (
+          <>
+            <Switch
+              id="email-notifications"
+              checked={subscribed}
+              onCheckedChange={handleToggle}
+            />
+            <label htmlFor="email-notifications" className="opacity-60">
+              Email on every post
+            </label>
+          </>
+        ) : (
+          <div className="flex gap-1 grow sm:self-center sm:justify-end">
+            <Input
+              type="email"
+              name="email"
+              aria-label="Email Address"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="your.email@address.com"
+              className="" //rounded bg-opacity-50 px-1 min-w-52 grow
+            />
+            <Button
+              type="submit" //text-sm rounded px-1 border bg-primarydark text-white border-transparent hover:border-dashed
+              className="bg-primarydark">
+              Subscribe
+            </Button>
           </div>
-        </label>
-        <div className="flex gap-1 grow sm:self-center sm:justify-end">
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="your.email@address.com"
-            className="rounded bg-opacity-50 px-1 min-w-52 grow"
-          />
-          <button
-            type="submit"
-            className="text-sm rounded px-1 border bg-primarydark text-white border-transparent hover:border-dashed">
-            Subscribe
-          </button>
-        </div>
+        )}
+      </form>
+      {dismissable && (
         <button
-          className="absolute top-0 right-0"
+          className="absolute top-3 right-4"
           onClick={() => setOpen(false)}>
-          <IconX size={16} />
+          <IconX
+            size={16}
+            className="rounded-full hover:text-primarydark p-0"
+          />
         </button>
-      </div>
-    </form>
+      )}
+    </Alert>
   )
 }
