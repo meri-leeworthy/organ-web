@@ -23,7 +23,11 @@ const Login = () => {
     router.push("/login")
   }
 
-  return <Button onClick={handleLogin}>login</Button>
+  return (
+    <Button onClick={handleLogin} className="text-sm">
+      login
+    </Button>
+  )
 }
 
 const Logout = () => {
