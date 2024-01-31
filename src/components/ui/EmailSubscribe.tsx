@@ -1,7 +1,6 @@
 "use client"
 
 import { useRoom } from "@/hooks/useRoom"
-// import { organRoomUserNotifications } from "@/lib/types"
 import { IconMail, IconX } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import { Alert, AlertDescription, AlertTitle } from "./alert"
@@ -23,6 +22,8 @@ export function EmailSubscribe({
   const [open, setOpen] = useState(true)
   const [email, setEmail] = useState("")
   const [subscribed, setSubscribed] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [finished, setFinished] = useState(false)
   const [hash, setHash] = useState("")
 
   useEffect(() => {
@@ -42,21 +43,22 @@ export function EmailSubscribe({
   }, [room])
 
   useEffect(() => {
-    console.log("running hash useeffect")
+    // console.log("running hash useeffect")
     if (!hash || !room) return
-    console.log("getting state")
+    // console.log("getting state")
     room.getState().then(res => {
       if (
         res.some(
           (stateEvent: any) =>
             stateEvent.type === organRoomUserNotifications &&
-            stateEvent.state_key === hash
+            stateEvent.state_key === hash &&
+            stateEvent.content.email !== "never"
         )
       ) {
-        console.log("user is subscribed. found hash " + hash)
+        // console.log("user is subscribed. found hash " + hash)
         setSubscribed(true)
       } else {
-        console.log("didn't find hash " + hash)
+        // console.log("didn't find hash " + hash)
       }
       console.log(res)
       const notificationsEvents = res.filter(
@@ -66,11 +68,13 @@ export function EmailSubscribe({
     })
   }, [hash, room])
 
-  if (!open) return null
+  if (!open || (room && !finished && subscribed)) return null
 
   function handleSubscribe(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault()
     if (!email) return
+
+    setLoading(true)
 
     fetch(`/api/subscribe`, {
       method: "POST",
@@ -83,8 +87,8 @@ export function EmailSubscribe({
       .then(res => {
         console.log(res)
       })
-
-    //would be good to set something in localstorage
+    setLoading(false)
+    setFinished(true)
   }
 
   function handleToggle(checked: boolean) {
@@ -118,37 +122,43 @@ export function EmailSubscribe({
           "No account needed. Unsubscribe anytime. "
         )}
       </AlertDescription>
-      <form className="flex gap-1 w-full mt-2" onSubmit={handleSubscribe}>
-        {room ? (
-          <>
-            <Switch
-              id="email-notifications"
-              checked={subscribed}
-              onCheckedChange={handleToggle}
-            />
-            <label htmlFor="email-notifications" className="opacity-60">
-              Email on every post
-            </label>
-          </>
-        ) : (
-          <div className="flex gap-1 grow sm:self-center sm:justify-end">
-            <Input
-              type="email"
-              name="email"
-              aria-label="Email Address"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="your.email@address.com"
-              className="" //rounded bg-opacity-50 px-1 min-w-52 grow
-            />
-            <Button
-              type="submit" //text-sm rounded px-1 border bg-primarydark text-white border-transparent hover:border-dashed
-              className="bg-primarydark">
-              Subscribe
-            </Button>
-          </div>
-        )}
-      </form>
+      {!room && finished ? (
+        <p>You have subscribed! You should have got a confirmation email.</p>
+      ) : (
+        <form className="flex gap-1 w-full mt-2" onSubmit={handleSubscribe}>
+          {room ? (
+            <>
+              <Switch
+                id="email-notifications"
+                checked={subscribed}
+                onCheckedChange={handleToggle}
+              />
+              <label htmlFor="email-notifications" className="opacity-60">
+                Email on every post
+              </label>
+            </>
+          ) : (
+            <div className="flex gap-1 grow sm:self-center sm:justify-end">
+              <Input
+                type="email"
+                name="email"
+                disabled={loading}
+                aria-label="Email Address"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="your.email@address.com"
+                className="" //rounded bg-opacity-50 px-1 min-w-52 grow
+              />
+              <Button
+                type="submit" //text-sm rounded px-1 border bg-primarydark text-white border-transparent hover:border-dashed
+                disabled={loading}
+                className="bg-primarydark">
+                Subscribe
+              </Button>
+            </div>
+          )}
+        </form>
+      )}
       {dismissable && (
         <button
           className="absolute top-3 right-4"
