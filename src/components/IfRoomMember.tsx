@@ -22,18 +22,15 @@ export function IfRoomMember({
       .getJoinedRooms()
       .then(result => {
         // console.log("joined rooms result", result)
-        const isMember = result.joined_rooms.some(
-          roomId => roomId === `!${slug}:radical.directory`
-        )
+        const isMember = result.joined_rooms.some(roomId => {
+          return roomId === `!${slug}:radical.directory`
+        })
+        console.log("isMember", isMember)
         setIsMember(isMember)
       })
       .catch(() => setIsMember(false))
   }, [client, slug])
 
-  if (typeof window === "undefined") return
-  const accessToken = localStorage?.getItem("accessToken")
-  const userId = localStorage?.getItem("userId")
-
-  if (xor(isMember, not) && accessToken && userId) return <>{children}</>
+  if (xor(isMember, not)) return <>{children}</>
   return null
 }
