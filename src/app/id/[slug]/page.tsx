@@ -92,14 +92,6 @@ export default async function OrgSlugPage({
     <>
       <div className="flex flex-col sm:flex-row-reverse my-6 w-full mb-8 gap-4">
         <div className="flex items-center sm:flex-col-reverse sm:ml-auto sm:items-end gap-1 justify-between">
-          {/* <IfModerator slug={slug} fallback={<br />}>
-            <Link
-              href={`/id/${slug}/edit`}
-              aria-label="Edit Page"
-              className="flex items-center p-1 text-xs border-0 rounded-full opacity-60 hover:bg-primary">
-              <IconDotsVertical size={16} />
-            </Link>
-          </IfModerator> */}
           <span className="uppercase text-xs opacity-60">
             <strong>{memberCount - 1}</strong> followers
           </span>
@@ -121,7 +113,7 @@ export default async function OrgSlugPage({
         </div>
         <div className={`flex ${avatarUrl && "gap-4"}`}>
           <Suspense fallback={<div>loading...</div>}>
-            <AvatarFull url={avatarUrl} />
+            {avatarUrl && <AvatarFull url={avatarUrl} />}
           </Suspense>
           <div className="flex items-end justify-between gap-2 sm:grow">
             <h2 className="flex gap-2 text-3xl font-bold w-72 lg:text-4xl">
