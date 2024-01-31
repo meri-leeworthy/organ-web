@@ -44,48 +44,6 @@ async function sendEmailSendgrid(
   }
 }
 
-export async function sendEmail(email: string, subject: string, body: string) {
-  console.log("email", email, "subject", subject, "body", body)
-
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    params: {
-      user_id: "@_relay_bot:radical.directory",
-    },
-    fetch,
-  })
-
-  const hash = getHmac32(email)
-
-  const roomId = await client.getRoomIdFromAlias(
-    `%23relay_${hash}%3Aradical.directory`
-  )
-
-  const room = new Room(roomId, client)
-
-  if (isSensitive(email)) {
-    //send using sendgrid
-    sendEmailSendgrid(
-      email,
-      "notifications@matrix.radical.directory",
-      subject,
-      body
-    )
-
-    room.sendMessage({
-      msgtype: "m.text",
-      body: "sent using sendgrid to " + email + "\n" + subject + "\n" + body,
-    })
-    return
-  }
-
-  room.sendMessage({
-    msgtype: "m.text",
-    body: "!pm send " + email + "\n" + subject + "\n" + body,
-  })
-
-  return roomId
-}
-
 export async function getOrCreateMailboxId(email: string, username?: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
@@ -148,6 +106,48 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
 // console.log("room id from alias", getRoomIdFromAlias)
 
 // return JSON.stringify(getRoomIdFromAlias)
+
+export async function sendEmail(email: string, subject: string, body: string) {
+  console.log("email", email, "subject", subject, "body", body)
+
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    params: {
+      user_id: "@_relay_bot:radical.directory",
+    },
+    fetch,
+  })
+
+  const hash = getHmac32(email)
+
+  const roomId = await client.getRoomIdFromAlias(
+    `%23relay_${hash}%3Aradical.directory`
+  )
+
+  const room = new Room(roomId, client)
+
+  if (isSensitive(email)) {
+    //send using sendgrid
+    sendEmailSendgrid(
+      email,
+      "notifications@matrix.radical.directory",
+      subject,
+      body
+    )
+
+    room.sendMessage({
+      msgtype: "m.text",
+      body: "sent using sendgrid to " + email + "\n" + subject + "\n" + body,
+    })
+    return
+  }
+
+  room.sendMessage({
+    msgtype: "m.text",
+    body: "!pm send " + email + "\n" + subject + "\n" + body,
+  })
+
+  return roomId
+}
 
 export async function sendEmailFromMailbox(
   alias: string,
