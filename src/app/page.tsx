@@ -82,9 +82,9 @@ export default async function Home() {
   // const freshPosts = deleteOldEdits(posts)
 
   return (
-    <main className="w-full max-w-lg">
+    <main className="w-full max-w-lg flex flex-col gap-4">
       <WelcomeEmailSignup />
-      <h3 className="mt-6 mb-4 text-lg font-medium">Recent posts</h3>
+      <h3 className="mt-2 text-lg font-medium">Recent posts</h3>
       <Posts posts={[...timeline.events.values()]} />
       <h3 className="mt-6 text-lg font-medium">Collectives</h3>
       <ul>
