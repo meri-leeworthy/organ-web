@@ -10,62 +10,63 @@ export async function POST(request: NextRequest) {
 
   //if slug is defined, this endpoint is to send a custom event into the room
 
-  const hash = getHmac32(email)
+  // const hash = getHmac32(email)
 
-  if (slug) {
-    const res = subscribeEmailToRoom(`!${slug}:radical.directory`, hash)
-    if ("errcode" in res)
-      return NextResponse.json({
-        now: Date.now(),
-        message: "Failed to join room!",
-        errcode: res.errcode,
-        error: "error" in res && res.error,
-      })
-    //send confirmation email to user
-
-    const result = await sendEmailFromMailbox(
-      `relay_${hash}`,
-      email as string,
-      "You just signed up for updates for a specific page on Organ!",
-      welcomeEmailContent
-    )
-
+  if (!slug)
     return NextResponse.json({
       now: Date.now(),
-      message: "Subscribed!",
+      message: "Failed to join room!",
+      errcode: "",
+      error: "No slug in params",
     })
-  } else {
-    const result = await sendEmailFromMailbox(
-      `relay_${hash}`,
-      email as string,
-      "You just signed up for Organ updates!",
-      welcomeEmailContent
-    )
-    console.log("send email from mailbox result", result)
-    const secretEvent = await getSecretFromRoom(
-      "!NUVsYlMWcttFfEHkCj:radical.directory",
-      "emails"
-    )
-    if ("errcode" in secretEvent) throw new Error("No emails secret found")
-    const secret = secretEvent.body
 
-    const json = JSON.parse(secret as string) as string[]
+  // if (slug) {
+  const res = subscribeEmailToRoom(`!${slug}:radical.directory`, email)
 
-    const set = new Set(json)
-    set.add(email)
-
-    console.log("secret", json)
-    const store = await storeSecretInRoom(
-      "!NUVsYlMWcttFfEHkCj:radical.directory", //chamber of secrets
-      "emails",
-      JSON.stringify([...set.values()])
-    )
-
+  if ("errcode" in res)
     return NextResponse.json({
       now: Date.now(),
-      message: "Subscribed!",
+      message: "Failed to join room!",
+      errcode: res.errcode,
+      error: "error" in res && res.error,
     })
-  }
+
+  return NextResponse.json({
+    now: Date.now(),
+    message: "Subscribed!",
+  })
+  // } else {
+  //   const result = await sendEmailFromMailbox(
+  //     `relay_${hash}`,
+  //     email as string,
+  //     "You just signed up for Organ updates!",
+  //     welcomeEmailContent
+  //   )
+  //   console.log("send email from mailbox result", result)
+  //   const secretEvent = await getSecretFromRoom(
+  //     "!NUVsYlMWcttFfEHkCj:radical.directory",
+  //     "emails"
+  //   )
+  //   if ("errcode" in secretEvent) throw new Error("No emails secret found")
+  //   const secret = secretEvent.body
+
+  //   const json = JSON.parse(secret as string) as string[]
+
+  //   const set = new Set(json)
+  //   set.add(email)
+
+  //   console.log("secret", json)
+  //   const store = await storeSecretInRoom(
+  //     "!NUVsYlMWcttFfEHkCj:radical.directory", //chamber of secrets
+  //     "emails",
+  //     JSON.stringify([...set.values()])
+  //   )
+
+  //   return NextResponse.json({
+  //     now: Date.now(),
+  //     message: "Subscribed!",
+  //   })
+  // }
 }
 
 const welcomeEmailContent = `
