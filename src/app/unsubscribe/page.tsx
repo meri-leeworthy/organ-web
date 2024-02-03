@@ -4,7 +4,7 @@ import { ErrorBox } from "@/components/ui/ErrorBox"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { FormEvent, FormEventHandler, useState } from "react"
+import { FormEvent, FormEventHandler, useEffect, useState } from "react"
 
 const initialState = {
   email: "",
@@ -43,6 +43,15 @@ export default function Unsubscribe({
     }
     setUnsubscribed(true)
   }
+
+  useEffect(() => {
+    if (roomIdParam) {
+      setRoomId(roomIdParam)
+    }
+    if (emailParam) {
+      setEmail(emailParam)
+    }
+  }, [roomIdParam, emailParam])
 
   return (
     <Card className="flex w-full max-w-md flex-col gap-4">

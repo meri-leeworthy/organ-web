@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   const room = new Room(roomId, client)
 
   const state = await room.getState()
-  console.log("state", state)
+  // console.log("state", state)
 
   // get all the state events with organ.room.user.notifications
 
@@ -50,17 +50,20 @@ export async function POST(request: NextRequest) {
       `%23relay_${hash}%3Aradical.directory`,
     )
     console.log("roomId", roomId)
+    if (!roomId) return
     const email = await getSecretFromRoom(roomId, organRoomSecretEmail)
-    if ("errcode" in email) return
     console.log("email", email)
+    if (!email || "errcode" in email) return
     // const room = new Room(roomId, client)
 
     const emailTitle = post.title ? "<h1>" + post.title + "</h1>\n" : ""
 
+    const unsubscribeFooter = `\n\n<p><a href="https://organ.is/unsubscribe?email=${email.body}&room=${roomId}">unsubscribe</a></p>`
+
     await sendEmail(
       email.body,
       "New post on Organ!", //would be good to include the name of the room
-      emailTitle + post.body, // include some descriptive things & links, html formatting?
+      emailTitle + post.body + unsubscribeFooter, // include some descriptive things & links, html formatting?
     )
   })
 

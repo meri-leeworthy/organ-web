@@ -8,7 +8,7 @@ const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 export async function storeSecretInRoom(
   roomId: string,
   key: string,
-  value: string
+  value: string,
 ) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
@@ -32,7 +32,7 @@ export async function storeSecretInRoom(
 
 export async function getSecretFromRoom(
   roomId: string,
-  key: string
+  key: string,
 ): Promise<{ body: string } | ErrorOutput> {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
@@ -43,9 +43,14 @@ export async function getSecretFromRoom(
 
   const room = new Room(roomId, client)
 
+  console.log("getting secret with key ", key, " from room ", roomId)
+
   const stateEventId = await room.getStateEvent("organ.secretId", key)
 
   console.log("eventId", stateEventId)
+
+  if (!stateEventId || "errcode" in stateEventId)
+    return stateEventId as ErrorOutput
 
   const message = await room.getEvent(stateEventId.event_id)
   if ("errcode" in message) return message as ErrorOutput
