@@ -1,13 +1,14 @@
 "use server"
 
 import { getHmac32 } from "@/lib/getHmac"
-import { sendEmailFromMailbox } from "@/lib/sendEmail"
+import { getOrCreateMailboxId, sendEmailFromMailbox } from "@/lib/sendEmail"
 import { organRoomUserNotifications } from "@/lib/types"
 import { Client, Room } from "simple-matrix-sdk"
 
 const { MATRIX_BASE_URL, AS_TOKEN } = process.env
 
 export async function subscribeEmailToRoom(roomId: string, email: string) {
+  await getOrCreateMailboxId(email)
   const hash = getHmac32(email)
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
@@ -19,10 +20,17 @@ export async function subscribeEmailToRoom(roomId: string, email: string) {
   const room = new Room(roomId, client)
 
   const name = await room.getName()
+  if (typeof name === "object" && name !== null && "errcode" in name)
+    return name
   console.log("name", name)
 
+  const nameString =
+    typeof name === "object" && name !== null && "name" in name
+      ? name.name
+      : "unnamed room"
+
   const pageSpecificWelcomeEmailContent = `
-  Hi, confirming you just for signed up to get updates about ${name} on Organ!
+  Hi, confirming you just for signed up to get updates about ${nameString} on Organ!
 `
 
   const res = await room.sendStateEvent(

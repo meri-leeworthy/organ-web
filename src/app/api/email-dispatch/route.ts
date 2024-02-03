@@ -27,6 +27,16 @@ export async function POST(request: NextRequest) {
   })
   const room = new Room(roomId, client)
 
+  const name = await room.getName()
+  if (typeof name === "object" && name !== null && "errcode" in name)
+    return name
+  console.log("name", name)
+
+  const nameString =
+    typeof name === "object" && name !== null && "name" in name
+      ? name.name
+      : "unnamed room"
+
   const state = await room.getState()
   // console.log("state", state)
 
@@ -46,12 +56,12 @@ export async function POST(request: NextRequest) {
   console.log("hashes", hashes)
 
   hashes.forEach(async (hash: string) => {
-    const roomId = await client.getRoomIdFromAlias(
+    const mailboxRoomId = await client.getRoomIdFromAlias(
       `%23relay_${hash}%3Aradical.directory`,
     )
-    console.log("roomId", roomId)
+    console.log("roomId", mailboxRoomId)
     if (!roomId) return
-    const email = await getSecretFromRoom(roomId, organRoomSecretEmail)
+    const email = await getSecretFromRoom(mailboxRoomId, organRoomSecretEmail)
     console.log("email", email)
     if (!email || "errcode" in email) return
     // const room = new Room(roomId, client)
@@ -62,8 +72,8 @@ export async function POST(request: NextRequest) {
 
     await sendEmail(
       email.body,
-      "New post on Organ!", //would be good to include the name of the room
-      emailTitle + post.body + unsubscribeFooter, // include some descriptive things & links, html formatting?
+      `New post from ${nameString} on Organ `,
+      emailTitle + post.body + unsubscribeFooter,
     )
   })
 

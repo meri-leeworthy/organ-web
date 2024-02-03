@@ -32,21 +32,21 @@ export default async function Home() {
   const hierarchy = await space.getHierarchy()
 
   // console.log("hierarchy", hierarchy)
-  const children = hierarchy.filter(room => room.children_state.length === 0)
+  const children = hierarchy.filter((room) => room.children_state.length === 0)
   const rooms = children
-    .filter(r => r !== undefined)
-    .map(room => {
+    .filter((r) => r !== undefined)
+    .map((room) => {
       if (!room) throw new Error("room is undefined")
       return new Room(room.room_id, noCacheClient)
     })
   await Promise.all(
-    rooms.map(async room => {
+    rooms.map(async (room) => {
       try {
         await room.getName()
       } catch (e) {
         console.log(e)
       }
-    })
+    }),
   )
 
   // rooms.forEach(room => {
@@ -55,7 +55,7 @@ export default async function Home() {
 
   const posts = (
     await Promise.all(
-      rooms.map(async room => {
+      rooms.map(async (room) => {
         try {
           return (
             await room.getMessages({
@@ -65,13 +65,14 @@ export default async function Home() {
           ).chunk.filter(
             (message: any) =>
               message.type === "m.room.message" &&
-              (message.content?.msgtype === organCalEventUnstable ||
-                message.content?.msgtype === organPostUnstable)
+              ((message.content?.msgtype === organCalEventUnstable &&
+                new Date(message.content.start).valueOf() > Date.now()) ||
+                message.content?.msgtype === organPostUnstable),
           )
         } catch (e) {
           console.log(e)
         }
-      })
+      }),
     )
   ).flat()
 
@@ -82,7 +83,7 @@ export default async function Home() {
   // const freshPosts = deleteOldEdits(posts)
 
   return (
-    <main className="w-full max-w-lg flex flex-col gap-4">
+    <main className="flex w-full max-w-lg flex-col gap-4">
       <WelcomeEmailSignup />
       <h3 className="mt-2 text-lg font-medium">Recent posts</h3>
       <Posts posts={[...timeline.events.values()]} />
