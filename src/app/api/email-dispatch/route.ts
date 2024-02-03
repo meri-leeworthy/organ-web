@@ -47,18 +47,20 @@ export async function POST(request: NextRequest) {
 
   hashes.forEach(async (hash: string) => {
     const roomId = await client.getRoomIdFromAlias(
-      `%23relay_${hash}%3Aradical.directory`
+      `%23relay_${hash}%3Aradical.directory`,
     )
     console.log("roomId", roomId)
     const email = await getSecretFromRoom(roomId, organRoomSecretEmail)
     if ("errcode" in email) return
     console.log("email", email)
-    const room = new Room(roomId, client)
+    // const room = new Room(roomId, client)
+
+    const emailTitle = post.title ? "<h1>" + post.title + "</h1>\n" : ""
 
     await sendEmail(
       email.body,
       "New post on Organ!", //would be good to include the name of the room
-      "<h1>" + post.title + "</h1>\n" + post.body // include some descriptive things & links, html formatting?
+      emailTitle + post.body, // include some descriptive things & links, html formatting?
     )
   })
 
