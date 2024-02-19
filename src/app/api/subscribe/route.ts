@@ -1,8 +1,5 @@
-import { getSecretFromRoom, storeSecretInRoom } from "@/lib/roomSecretStore"
-import { sendEmailFromMailbox } from "@/lib/sendEmail"
 import { NextRequest, NextResponse } from "next/server"
 import { subscribeEmailToRoom } from "./actions"
-import { getHmac32 } from "@/lib/getHmac"
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
@@ -69,8 +66,8 @@ export async function POST(request: NextRequest) {
   // }
 }
 
-const welcomeEmailContent = `
-  Hi, thanks for signing up to get updates about Organ!
+// const welcomeEmailContent = `
+//   Hi, thanks for signing up to get updates about Organ!
 
-  This project is really early in development (and totally unfunded). One way you can help is by letting me know if something is going wrong. If you have any feedback, questions, or just want to say hi, please reply to this email.
-`
+//   This project is really early in development (and totally unfunded). One way you can help is by letting me know if something is going wrong. If you have any feedback, questions, or just want to say hi, please reply to this email.
+// `
