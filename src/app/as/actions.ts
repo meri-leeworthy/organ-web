@@ -130,3 +130,15 @@ export async function setStateAction(formData: FormData) {
 
   return state
 }
+
+export async function sendMessage(formData: FormData) {
+  const roomId = formData.get("room") as string
+  const message = formData.get("message") as string
+
+  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+    fetch: noCacheFetch,
+    params: { user_id: "@_relay_bot:radical.directory" },
+  })
+  const room = new Room(roomId, client)
+  return await room.sendMessage({ msgtype: "m.text", body: message })
+}
