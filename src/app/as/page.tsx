@@ -9,6 +9,7 @@ import {
   GetState,
   SetState,
   GetStateType,
+  SendMessage,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE } = process.env
 
@@ -49,6 +50,9 @@ export default async function ApplicationServiceTest() {
 
           <h2>Set State</h2>
           <SetState />
+
+          <h2>Send Message</h2>
+          <SendMessage />
         </div>
       )}
     </IfLoggedIn>
