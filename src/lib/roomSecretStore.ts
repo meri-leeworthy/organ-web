@@ -43,11 +43,11 @@ export async function getSecretFromRoom(
 
   const room = new Room(roomId, client)
 
-  console.log("getting secret with key ", key, " from room ", roomId)
+  console.log(roomId, " with ", key)
 
   const stateEventId = await room.getStateEvent("organ.secretId", key)
 
-  console.log("eventId", stateEventId)
+  console.log(roomId, " --> ", stateEventId)
 
   if (!stateEventId || "errcode" in stateEventId)
     return stateEventId as ErrorOutput
