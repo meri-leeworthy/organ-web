@@ -29,7 +29,12 @@ export async function POST(request: NextRequest) {
 
   const name = await room.getName()
   if (typeof name === "object" && name !== null && "errcode" in name)
-    return name
+    return NextResponse.json({
+      now: Date.now(),
+      message: "Couldn't get name",
+      errcode: name.errcode,
+      error: ("error" in name && name.error) || "",
+    })
   console.log("name", name)
 
   const nameString =
@@ -59,26 +64,50 @@ export async function POST(request: NextRequest) {
     const mailboxRoomId = await client.getRoomIdFromAlias(
       `%23relay_${hash}%3Aradical.directory`,
     )
-    console.log("roomId", mailboxRoomId)
-    if (!roomId) return
+    console.log(hash, "-->", mailboxRoomId)
+    if (!mailboxRoomId) return
     const email = await getSecretFromRoom(mailboxRoomId, organRoomSecretEmail)
     console.log("email", email)
     if (!email || "errcode" in email) return
     // const room = new Room(roomId, client)
+    //
+    const emailHTML = `
+          ${post.title ? "<h1>" + post.title + "</h1>" : ""}
+          <p>${post.body}</p>
+          <p>
+            <a href="https://organ.is/unsubscribe?email=${email.body}&room=${roomId}">
+              unsubscribe
+            </a>
+          </p>
 
-    const emailTitle = post.title ? "<h1>" + post.title + "</h1>\n" : ""
+      `
 
-    const unsubscribeFooter = `\n\n<p><a href="https://organ.is/unsubscribe?email=${email.body}&room=${roomId}">unsubscribe</a></p>`
+    //<!DOCTYPE html>
+    // <html lang="en">
+    //   <head>
+    //     <meta charset="UTF-8" />
+    //   </head>
+    //   <body>
+    //         </body>
+    // </html>
 
     await sendEmail(
       email.body,
       `New post from ${nameString} on Organ `,
-      emailTitle + post.body + unsubscribeFooter,
+      emailHTML, // + emailTitle + post.body + unsubscribeFooter,
+      post.title +
+        "\n\n" +
+        post.body +
+        "\n\n" +
+        "unsubscribe: https://organ.is/unsubscribe?email=" +
+        email.body +
+        "&room=" +
+        roomId,
     )
   })
 
   return NextResponse.json({
     now: Date.now(),
-    message: "Subscribed!",
+    message: "Dispatched!",
   })
 }
