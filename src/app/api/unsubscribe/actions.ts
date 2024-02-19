@@ -52,6 +52,7 @@ export async function unsubscribeEmailFromRoom(roomId: string, email: string) {
     email as string,
     `You just unsubscribed from updates for ${nameString} on Organ!`,
     unsubscribedEmailContent,
+    unsubscribedEmailContent,
   )
 
   return result
