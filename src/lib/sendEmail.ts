@@ -11,27 +11,30 @@ async function sendEmailSendgrid(
   to: string,
   from: string,
   subject: string,
-  content: string
+  htmlContent: string,
+  plaintextContent: string
 ): Promise<void> {
   const url = "https://api.sendgrid.com/v3/mail/send"
 
   const headers = {
     Authorization: `Bearer ${SENDGRID_API_KEY}`,
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
   }
 
   const emailData = {
     personalizations: [{ to: [{ email: to }] }],
     from: { email: from },
     subject: subject,
-    content: [{ type: "text/plain", value: content }],
+    content: [{ type: "text/html", value: htmlContent }]
   }
+
+  // console.log("emailData", emailData)
 
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
-      body: JSON.stringify(emailData),
+      body: JSON.stringify(emailData)
     })
 
     if (!response.ok) {
@@ -47,9 +50,9 @@ async function sendEmailSendgrid(
 export async function getOrCreateMailboxId(email: string, username?: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:radical.directory"
     },
-    fetch,
+    fetch
   })
 
   const hash = getHmac32(email)
@@ -66,7 +69,7 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
   const room = await client.createRoom({
     name: `${username || hash} Mailbox`,
     invite: ["@email:radical.directory", "@meri:radical.directory"],
-    room_alias_name: `relay_${hash}`,
+    room_alias_name: `relay_${hash}`
   })
 
   if ("errcode" in room) {
@@ -79,9 +82,6 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
       `%23relay_${username}%3Aradical.directory`
     )
   }
-
-  // do i need to add the email as a 'secret' in the room here?
-
   const stored = await storeSecretInRoom(
     room.roomId as string,
     organRoomSecretEmail,
@@ -89,9 +89,11 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
   )
   console.log("stored", stored)
 
+  const readableMailboxName = email.replaceAll("@", ".")
+
   const createMailboxResponse = await room.sendMessage({
     msgtype: "m.text",
-    body: "!pm mailbox " + username || hash,
+    body: "!pm mailbox " + (username || readableMailboxName)
   })
 
   return room
@@ -107,14 +109,19 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
 
 // return JSON.stringify(getRoomIdFromAlias)
 
-export async function sendEmail(email: string, subject: string, body: string) {
-  console.log("email", email, "subject", subject, "body", body)
+export async function sendEmail(
+  email: string,
+  subject: string,
+  htmlContent: string,
+  plaintextContent: string
+) {
+  console.log("email", email, "subject", subject, "body", htmlContent)
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:radical.directory"
     },
-    fetch,
+    fetch
   })
 
   const hash = getHmac32(email)
@@ -125,41 +132,44 @@ export async function sendEmail(email: string, subject: string, body: string) {
 
   const room = new Room(roomId, client)
 
-  if (isSensitive(email)) {
-    //send using sendgrid
-    sendEmailSendgrid(
-      email,
-      "notifications@matrix.radical.directory",
-      subject,
-      body
-    )
-
-    room.sendMessage({
-      msgtype: "m.text",
-      body: "sent using sendgrid to " + email + "\n" + subject + "\n" + body,
-    })
-    return
-  }
+  // if (isSensitive(email)) {
+  //send using sendgrid
+  sendEmailSendgrid(
+    email,
+    "notifications@matrix.radical.directory",
+    subject,
+    htmlContent,
+    plaintextContent
+  )
 
   room.sendMessage({
     msgtype: "m.text",
-    body: "!pm send " + email + "\n" + subject + "\n" + body,
+    body:
+      "sent using sendgrid to " + email + "\n" + subject + "\n" + htmlContent
   })
+  return
+  // }
 
-  return roomId
+  // room.sendMessage({
+  //   msgtype: "m.text",
+  //   body: "!pm send " + email + "\n" + subject + "\n" + htmlContent,
+  // })
+
+  // return roomId
 }
 
 export async function sendEmailFromMailbox(
   alias: string,
   email: string,
   subject: string,
-  content: string
+  htmlContent: string,
+  plaintextContent: string
 ) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:radical.directory"
     },
-    fetch,
+    fetch
   })
 
   const roomId = await client.getRoomIdFromAlias(
@@ -168,27 +178,28 @@ export async function sendEmailFromMailbox(
 
   const room = new Room(roomId, client)
 
-  if (isSensitive(email)) {
-    sendEmailSendgrid(
-      email,
-      "notifications@matrix.radical.directory",
-      subject,
-      content
-    )
+  // if (isSensitive(email)) {
+  sendEmailSendgrid(
+    email,
+    "notifications@matrix.radical.directory",
+    subject,
+    htmlContent,
+    plaintextContent
+  )
 
-    room.sendMessage({
-      msgtype: "m.text",
-      body: "sent using sendgrid to " + email + "\n" + subject + "\n" + content,
-    })
-    return
-  }
-
-  const eventId = await room.sendMessage({
+  room.sendMessage({
     msgtype: "m.text",
-    body: "!pm send " + email + "\n" + subject + "\n" + content,
+    body: "sent using sendgrid to " + email + "\n" + subject
   })
+  return
+  // }
 
-  return eventId
+  // const eventId = await room.sendMessage({
+  //   msgtype: "m.text",
+  //   body: "!pm send " + email + "\n" + subject + "\n" + htmlContent,
+  // })
+
+  // return eventId
 }
 
 function isSensitive(email: string) {
