@@ -8,6 +8,7 @@ import {
   getStateAction,
   setStateAction,
   getStateTypeAction,
+  sendMessage,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -35,7 +36,8 @@ export function GetRooms() {
         const rooms = await getRooms(formData)
         console.log("rooms", rooms)
         setRooms(rooms)
-      }}>
+      }}
+    >
       <input
         type="text"
         name="user"
@@ -45,7 +47,7 @@ export function GetRooms() {
       <Button type="submit">get rooms</Button>
       <p>Rooms: </p>
       <ul>
-        {rooms.map(room => {
+        {rooms.map((room) => {
           return (
             <li key={room[0].room_id} className="py-2">
               <ul className="">
@@ -82,7 +84,8 @@ export function JoinRoom() {
       action={async (formData: FormData) => {
         const result = await joinRoomAction(formData)
         setResult(result)
-      }}>
+      }}
+    >
       <input
         type="text"
         name="room"
@@ -103,7 +106,8 @@ export function Register() {
       action={async (formData: FormData) => {
         const result = await register(formData)
         setResult(result)
-      }}>
+      }}
+    >
       <input
         type="text"
         name="user"
@@ -125,10 +129,11 @@ export function CreateMailbox() {
         console.log("formData", formData)
         const result = await getOrCreateMailboxId(
           formData.get("email") as string,
-          formData.get("user") as string
+          formData.get("user") as string,
         )
         setResult(result)
-      }}>
+      }}
+    >
       <input
         type="text"
         name="user"
@@ -160,10 +165,11 @@ export function SetSecret() {
         const result = await storeSecretInRoom(
           formData.get("room") as string,
           formData.get("key") as string,
-          formData.get("value") as string
+          formData.get("value") as string,
         )
         setResult(result)
-      }}>
+      }}
+    >
       <input
         type="text"
         name="room"
@@ -197,10 +203,11 @@ export function GetSecret() {
         console.log("formData", formData)
         const result = await getSecretFromRoom(
           formData.get("room") as string,
-          formData.get("key") as string
+          formData.get("key") as string,
         )
         setResult({ result })
-      }}>
+      }}
+    >
       <input
         type="text"
         name="room"
@@ -228,7 +235,8 @@ export function GetState() {
         console.log("formData", formData)
         const result = await getStateAction(formData)
         setResult({ result })
-      }}>
+      }}
+    >
       <input
         type="text"
         name="room"
@@ -250,7 +258,8 @@ export function GetStateType() {
         console.log("formData", formData)
         const result = await getStateTypeAction(formData)
         setResult({ result })
-      }}>
+      }}
+    >
       <input
         type="text"
         name="room"
@@ -278,7 +287,8 @@ export function SetState() {
         console.log("formData", formData)
         const result = await setStateAction(formData)
         setResult({ result })
-      }}>
+      }}
+    >
       <input
         type="text"
         name="room"
@@ -304,6 +314,35 @@ export function SetState() {
         className="border border-black"
       />
       <Button type="submit">set state</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function SendMessage() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await sendMessage(formData)
+        setResult({ result })
+      }}
+    >
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
+      <input
+        type="text"
+        name="message"
+        placeholder="content"
+        className="border border-black"
+      />
+      <Button type="submit">send message</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )
