@@ -1,7 +1,7 @@
 import {
   ACCESSTOKEN_STORAGE_KEY,
   BASE_URL,
-  USERID_STORAGE_KEY,
+  USERID_STORAGE_KEY
 } from "@/lib/constants"
 import { Client } from "simple-matrix-sdk"
 import { useEffect, useMemo, useState } from "react"

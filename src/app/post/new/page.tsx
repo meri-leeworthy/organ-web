@@ -11,9 +11,9 @@ export default async function NewTag() {
 
   return (
     <IfLoggedIn>
-      <h1>Add Tag</h1>
+      <h1>New Post</h1>
       <Form />
-      <Link href="/tag/list">List Tags</Link>
+      {/* <Link href="/tag/list">List Tags</Link> */}
     </IfLoggedIn>
   )
 }

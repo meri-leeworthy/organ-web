@@ -7,7 +7,7 @@ import {
   object,
   optional,
   record,
-  string,
+  string
 } from "valibot"
 
 export const contactTypes = {
@@ -18,7 +18,7 @@ export const contactTypes = {
   facebook: "facebook",
   newsletter: "newsletter",
   linktree: "linktree",
-  link: "link",
+  link: "link"
 } as const
 export type ContactType = keyof typeof contactTypes
 
@@ -31,14 +31,14 @@ export const OrganCalEventUnstableSchema = object({
   msgtype: literal(organCalEventUnstable),
   host: object({
     name: string(),
-    id: string(),
+    id: string()
   }),
   start: string(),
   end: optional(string()),
   allDay: optional(boolean()),
   location: optional(string()),
   avatar: optional(string()),
-  source: optional(string()),
+  source: optional(string())
 })
 
 export type OrganCalEventUnstable = Output<typeof OrganCalEventUnstableSchema>
@@ -51,18 +51,16 @@ export type OrganMetaContactUnstable = {
 export const organMetaContactUnstable = "organ.meta.contact.unstable"
 export const organPostUnstable = "organ.post.unstable"
 export const organRoomUserNotifications = "organ.room.user.notifications"
-export const organRoomType = "organ.room.type"
 export const organRoomSecretEmail = "organ.room.secret.email"
-export const organSpaceType = "organ.space.type"
-export const organLocation = "organ.location"
-export const organEventMeta = "organ.event.meta"
 
+export const organRoomType = "organ.room.type"
 export const organRoomTypeValue = {
   id: "id",
   event: "event",
-  post: "post",
+  post: "post"
 } as const
 
+export const organLocation = "organ.location"
 export type OrganLocation =
   | {
       type: "text"
@@ -70,11 +68,12 @@ export type OrganLocation =
     }
   | {
       type: "page"
-      value: string
+      value: string //RoomID
     }
 
-export type OrganEventMeta = {
-  type: typeof organEventMeta
+export const organPageEventMeta = "organ.page.event.meta"
+export type OrganPageEventMeta = {
+  type: typeof organPageEventMeta
   content: {
     start: string
     end: string
@@ -84,32 +83,62 @@ export type OrganEventMeta = {
   }
 }
 
+export const organSpaceType = "organ.space.type"
 export const organSpaceTypeValue = {
-  tagindex: "tagindex",
-  userindex: "userindex",
+  index: "index",
   tag: "tag",
-  page: "page",
-  event: "event",
+  page: "page"
 } as const
+
+export const organPostType = "organ.post.type"
+export const organPostTypeValue = {
+  text: "text",
+  image: "image",
+  event: "event"
+} as const
+
+export const organPageType = "organ.page.type"
+export const organPageTypeValue = {
+  tag: "tag",
+  id: "id",
+  event: "event"
+} as const
+
+export const organIndexType = "organ.index.type"
+export const organIndexTypeValue = {
+  tag: "tag",
+  user: "user"
+} as const
+
+export const organPostText = "organ.post.text"
+export type OrganPostText = {
+  type: typeof organPostText
+  content: { value: string }
+}
 
 // SPACE/ROOM STATE MODEL
 //
 // POST
 // organ.room.type = "post"
+// organ.post.type = "text" | "image" | "event" | ...
 // event?: string //parent
 // pages?: string[] //parents
 // tags?: string[] //parents
 // content: {type: "text", body: string} | {type: "private", id: Event ID}  //content
 //
-// EVENT
-// organ.space.type = "event"
-// events?: string[] //linked events (roomID)
-// pages?: string[] //parents (roomID)
-// tags?: string[] //parents (roomID)
+// --- deleted ---
+// -- EVENT
+// -- organ.space.type: "event"
+// -- events?: string[] //linked events (roomID)
+// -- pages?: string[] //parents (roomID)
+// -- tags?: string[] //parents (roomID)
+// --- /deleted ---
 //
 //
 // PAGE
-// organ.space.type = "page"
+// organ.space.type: "page"
+// organ.page.type: "tag" | "id" | "event"
+// organ.event.meta: OrganEventMeta
 // pages?: string[] //linked pages (roomID)
 // tags?: string[] //parents (roomID)
 // pinned: string[] //pinned posts or events (roomID)
@@ -120,8 +149,9 @@ export const organSpaceTypeValue = {
 // canonical?: string //page (child) (roomID)
 // pages: Map<RoomID, PageName> // children (essentially a cached AS aggregation)
 //
-// TAGINDEX
-// organ.space.type = "tagindex"
+// INDEX
+// organ.space.type = "index"
+// organ.index.type = "tag" | "user"
 // tags: Map<RoomID, Tag> // children (essentially a cached AS aggregation)
 
 export const OrganPostUnstableSchema = object({
@@ -131,7 +161,7 @@ export const OrganPostUnstableSchema = object({
   msgtype: literal(organPostUnstable),
   author: object({
     name: string("author name must be a string"),
-    id: string("author id must be string"),
+    id: string("author id must be string")
   }),
   source: optional(string()),
   media: optional(array(string("media must be an array of strings"))),
@@ -140,7 +170,7 @@ export const OrganPostUnstableSchema = object({
   ),
   "m.relates_to": optional(
     record(string("m.relates_to record key must be string"), any())
-  ),
+  )
 })
 
 export type OrganPostUnstable = Output<typeof OrganPostUnstableSchema>

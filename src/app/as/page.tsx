@@ -10,6 +10,9 @@ import {
   SetState,
   GetStateType,
   SendMessage,
+  GetAliases,
+  GetRoomIdFromAlias,
+  SetAlias
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE } = process.env
 
@@ -53,6 +56,15 @@ export default async function ApplicationServiceTest() {
 
           <h2>Send Message</h2>
           <SendMessage />
+
+          <h2>Get Aliases for Room</h2>
+          <GetAliases />
+
+          <h2>Get RoomId from Alias</h2>
+          <GetRoomIdFromAlias />
+
+          <h2>Set Alias</h2>
+          <SetAlias />
         </div>
       )}
     </IfLoggedIn>

@@ -9,6 +9,9 @@ import {
   setStateAction,
   getStateTypeAction,
   sendMessage,
+  getAliases,
+  getRoomIdFromAlias,
+  setAlias
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -129,7 +132,7 @@ export function CreateMailbox() {
         console.log("formData", formData)
         const result = await getOrCreateMailboxId(
           formData.get("email") as string,
-          formData.get("user") as string,
+          formData.get("user") as string
         )
         setResult(result)
       }}
@@ -165,7 +168,7 @@ export function SetSecret() {
         const result = await storeSecretInRoom(
           formData.get("room") as string,
           formData.get("key") as string,
-          formData.get("value") as string,
+          formData.get("value") as string
         )
         setResult(result)
       }}
@@ -203,7 +206,7 @@ export function GetSecret() {
         console.log("formData", formData)
         const result = await getSecretFromRoom(
           formData.get("room") as string,
-          formData.get("key") as string,
+          formData.get("key") as string
         )
         setResult({ result })
       }}
@@ -343,6 +346,80 @@ export function SendMessage() {
         className="border border-black"
       />
       <Button type="submit">send message</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function GetAliases() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await getAliases(formData)
+        setResult({ result })
+      }}
+    >
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
+      <Button type="submit">get aliases</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function GetRoomIdFromAlias() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await getRoomIdFromAlias(formData)
+        setResult({ result })
+      }}
+    >
+      <input
+        type="text"
+        name="alias"
+        placeholder="alias"
+        className="border border-black"
+      />
+      <Button type="submit">get roomId from alias</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function SetAlias() {
+  const [result, setResult] = useState({})
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await setAlias(formData)
+        setResult({ result })
+      }}
+    >
+      <input
+        type="text"
+        name="room"
+        placeholder="roomId"
+        className="border border-black"
+      />
+      <input
+        type="text"
+        name="alias"
+        placeholder="alias"
+        className="border border-black"
+      />
+      <Button type="submit">set alias</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )
