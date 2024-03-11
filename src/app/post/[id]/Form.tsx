@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { addTagToPost } from "../actions"
+import { useClient } from "@/hooks/useClient"
 
 export function Form({ postId }: { postId: string }) {
   return (

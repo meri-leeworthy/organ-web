@@ -6,65 +6,72 @@ import { EditMenu } from "@/components/ui/EditMenu"
 import { Avatar } from "@/components/ui/Avatar"
 import { Client, Room } from "simple-matrix-sdk"
 import { IfModerator } from "../IfModerator"
+import { OrganPostMeta } from "@/lib/types"
 
 export async function Post({
-  content,
-  timestamp,
-  id,
-  slug,
+  post,
+  id
 }: {
-  content: any
-  timestamp: number
-  id: string
-  slug: string
+  post: OrganPostMeta
+  id: string // the room id of the post
 }) {
-  // console.log("post content", content)
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
-    },
+      user_id: "@_relay_bot:radical.directory"
+    }
   })
-  const room = new Room(`!${slug}:radical.directory`, client)
-  const avatarUrl = await room.getAvatarMxc()
+
+  const authorType = post.author.type
+  const authorValue = post.author.value
+  const authorName =
+    authorType === "user"
+      ? (await client.getProfile(authorValue)).displayname
+      : ((await client.getRoom(authorValue).getName()) as string)
+
+  console.log(authorName)
+
+  // get avatar
+  // const room = new Room(`!${slug}:radical.directory`, client)
+  // const avatarUrl = await room.getAvatarMxc()
   return (
-    <article className="flex flex-col items-start p-3 mb-6 bg-white border rounded-lg drop-shadow-sm">
-      <div className="flex items-center w-full gap-2">
-        <Link className="flex items-center gap-2" href={`/id/${slug}` || ""}>
-          {content?.author && (
+    <article className="mb-6 flex flex-col items-start rounded-lg border bg-white p-3 drop-shadow-sm">
+      <div className="flex w-full items-center gap-2">
+        <Link className="flex items-center gap-2" href={`/id/${null}` || ""}>
+          {post.author && (
             <>
-              <Avatar url={avatarUrl} name={content?.author?.name} />
+              {/* <Avatar url={avatarUrl} name={post.author?.value} /> */}
               <h5 className="flex items-center gap-2 text-sm font-medium">
-                {content?.author?.name}
+                {authorName}
               </h5>
             </>
           )}
-          <time className="text-xs uppercase opacity-60 justify-self-start">
-            {getContextualDate(timestamp)}
+          <time className="justify-self-start text-xs uppercase opacity-60">
+            {getContextualDate(post.timestamp)}
           </time>
         </Link>
         <div className="ml-auto">
-          <IfModerator slug={slug}>
-            <EditMenu slug={slug} event_id={id} type="post" />
+          <IfModerator slug={id}>
+            <EditMenu slug={id} event_id={id} type="post" />
           </IfModerator>
         </div>
       </div>
-      <div className="flex flex-col justify-between gap-2 mt-2">
-        {content && "title" in content && content?.title && (
+      <div className="mt-2 flex flex-col justify-between gap-2">
+        {post && "title" in post && post?.title && (
           <div className="flex items-center gap-2">
-            <Link href={`/id/${slug}/post/${id}`}>
+            <Link href={`/id/${id}/post/${id}`}>
               <h4 className="flex gap-2 text-lg font-bold">
-                {content && "title" in content && content?.title}
+                {post && "title" in post && post?.title}
               </h4>
             </Link>
           </div>
         )}
         <p className="whitespace-pre-line">
-          {content?.body.slice(0, 400)}
-          {content?.body.length > 400 && (
+          {post?.body.slice(0, 400)}
+          {post?.body.length > 400 && (
             <>
               ...{" "}
-              <Link href={`/id/${slug}/post/${id}`} className="text-[#aa8eff] ">
+              <Link href={`/id/${null}/post/${id}`} className="text-[#aa8eff] ">
                 more
               </Link>
             </>

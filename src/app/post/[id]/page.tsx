@@ -1,6 +1,7 @@
 import { noCacheFetch } from "@/lib/utils"
 import { Client, State } from "simple-matrix-sdk"
 import { Form } from "./Form"
+import { Post } from "@/components/ui/Post"
 
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
 
@@ -16,18 +17,22 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   const postRoom = client.getRoom(roomId)
   const state = await postRoom.getState()
 
-  // console.log("state", state)
+  console.log("state", state)
 
   if ("errcode" in state) return "no state found"
+
+  const roomType = state.get("organ.room.type")
+  const postType = state.get("organ.post.type")
+  const postText = state.get("organ.post.text")
+  console.log("roomType", roomType, "postType", postType, "postText", postText)
+  const post = state.get("organ.post.meta")?.content
+  console.log("post", post.content)
 
   // const stateObject = new State(state)
 
   return (
     <div>
-      <h1>Post {idLocalPart}</h1>
-      <p>Room type: {state.get("organ.room.type")?.type}</p>
-      <p>Post(?) type: {state.get("organ.post.type")?.type}</p>
-      <p>Post text(?): {state.get("organ.post.text")?.value}</p>
+      <Post post={post} id={idLocalPart} />
       <h2>Add tag:</h2>
       <Form postId={roomId} />
     </div>
