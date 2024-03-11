@@ -7,13 +7,18 @@ import {
   OrganCalEventUnstable,
   OrganPostUnstable,
   organCalEventUnstable,
+  organPostMeta,
+  organPostType,
+  organPostTypeValue,
   organPostUnstable,
+  organRoomType,
+  organRoomTypeValue
 } from "@/lib/types"
 import { Room } from "simple-matrix-sdk"
 import {
   IconCalendarEvent,
   IconCamera,
-  IconNorthStar,
+  IconNorthStar
 } from "@tabler/icons-react"
 // import { SelectAuthor } from "@/components/SelectAuthor"
 // import Link from "next/link"
@@ -22,36 +27,6 @@ import { getMxcUrl, toValidDateString } from "@/lib/utils"
 import { Input, Textarea, Button } from "../styled"
 
 type PostType = "post" | "event"
-
-export function Description(props: {
-  type: PostType
-  content: string
-  setContent: Dispatch<SetStateAction<string>>
-  rows?: number
-}) {
-  return (
-    <div className="flex grow">
-      <Textarea
-        autoFocus
-        id="content"
-        aria-label="content"
-        placeholder={
-          props.type === "post" ? "Write your update here" : "Event description"
-        }
-        rows={props.rows || 3}
-        value={props.content}
-        onChange={e =>
-          props.setContent(
-            typeof e === "object" && e !== null && "target" in e
-              ? (e.target as HTMLTextAreaElement).value
-              : ""
-          )
-        }
-        className="w-full p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 bg-white border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
-      />
-    </div>
-  )
-}
 
 export const NewPost = ({ slug }: { slug: string }) => {
   const [type, setType] = useState<PostType>("post")
@@ -110,52 +85,111 @@ export const NewPost = ({ slug }: { slug: string }) => {
     if (!author) return
     const [authorRoom, authorName] = author
     const roomId = authorRoom.roomId
-    const authorKV = { name: authorName, id: roomId }
+    // const authorKV = { name: authorName, id: roomId }
 
-    const postEvent: OrganPostUnstable | OrganCalEventUnstable =
-      type === "post"
-        ? {
-            msgtype: organPostUnstable,
-            title,
-            body: content,
-            author: authorKV,
-            tags: [],
-            media: imageSrcs,
-          }
-        : {
-            msgtype: organCalEventUnstable,
-            title,
-            body: content,
-            host: authorKV,
-            tags: [],
-            start: `${startDate}T${startTime}`,
-            end: `${endDate}T${endTime}`,
-            allDay,
-            avatar: imageSrcs[0],
-            location: place,
-          }
+    // const postEvent: OrganPostUnstable | OrganCalEventUnstable =
+    //   type === "post"
+    //     ? {
+    //         msgtype: organPostUnstable,
+    //         title,
+    //         body: content,
+    //         author: authorKV,
+    //         tags: [],
+    //         media: imageSrcs
+    //       }
+    //     : {
+    //         msgtype: organCalEventUnstable,
+    //         title,
+    //         body: content,
+    //         host: authorKV,
+    //         tags: [],
+    //         start: `${startDate}T${startTime}`,
+    //         end: `${endDate}T${endTime}`,
+    //         allDay,
+    //         avatar: imageSrcs[0],
+    //         location: place
+    //       }
 
-    const result = await room?.sendMessage(postEvent)
+    const newPostRoomResult = client?.createRoom({
+      name: title,
+      topic: content,
+      creation_content: {
+        type: "m.space"
+      },
+      initial_state: [
+        {
+          type: "m.room.power_levels",
+          state_key: "",
+          content: {
+            ban: 50,
+            events: {
+              "m.room.name": 100,
+              "m.room.power_levels": 100
+            },
+            events_default: 0,
+            invite: 50,
+            kick: 50,
+            notifications: {
+              room: 20
+            },
+            redact: 50,
+            state_default: 50,
+            users: {
+              "@_relay_bot:radical.directory": 100,
+              [client.userId]: 100
+            },
+            users_default: 0
+          }
+        },
+        {
+          type: organRoomType,
+          state_key: "",
+          content: {
+            type: organRoomTypeValue.post
+          }
+        },
+        {
+          type: organPostType,
+          state_key: "",
+          content: {
+            type: organPostTypeValue.text
+          }
+        },
+        {
+          type: organPostMeta,
+          state_key: "",
+          content: {
+            title,
+            content,
+            author: { type: "id", value: `!${slug}:radical.directory` },
+            timestamp: new Date().valueOf()
+          }
+        }
+      ],
+      invite: ["@_relay_bot:radical.directory"]
+    })
+
+    // const result = await room?.sendMessage(postEvent)
 
     const homeRevalidate = await fetch("/api/revalidate?path=/")
     const idRevalidate = await fetch(`/api/revalidate?path=/id/${slug}`)
 
-    const dispatchEmails = await fetch("/api/email-dispatch", {
-      method: "POST",
-      body: JSON.stringify({
-        roomId: room?.roomId,
-        post: postEvent,
-      }),
-    })
+    // const dispatchEmails = await fetch("/api/email-dispatch", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     roomId: room?.roomId,
+    //     post: postEvent
+    //   })
+    // })
 
     location.reload()
     // redirect(`/orgs/${params.slug}`)
   }
 
   return (
-    <div className="flex flex-col gap-2 p-3 mb-6 bg-white border rounded-lg drop-shadow-sm border-primary">
+    <div className="border-primary mb-6 flex flex-col gap-2 rounded-lg border bg-white p-3 drop-shadow-sm">
       {imageSrcs[0] && (
-        <div className="flex items-center justify-center grow">
+        <div className="flex grow items-center justify-center">
           <img
             src={imageSrcs[0]}
             alt="post"
@@ -164,7 +198,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
           />
         </div>
       )}
-      <form onSubmit={handlePostSubmit} className="flex flex-col gap-2 grow">
+      <form onSubmit={handlePostSubmit} className="flex grow flex-col gap-2">
         <div className="flex flex-wrap gap-1 gap-y-2">
           <PostTypeButton type={type} thisType="post" setType={setType}>
             <IconNorthStar size={16} /> Post
@@ -179,7 +213,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
               placeholder="Title"
               aria-label="title"
               value={title}
-              onChange={e => setTitle((e.target as HTMLInputElement).value)}
+              onChange={(e) => setTitle((e.target as HTMLInputElement).value)}
             />
           )}
         </div>
@@ -193,7 +227,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
               placeholder="Location"
               aria-label="location"
               value={place}
-              onChange={e => setPlace((e.target as HTMLInputElement).value)}
+              onChange={(e) => setPlace((e.target as HTMLInputElement).value)}
             />
           )}
 
@@ -203,21 +237,21 @@ export const NewPost = ({ slug }: { slug: string }) => {
                 <input
                   type="date"
                   value={startDate}
-                  onChange={e =>
+                  onChange={(e) =>
                     setStartDate(toValidDateString(new Date(e.target.value)))
                   }
-                  className="font-medium px-1 text-[#8258ff] bg-white text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+                  className="border-primary focus:outline-primary border bg-white px-1 font-medium text-[#8258ff] text-opacity-50 focus:outline-dashed focus:outline-1"
                 />
                 {!allDay && (
                   <input
                     type="time"
                     value={startTime}
-                    onChange={e => {
+                    onChange={(e) => {
                       // console.log("e", e)
                       setStartTime(e.currentTarget.value)
                     }}
                     step="300"
-                    className="font-medium px-1 text-[#8258ff] bg-white text-opacity-50 border border-primary focus:outline-dashed focus:outline-1 focus:outline-primary"
+                    className="border-primary focus:outline-primary border bg-white px-1 font-medium text-[#8258ff] text-opacity-50 focus:outline-dashed focus:outline-1"
                   />
                 )}
 
@@ -228,14 +262,14 @@ export const NewPost = ({ slug }: { slug: string }) => {
                     id="allday"
                     name="allday"
                     checked={allDay}
-                    onChange={e => setAllDay(e.target.checked)}
-                    className="mr-1 outline-4 outline-primary checked:bg-primary"
+                    onChange={(e) => setAllDay(e.target.checked)}
+                    className="outline-primary checked:bg-primary mr-1 outline-4"
                   />
                 </label>
               </>
             )}
 
-            <div className="flex items-center justify-end gap-2 ml-auto">
+            <div className="ml-auto flex items-center justify-end gap-2">
               <UploadImageButton
                 imageSrcs={imageSrcs}
                 setImageSrcs={setImageSrcs}
@@ -243,7 +277,8 @@ export const NewPost = ({ slug }: { slug: string }) => {
 
               <Button
                 type="submit"
-                className="rounded-[100%] border border-black border-opacity-40 text-sm px-2 py-1 gap-1 self-end flex items-center hover:border-dashed bg-white">
+                className="flex items-center gap-1 self-end rounded-[100%] border border-black border-opacity-40 bg-white px-2 py-1 text-sm hover:border-dashed"
+              >
                 Share
               </Button>
             </div>
@@ -254,9 +289,39 @@ export const NewPost = ({ slug }: { slug: string }) => {
   )
 }
 
+export function Description(props: {
+  type: PostType
+  content: string
+  setContent: Dispatch<SetStateAction<string>>
+  rows?: number
+}) {
+  return (
+    <div className="flex grow">
+      <Textarea
+        autoFocus
+        id="content"
+        aria-label="content"
+        placeholder={
+          props.type === "post" ? "Write your update here" : "Event description"
+        }
+        rows={props.rows || 3}
+        value={props.content}
+        onChange={(e) =>
+          props.setContent(
+            typeof e === "object" && e !== null && "target" in e
+              ? (e.target as HTMLTextAreaElement).value
+              : ""
+          )
+        }
+        className="border-primary focus:outline-primary w-full border bg-white p-1 text-base placeholder:text-[#8258ff] placeholder:opacity-40 focus:outline-dashed focus:outline-1"
+      />
+    </div>
+  )
+}
+
 export function UploadImageButton({
   imageSrcs,
-  setImageSrcs,
+  setImageSrcs
 }: {
   imageSrcs: string | string[]
   setImageSrcs:
@@ -302,9 +367,10 @@ export function UploadImageButton({
     <div className="">
       <label
         htmlFor="image"
-        className="flex items-center border-dashed justify-center px-2 py-1 rounded-[100%] text-[#9572ff] border border-primary cursor-pointer">
+        className="border-primary flex cursor-pointer items-center justify-center rounded-[100%] border border-dashed px-2 py-1 text-[#9572ff]"
+      >
         {loading ? (
-          <Spinner className="w-4 h-4 text-primary animate-spin fill-[#9572ff]" />
+          <Spinner className="text-primary h-4 w-4 animate-spin fill-[#9572ff]" />
         ) : (
           <IconCamera size={16} />
         )}
@@ -323,7 +389,7 @@ export function PostTypeButton({
   type,
   thisType,
   setType,
-  children,
+  children
 }: {
   type: PostType
   thisType: PostType
@@ -334,7 +400,8 @@ export function PostTypeButton({
     <Button
       onClick={() => setType(thisType)}
       disabled={thisType === type}
-      className="border border-primary text-sm gap-1 flex items-center disabled:bg-primary disabled:border-transparent text-[#9572ff] bg-white disabled:text-black">
+      className="border-primary disabled:bg-primary flex items-center gap-1 border bg-white text-sm text-[#9572ff] disabled:border-transparent disabled:text-black"
+    >
       {children}
     </Button>
   )
