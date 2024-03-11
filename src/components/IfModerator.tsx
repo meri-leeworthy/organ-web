@@ -8,7 +8,7 @@ export function IfModerator({
   slug,
   children,
   fallback,
-  redirect,
+  redirect
 }: {
   slug: string
   children: React.ReactNode
@@ -19,18 +19,16 @@ export function IfModerator({
   const room = useRoom(slug)
   const router = useRouter()
 
-  // console.log("room", room, "slug", slug, "isModerator", isModerator)
+  console.log("room", room, "slug", slug, "isModerator", isModerator)
 
   useEffect(() => {
     if (!room) return
-    room
-      .isUserModerator()
-      .then(result => {
-        console.log("result", result)
-        setIsModerator(result)
-        if (!result && redirect) router.push(redirect)
-      })
-      .catch(() => setIsModerator(false))
+    console.log("checking if moderator")
+    room.isUserModerator().then((result) => {
+      console.log("result", result)
+      setIsModerator(result)
+      if (!result && redirect) router.push(redirect)
+    })
   }, [room, router, redirect])
 
   if (isModerator) return <>{children}</>
