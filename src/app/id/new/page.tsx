@@ -8,7 +8,11 @@ import {
   ContactType,
   contactTypes,
   organMetaContactUnstable,
-  organRoomType
+  organPageType,
+  organPageTypeValue,
+  organRoomType,
+  organSpaceType,
+  organSpaceTypeValue
 } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { is } from "valibot"
@@ -31,14 +35,14 @@ const NewRoomPage = () => {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  function setContactKV(contactType: ContactType, contactValue?: string) {
-    // console.log("setting contact kv", contactType, contactValue)
-    setContactKVs({ ...contactKVs, [contactType]: contactValue })
-  }
-  function removeContactKV(contactType: ContactType) {
-    const { [contactType]: _, ...rest } = contactKVs
-    setContactKVs(rest)
-  }
+  // function setContactKV(contactType: ContactType, contactValue?: string) {
+  //   // console.log("setting contact kv", contactType, contactValue)
+  //   setContactKVs({ ...contactKVs, [contactType]: contactValue })
+  // }
+  // function removeContactKV(contactType: ContactType) {
+  //   const { [contactType]: _, ...rest } = contactKVs
+  //   setContactKVs(rest)
+  // }
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
@@ -50,7 +54,6 @@ const NewRoomPage = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    // Logic to create a new Matrix room with the provided inputs
     console.log("Creating new room...")
     try {
       const room = await client?.createRoom({
@@ -64,33 +67,49 @@ const NewRoomPage = () => {
             type: "m.room.power_levels",
             state_key: "",
             content: {
-              users: { "@_relay_bot:radical.directory": 100 }
+              ban: 50,
+              events: {
+                "m.room.name": 100,
+                "m.room.power_levels": 100
+              },
+              events_default: 0,
+              invite: 50,
+              kick: 50,
+              notifications: {
+                room: 20
+              },
+              redact: 50,
+              state_default: 50,
+              users: {
+                "@_relay_bot:radical.directory": 100,
+                [client.userId]: 100
+              },
+              users_default: 0
             }
           },
           {
-            type: organRoomType,
-            state_key: "id",
+            type: organSpaceType,
+            state_key: "",
             content: {
-              type: organRoomType,
-              value: "id"
+              type: organSpaceTypeValue.page
+            }
+          },
+          {
+            type: organPageType,
+            state_key: "",
+            content: {
+              type: organPageTypeValue.id
             }
           }
         ],
         invite: ["@_relay_bot:radical.directory"]
       })
       if (!room) throw new Error("Failed to create room")
-      console.log("Created room", room)
+      console.log("Room creation result:", room)
       if (is(ErrorSchema, room)) throw new Error(room.error)
 
       const join = await joinRoom(room.roomId, "bot")
       console.log("join", join)
-
-      const organRoomTypeStateResult = await room?.sendStateEvent(
-        organRoomType,
-        "id"
-      )
-
-      console.log("organRoomTypeStateResult", organRoomTypeStateResult)
 
       router.push(`/id/${slug(room?.roomId)}`)
     } catch (error) {
