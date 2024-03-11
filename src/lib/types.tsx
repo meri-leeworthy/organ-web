@@ -116,6 +116,21 @@ export type OrganPostText = {
   content: { value: string }
 }
 
+export const organPostMeta = "organ.post.meta"
+export type OrganPostMetaState = {
+  type: typeof organPostMeta
+  content: OrganPostMeta
+}
+
+export type OrganPostMeta = {
+  title?: string
+  body: string
+  timestamp: number
+  author: OrganAuthor
+}
+
+export type OrganAuthor = { type: "user" | "id"; value: string }
+
 // SPACE/ROOM STATE MODEL
 //
 // POST
@@ -125,15 +140,6 @@ export type OrganPostText = {
 // pages?: string[] //parents
 // tags?: string[] //parents
 // content: {type: "text", body: string} | {type: "private", id: Event ID}  //content
-//
-// --- deleted ---
-// -- EVENT
-// -- organ.space.type: "event"
-// -- events?: string[] //linked events (roomID)
-// -- pages?: string[] //parents (roomID)
-// -- tags?: string[] //parents (roomID)
-// --- /deleted ---
-//
 //
 // PAGE
 // organ.space.type: "page"
