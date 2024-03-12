@@ -47,7 +47,16 @@ export async function POST(request: NextRequest) {
 
   // get all the state events with organ.room.user.notifications
 
-  const hashes = state
+  if (typeof state === "object" && "errcode" in state) return state
+
+  const notificationPrefsMapIterator = state
+    .getAll(organRoomUserNotifications)
+    ?.values()
+  const notificationPrefs = notificationPrefsMapIterator
+    ? Array.from(notificationPrefsMapIterator)
+    : []
+
+  const hashes = notificationPrefs
     .filter((event: any) => {
       return (
         event.type === organRoomUserNotifications &&
@@ -62,10 +71,11 @@ export async function POST(request: NextRequest) {
 
   hashes.forEach(async (hash: string) => {
     const mailboxRoomId = await client.getRoomIdFromAlias(
-      `%23relay_${hash}%3Aradical.directory`,
+      `%23relay_${hash}%3Aradical.directory`
     )
     console.log(hash, "-->", mailboxRoomId)
     if (!mailboxRoomId) return
+    if (typeof mailboxRoomId === "object" && "errcode" in mailboxRoomId) return
     const email = await getSecretFromRoom(mailboxRoomId, organRoomSecretEmail)
     console.log("email", email)
     if (!email || "errcode" in email) return
@@ -75,7 +85,9 @@ export async function POST(request: NextRequest) {
           ${post.title ? "<h1>" + post.title + "</h1>" : ""}
           <p>${post.body}</p>
           <p>
-            <a href="https://organ.is/unsubscribe?email=${email.body}&room=${roomId}">
+            <a href="https://organ.is/unsubscribe?email=${
+              email.body
+            }&room=${roomId}">
               unsubscribe
             </a>
           </p>
@@ -102,7 +114,7 @@ export async function POST(request: NextRequest) {
         "unsubscribe: https://organ.is/unsubscribe?email=" +
         email.body +
         "&room=" +
-        roomId,
+        roomId
     )
   })
 
