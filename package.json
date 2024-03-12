@@ -19,7 +19,7 @@
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "simple-matrix-sdk": "^0.4.1",
+    "simple-matrix-sdk": "^0.4.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "valibot": "^0.25.0"
