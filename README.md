@@ -10,8 +10,6 @@ Organ Web is a [Next.js](https://nextjs.org/) project using Typescript and Tailw
 
 ## Getting Started
 
-Run:
-
 ``` sh
 # generate a configuration file in the 'synapse-data' volume
 docker-compose run --rm synapse generate
