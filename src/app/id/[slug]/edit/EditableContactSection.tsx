@@ -8,6 +8,8 @@ import { useRoom } from "@/hooks/useRoom"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import { IconCheck, IconEdit, IconLink, IconPlus } from "@tabler/icons-react"
 import { Spinner } from "@/components/ui"
+import * as v from "valibot"
+import { ClientEventSchema } from "simple-matrix-sdk"
 
 export function EditableContactSection({
   slug,
@@ -19,15 +21,27 @@ export function EditableContactSection({
   setEditSection: (section: SectionType) => void
 }) {
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [links, setLinks] = useState<OrganMetaContactUnstable["value"]>([])
   const room = useRoom(slug)
   useEffect(() => {
     if (!room || !isLoading) return
     room
       .getStateEvent(organMetaContactUnstable, "link")
-      .then(content => {
-        console.log("content", content)
-        setLinks(content?.value || [])
+      .then(event => {
+        console.log("event", event)
+        if (!event || "errcode" in event) {
+          setError("Failed to fetch contact links")
+          return
+        }
+        const links =
+          v.is(ClientEventSchema, event) &&
+          typeof event.content === "object" &&
+          event.content !== null &&
+          "value" in event.content &&
+          Array.isArray(event.content.value) &&
+          event.content.value
+        setLinks(links || [])
         setIsLoading(false)
       })
       .catch(() => undefined)

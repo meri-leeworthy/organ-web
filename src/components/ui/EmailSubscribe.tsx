@@ -47,24 +47,42 @@ export function EmailSubscribe({
     if (!hash || !room) return
     // console.log("getting state")
     room.getState().then(res => {
+      if ("errcode" in res) return
+
+      const notificationPrefs = res.get(organRoomUserNotifications, hash)
+
+      if (!notificationPrefs) return
+      const content = notificationPrefs.content
+
       if (
-        res.some(
-          (stateEvent: any) =>
-            stateEvent.type === organRoomUserNotifications &&
-            stateEvent.state_key === hash &&
-            stateEvent.content.email !== "never"
-        )
+        typeof content === "object" &&
+        content !== null &&
+        "email" in content &&
+        content.email === "never"
       ) {
-        // console.log("user is subscribed. found hash " + hash)
         setSubscribed(true)
       } else {
-        // console.log("didn't find hash " + hash)
+        console.log("didn't find hash " + hash)
       }
+
+      // if (
+      //   res.some(
+      //     (stateEvent: any) =>
+      //       stateEvent.type === organRoomUserNotifications &&
+      //       stateEvent.state_key === hash &&
+      //       stateEvent.content.email !== "never"
+      //   )
+      // ) {
+      //   // console.log("user is subscribed. found hash " + hash)
+      //   setSubscribed(true)
+      // } else {
+      //   // console.log("didn't find hash " + hash)
+      // }
       console.log(res)
-      const notificationsEvents = res.filter(
-        (stateEvent: any) => stateEvent.type === organRoomUserNotifications
-      )
-      console.log(notificationsEvents)
+      // const notificationsEvents = res.filter(
+      //   (stateEvent: any) => stateEvent.type === organRoomUserNotifications
+      // )
+      // console.log(notificationsEvents)
     })
   }, [hash, room])
 

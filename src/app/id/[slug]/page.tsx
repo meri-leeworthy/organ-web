@@ -13,7 +13,7 @@ import { IfModerator } from "@/components/IfModerator"
 import { Dropdown, DropdownItem, NewPost } from "@/components/ui"
 import {
   OrganPostUnstableSchema,
-  OrganCalEventUnstableSchema
+  OrganCalEventUnstableSchema,
 } from "@/lib/types"
 import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
@@ -23,7 +23,7 @@ import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 import { IfRoomMember } from "@/components/IfRoomMember"
 
 export default async function OrgSlugPage({
-  params
+  params,
 }: {
   params: { slug: string }
 }) {
@@ -33,8 +33,8 @@ export default async function OrgSlugPage({
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: {
-      user_id: "@_relay_bot:radical.directory"
-    }
+      user_id: "@_relay_bot:radical.directory",
+    },
   })
 
   const room = new Room(roomId, client)
@@ -48,16 +48,18 @@ export default async function OrgSlugPage({
     nameResult.name
   const messagesIterator = room.getMessagesAsyncGenerator()
 
-  const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
-    messagesIterator
-  ).catch(() => console.error("error getting messages"))
+  const messagesChunk: ClientEventOutput[] = []
+
+  // await getMessagesChunk(
+  //   messagesIterator
+  // ).catch(() => console.error("error getting messages"))
 
   const messages = messagesChunk?.filter(
-    (message) => message.type === "m.room.message"
+    message => message.type === "m.room.message"
   )
 
   const posts = messages?.filter(
-    (message) =>
+    message =>
       is(OrganPostUnstableSchema, message.content) ||
       is(OrganCalEventUnstableSchema, message.content)
   )
@@ -80,9 +82,7 @@ export default async function OrgSlugPage({
       ? `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
       : undefined
   const contactKVs = await fetchContactKVs(room)
-  const topic = messagesChunk?.find(
-    (message) => message.type === "m.room.topic"
-  )
+  const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   const members = await room.getMembers()
   // console.log("members", members)
@@ -151,7 +151,7 @@ export default async function OrgSlugPage({
 }
 
 export async function generateMetadata({
-  params
+  params,
 }: {
   params: { slug: string }
 }) {
@@ -162,9 +162,9 @@ export async function generateMetadata({
     roomId,
     new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
       params: {
-        user_id: "@_relay_bot:radical.directory"
+        user_id: "@_relay_bot:radical.directory",
       },
-      fetch
+      fetch,
     })
   )
 
@@ -172,16 +172,14 @@ export async function generateMetadata({
   const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
     messagesIterator
   ).catch(() => console.error("error getting messages"))
-  const topic = messagesChunk?.find(
-    (message) => message.type === "m.room.topic"
-  )
+  const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   return {
     title: room.name?.name,
     description:
       (is(object({ topic: string() }), topic?.content) &&
         topic.content.topic) ||
-      ""
+      "",
   }
 }
 
