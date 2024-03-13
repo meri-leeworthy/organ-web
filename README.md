@@ -10,6 +10,14 @@ Organ Web is a [Next.js](https://nextjs.org/) project using Typescript and Tailw
 
 ## Getting Started
 
+Run:
+
+``` sh
+docker-compose run --rm synapse generate
+docker run --rm -v organ-web_synapse-data:/data alpine chown -R 991:991 /data
+docker-compose up -d
+```
+
 This repo won't run very well by itself. As well as being a Matrix client, Organ Web also operates as an [Application Service](https://spec.matrix.org/v1.9/application-service-api/), which is like a client which has been configured on a server to have special permissions. The live app is configured as an application service for the [radical.directory](https://element.radical.directory) Matrix server. This enables the server-side Next.js code to authenticate with an App Service Token (`AS_TOKEN` environment variable) rather than logging in and using normal access tokens. App Services can act as a client for users on the server which have a certain prefix on their user ID. In this case the prefix is `_relay_`. User accounts with that prefix can then operate as 'relays' to the web app server.
 
 Due to these interdependencies, there is not currently a straightforward way to setup a self-contained dev environment. Ultimately, it would be good to have a simple docker-compose setup for Synapse (with the App Service configuration) for running a local dev server alongside this Next.js server.
