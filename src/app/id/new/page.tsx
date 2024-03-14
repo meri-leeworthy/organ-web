@@ -12,7 +12,7 @@ import {
   organPageTypeValue,
   organRoomType,
   organSpaceType,
-  organSpaceTypeValue
+  organSpaceTypeValue,
 } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { is } from "valibot"
@@ -21,6 +21,8 @@ import { ErrorBox } from "@/components/ui/ErrorBox"
 import { slug } from "@/lib/utils"
 import { IconNorthStar } from "@tabler/icons-react"
 import { joinRoom } from "@/app/api/join/action"
+
+const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
 
 const NewRoomPage = () => {
   const client = useClient()
@@ -60,7 +62,7 @@ const NewRoomPage = () => {
         name,
         topic,
         creation_content: {
-          type: "m.space"
+          type: "m.space",
         },
         initial_state: [
           {
@@ -70,39 +72,40 @@ const NewRoomPage = () => {
               ban: 50,
               events: {
                 "m.room.name": 100,
-                "m.room.power_levels": 100
+                "m.room.power_levels": 100,
               },
               events_default: 0,
               invite: 50,
               kick: 50,
               notifications: {
-                room: 20
+                room: 20,
               },
               redact: 50,
               state_default: 50,
               users: {
                 "@_relay_bot:radical.directory": 100,
-                [client.userId]: 100
+                [client.userId]: 100,
               },
-              users_default: 0
-            }
+              users_default: 0,
+            },
           },
           {
             type: organSpaceType,
             state_key: "",
             content: {
-              type: organSpaceTypeValue.page
-            }
+              type: organSpaceTypeValue.page,
+            },
           },
           {
             type: organPageType,
             state_key: "",
             content: {
-              type: organPageTypeValue.id
-            }
-          }
+              type: organRoomType,
+              value: "id",
+            },
+          },
         ],
-        invite: ["@_relay_bot:radical.directory"]
+        invite: [`@_relay_bot:${SERVER_NAME}`],
       })
       if (!room) throw new Error("Failed to create room")
       console.log("Room creation result:", room)

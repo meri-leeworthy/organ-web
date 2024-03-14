@@ -11,6 +11,8 @@ import React, { useState, useEffect } from "react"
 import { Client, ErrorSchema } from "simple-matrix-sdk"
 import { is, set } from "valibot"
 
+const { NEXT_PUBLIC_MATRIX_BASE_URL: MATRIX_BASE_URL } = process.env
+
 const SignupForm = () => {
   const [email, setEmail] = useState("")
   const [debouncedUsername, username, setUsername] = useDebounce("", 500)
@@ -32,7 +34,7 @@ const SignupForm = () => {
       if (debouncedUsername.length > 0) {
         const available = await Client.isUsernameAvailable(
           debouncedUsername,
-          "https://matrix.radical.directory"
+          MATRIX_BASE_URL!
         )
         setUsernameAvailable(available)
       }
@@ -55,11 +57,7 @@ const SignupForm = () => {
   const handleSignup = async () => {
     setLoading(true)
     try {
-      const user = await Client.register(
-        username,
-        password,
-        "https://matrix.radical.directory"
-      )
+      const user = await Client.register(username, password, MATRIX_BASE_URL!)
       if (is(ErrorSchema, user)) throw new Error(user.error)
 
       console.log(user, "User registered successfully!")
@@ -72,13 +70,9 @@ const SignupForm = () => {
         user.user_id.trim().toLowerCase()
       )
 
-      const client = new Client(
-        "https://matrix.radical.directory",
-        accessToken,
-        {
-          userId: user.user_id,
-        }
-      )
+      const client = new Client(MATRIX_BASE_URL!, accessToken, {
+        userId: user.user_id,
+      })
 
       const clientSecret = Math.random().toString(36).substring(2, 15)
 

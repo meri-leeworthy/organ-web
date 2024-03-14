@@ -1,8 +1,6 @@
-import {
-  ACCESSTOKEN_STORAGE_KEY,
-  BASE_URL,
-  USERID_STORAGE_KEY,
-} from "@/lib/constants"
+const { SERVER_NAME, MATRIX_BASE_URL } = process.env
+
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { Client, Room } from "simple-matrix-sdk"
 import { useEffect, useMemo, useState } from "react"
 
@@ -19,8 +17,8 @@ export function useRoom(slug: string) {
   useEffect(() => {
     if (!accessToken || !userId) return
 
-    const client = new Client(BASE_URL, accessToken, { userId, fetch })
-    const room = new Room(`!${slug}:radical.directory`, client)
+    const client = new Client(MATRIX_BASE_URL!, accessToken, { userId, fetch })
+    const room = new Room(`!${slug}:${SERVER_NAME}`, client)
     setRoom(room)
   }, [slug, accessToken, userId])
 

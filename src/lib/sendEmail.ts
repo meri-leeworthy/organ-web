@@ -1,6 +1,6 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, SENDGRID_API_KEY } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SENDGRID_API_KEY, SERVER_NAME } = process.env
 
 import { Client, Room } from "simple-matrix-sdk"
 import { getHmac32 } from "./getHmac"
@@ -18,14 +18,14 @@ async function sendEmailSendgrid(
 
   const headers = {
     Authorization: `Bearer ${SENDGRID_API_KEY}`,
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   }
 
   const emailData = {
     personalizations: [{ to: [{ email: to }] }],
     from: { email: from },
     subject: subject,
-    content: [{ type: "text/html", value: htmlContent }]
+    content: [{ type: "text/html", value: htmlContent }],
   }
 
   // console.log("emailData", emailData)
@@ -34,7 +34,7 @@ async function sendEmailSendgrid(
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
-      body: JSON.stringify(emailData)
+      body: JSON.stringify(emailData),
     })
 
     if (!response.ok) {
@@ -50,16 +50,16 @@ async function sendEmailSendgrid(
 export async function getOrCreateMailboxId(email: string, username?: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory"
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
-    fetch
+    fetch,
   })
 
   const hash = getHmac32(email)
   console.log("hash", hash)
 
   const roomIfExists = await client.getRoomIdFromAlias(
-    `%23relay_${hash}%3Aradical.directory`
+    `%23relay_${hash}%3A${SERVER_NAME}`
   )
 
   console.log("roomIfExists", roomIfExists)
@@ -69,7 +69,7 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
   const room = await client.createRoom({
     name: `${username || hash} Mailbox`,
     invite: ["@email:radical.directory", "@meri:radical.directory"],
-    room_alias_name: `relay_${hash}`
+    room_alias_name: `relay_${hash}`,
   })
 
   if ("errcode" in room) {
@@ -79,7 +79,7 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
 
   if (username) {
     const aliasUsernameResponse = await room.setAlias(
-      `%23relay_${username}%3Aradical.directory`
+      `%23relay_${username}%3A${SERVER_NAME}`
     )
   }
   const stored = await storeSecretInRoom(
@@ -93,7 +93,7 @@ export async function getOrCreateMailboxId(email: string, username?: string) {
 
   const createMailboxResponse = await room.sendMessage({
     msgtype: "m.text",
-    body: "!pm mailbox " + (username || readableMailboxName)
+    body: "!pm mailbox " + (username || readableMailboxName),
   })
 
   return room
@@ -119,16 +119,19 @@ export async function sendEmail(
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory"
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
-    fetch
+    fetch,
   })
 
   const hash = getHmac32(email)
 
   const roomId = await client.getRoomIdFromAlias(
-    `%23relay_${hash}%3Aradical.directory`
+    `%23relay_${hash}%3A${SERVER_NAME}`
   )
+
+  if (!roomId || (typeof roomId === "object" && "errcode" in roomId))
+    return "No room found"
 
   const room = new Room(roomId, client)
 
@@ -145,7 +148,7 @@ export async function sendEmail(
   room.sendMessage({
     msgtype: "m.text",
     body:
-      "sent using sendgrid to " + email + "\n" + subject + "\n" + htmlContent
+      "sent using sendgrid to " + email + "\n" + subject + "\n" + htmlContent,
   })
   return
   // }
@@ -167,14 +170,15 @@ export async function sendEmailFromMailbox(
 ) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory"
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
-    fetch
+    fetch,
   })
 
-  const roomId = await client.getRoomIdFromAlias(
-    `%23${alias}%3Aradical.directory`
-  )
+  const roomId = await client.getRoomIdFromAlias(`%23${alias}%3A${SERVER_NAME}`)
+
+  if (!roomId || (typeof roomId === "object" && "errcode" in roomId))
+    return "No room found"
 
   const room = new Room(roomId, client)
 
@@ -189,7 +193,7 @@ export async function sendEmailFromMailbox(
 
   room.sendMessage({
     msgtype: "m.text",
-    body: "sent using sendgrid to " + email + "\n" + subject
+    body: "sent using sendgrid to " + email + "\n" + subject,
   })
   return
   // }

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { subscribeEmailToRoom } from "./actions"
 
+const { SERVER_NAME } = process.env
+
 export async function POST(request: NextRequest) {
   const body = await request.json()
   const { email, slug }: { email: string; slug?: string } = body
@@ -18,7 +20,7 @@ export async function POST(request: NextRequest) {
     })
 
   // if (slug) {
-  const res = subscribeEmailToRoom(`!${slug}:radical.directory`, email)
+  const res = subscribeEmailToRoom(`!${slug}:${SERVER_NAME}`, email)
 
   if ("errcode" in res)
     return NextResponse.json({

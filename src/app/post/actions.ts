@@ -1,6 +1,6 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 import { bilateralTagAdoptPost } from "@/app/tag/actions"
 import {
@@ -9,14 +9,14 @@ import {
   organPostType,
   organPostTypeValue,
   organRoomType,
-  organRoomTypeValue
+  organRoomTypeValue,
 } from "@/lib/types"
 import { normaliseTagString } from "@/lib/utils"
 import { Client, Room } from "simple-matrix-sdk"
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   fetch,
-  params: { user_id: `@_relay_bot:radical.directory` }
+  params: { user_id: `@_relay_bot:${SERVER_NAME}` },
 })
 
 // const index = new Room(TAG_INDEX!, client)
@@ -34,14 +34,14 @@ export async function newPost(formData: FormData) {
       {
         type: organRoomType,
         content: {
-          type: organRoomTypeValue.post
-        }
+          type: organRoomTypeValue.post,
+        },
       },
       {
         type: organPostType,
         content: {
-          type: organPostTypeValue.text
-        }
+          type: organPostTypeValue.text,
+        },
       },
       {
         type: organPostMeta,
@@ -49,10 +49,10 @@ export async function newPost(formData: FormData) {
           title,
           timestamp: new Date().valueOf(),
           body: content,
-          author: { type: "user", value: "@_relay_bot:radical.directory" }
-        }
-      }
-    ]
+          author: { type: "user", value: "@_relay_bot:radical.directory" },
+        },
+      },
+    ],
   })
 
   if ("errcode" in postRoom) return postRoom
@@ -70,7 +70,7 @@ export async function addTagToPost(formData: FormData) {
 
   // check if tag space already exists
 
-  const alias = `#relay_tag_${tag}:radical.directory`
+  const alias = `#relay_tag_${tag}:${SERVER_NAME}`
 
   console.log(`alias "${alias}"`)
 
@@ -99,16 +99,16 @@ export async function createPost(opts: {
       {
         type: "m.room.join_rules",
         content: {
-          join_rule: "public"
-        }
+          join_rule: "public",
+        },
       },
       {
         type: organRoomType,
         content: {
-          type: organRoomTypeValue.post
-        }
-      }
-    ]
+          type: organRoomTypeValue.post,
+        },
+      },
+    ],
   })
 
   return postRoom

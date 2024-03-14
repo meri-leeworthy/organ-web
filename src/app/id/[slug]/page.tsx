@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
@@ -28,12 +28,12 @@ export default async function OrgSlugPage({
   params: { slug: string }
 }) {
   const { slug } = params
-  const roomId = `!${slug}:radical.directory`
+  const roomId = `!${slug}:${SERVER_NAME}`
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
@@ -79,7 +79,7 @@ export default async function OrgSlugPage({
   const mediaId = imageUri && imageUri.split("://")[1].split("/")[1]
   const avatarUrl =
     serverName && mediaId
-      ? `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
+      ? `${MATRIX_BASE_URL}/_matrix/media/r0/download/${serverName}/${mediaId}`
       : undefined
   const contactKVs = await fetchContactKVs(room)
   const topic = messagesChunk?.find(message => message.type === "m.room.topic")
@@ -156,13 +156,13 @@ export async function generateMetadata({
   params: { slug: string }
 }) {
   const { slug } = params
-  const roomId = `!${slug}:radical.directory`
+  const roomId = `!${slug}:${SERVER_NAME}`
 
   const room = new Room(
     roomId,
     new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
       params: {
-        user_id: "@_relay_bot:radical.directory",
+        user_id: "@_relay_bot:" + SERVER_NAME,
       },
       fetch,
     })

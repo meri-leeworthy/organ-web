@@ -5,7 +5,7 @@ import { sendEmailFromMailbox } from "@/lib/sendEmail"
 import { organRoomUserNotifications } from "@/lib/types"
 import { Client, Room } from "simple-matrix-sdk"
 
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 export async function unsubscribeEmailFromRoom(roomId: string, email: string) {
   const hash = getHmac32(email)
@@ -13,7 +13,7 @@ export async function unsubscribeEmailFromRoom(roomId: string, email: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
   const room = new Room(roomId, client)
@@ -39,7 +39,7 @@ export async function unsubscribeEmailFromRoom(roomId: string, email: string) {
     {
       email: "never",
     },
-    hash,
+    hash
   )
   console.log("state sent", res)
 
@@ -52,7 +52,7 @@ export async function unsubscribeEmailFromRoom(roomId: string, email: string) {
     email as string,
     `You just unsubscribed from updates for ${nameString} on Organ!`,
     unsubscribedEmailContent,
-    unsubscribedEmailContent,
+    unsubscribedEmailContent
   )
 
   return result

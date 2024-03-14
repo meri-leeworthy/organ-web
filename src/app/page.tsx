@@ -1,4 +1,4 @@
-const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
@@ -17,22 +17,21 @@ export default async function Home() {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
   const noCacheClient = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
   const space = new Room(HOME_SPACE!, client)
   const hierarchy = await space.getHierarchy()
 
-  console.log("hierarchy", hierarchy)
-
+  // console.log("hierarchy", hierarchy)
   const children = hierarchy.filter(room => room.children_state.length === 0)
   const rooms = children
     .filter(r => r !== undefined)

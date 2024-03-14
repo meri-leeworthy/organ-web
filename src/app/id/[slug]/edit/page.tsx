@@ -18,6 +18,8 @@ import { is } from "valibot"
 import { ClientEventOutput, ErrorSchema } from "simple-matrix-sdk"
 import { HOME_SPACE } from "@/lib/constants"
 
+const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
+
 export default function OrgSlugDashboardPage({
   params,
 }: {
@@ -91,7 +93,7 @@ function UserRoles(props: { slug: string }) {
               roles.set(member, 0)
             }
           }
-          roles.delete("@_relay_bot:radical.directory")
+          roles.delete("@_relay_bot:" + process.env.NEXT_PUBLIC_SERVER_NAME)
           setRoles(roles)
         })
       })
@@ -165,7 +167,7 @@ function RequestPublication({ slug }: { slug: string }) {
     )
     console.log("rooms", roomIds)
     const isPublished = roomIds.some(
-      (roomId: string) => roomId === `!${slug}:radical.directory`
+      (roomId: string) => roomId === `!${slug}:${SERVER_NAME}`
     )
     setIsPublished(isPublished)
   })
@@ -175,7 +177,7 @@ function RequestPublication({ slug }: { slug: string }) {
     const res = await fetch("/api/requestpub", {
       method: "POST",
       body: JSON.stringify({
-        roomId: `!${slug}:radical.directory`,
+        roomId: `!${slug}:${SERVER_NAME}`,
       }),
     })
     console.log("res", res)

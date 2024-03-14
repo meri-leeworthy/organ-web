@@ -1,4 +1,4 @@
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 import { getContextualDate } from "@/lib/utils"
 import Link from "next/link"
@@ -10,7 +10,7 @@ import { OrganPostMeta } from "@/lib/types"
 
 export async function Post({
   post,
-  id
+  id,
 }: {
   post: OrganPostMeta
   id: string // the room id of the post
@@ -18,8 +18,8 @@ export async function Post({
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory"
-    }
+      user_id: "@_relay_bot:" + SERVER_NAME,
+    },
   })
 
   const authorType = post.author.type
