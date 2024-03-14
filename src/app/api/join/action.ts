@@ -1,6 +1,6 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 import { Client } from "simple-matrix-sdk"
 
@@ -11,7 +11,7 @@ export async function joinRoom(room: string, user: string) {
     `join/${room}`,
     {},
     {
-      user_id: `@_relay_${user}:radical.directory`,
+      user_id: `@_relay_${user}:${SERVER_NAME}`,
     }
   )
 

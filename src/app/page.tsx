@@ -1,10 +1,10 @@
-const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
 // TODO: why does the event show up on the org page but not the homepage?
 
-import { Client, Room, Timeline } from "simple-matrix-sdk"
+import { Client, ClientEventOutput, Room, Timeline } from "simple-matrix-sdk"
 import Link from "next/link"
 import { Org } from "@/components/Org"
 import { Suspense } from "react"
@@ -17,14 +17,14 @@ export default async function Home() {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
   const noCacheClient = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
@@ -32,21 +32,21 @@ export default async function Home() {
   const hierarchy = await space.getHierarchy()
 
   // console.log("hierarchy", hierarchy)
-  const children = hierarchy.filter((room) => room.children_state.length === 0)
+  const children = hierarchy.filter(room => room.children_state.length === 0)
   const rooms = children
-    .filter((r) => r !== undefined)
-    .map((room) => {
+    .filter(r => r !== undefined)
+    .map(room => {
       if (!room) throw new Error("room is undefined")
       return new Room(room.room_id, noCacheClient)
     })
   await Promise.all(
-    rooms.map(async (room) => {
+    rooms.map(async room => {
       try {
         await room.getName()
       } catch (e) {
         console.log(e)
       }
-    }),
+    })
   )
 
   // rooms.forEach(room => {
@@ -55,26 +55,28 @@ export default async function Home() {
 
   const posts = (
     await Promise.all(
-      rooms.map(async (room) => {
+      rooms.map(async room => {
         try {
-          return (
-            await room.getMessages({
-              limit: 50,
-              dir: "b",
-            })
-          ).chunk.filter(
+          const messages = await room.getMessages({
+            limit: 50,
+            dir: "b",
+          })
+          if ("errcode" in messages) return []
+          return messages.chunk.filter(
             (message: any) =>
               message.type === "m.room.message" &&
               ((message.content?.msgtype === organCalEventUnstable &&
                 new Date(message.content.start).valueOf() > Date.now()) ||
-                message.content?.msgtype === organPostUnstable),
+                message.content?.msgtype === organPostUnstable)
           )
         } catch (e) {
           console.log(e)
         }
-      }),
+      })
     )
-  ).flat()
+  )
+    .flat()
+    .filter(message => message !== undefined) as ClientEventOutput[]
 
   const timeline = new Timeline(posts)
 

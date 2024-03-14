@@ -4,21 +4,21 @@ import { Client, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   fetch: noCacheFetch,
-  params: { user_id: "@_relay_bot:radical.directory" }
+  params: { user_id: "@_relay_bot:" + SERVER_NAME },
 })
 
 export async function register(formData: FormData) {
   const user = formData.get("user") as string
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch: noCacheFetch
+    fetch: noCacheFetch,
   })
   const register = await client.post("register", {
     type: "m.login.application_service",
-    username: `_relay_${user}`
+    username: `_relay_${user}`,
   })
   console.log(register)
   return register
@@ -34,10 +34,10 @@ export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
   const user = formData.get("user") as string
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
-    params: { user_id: `@_relay_${user}:radical.directory` }
+    params: { user_id: `@_relay_${user}:${SERVER_NAME}` },
   })
   const { joined_rooms: roomIds } = await client.get("joined_rooms", {
-    user_id: `@_relay_${user}:radical.directory`
+    user_id: `@_relay_${user}:${SERVER_NAME}`,
   })
   const rooms = roomIds.map((roomId: string) => {
     const room = new Room(roomId, client)

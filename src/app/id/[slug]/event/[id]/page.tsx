@@ -1,4 +1,4 @@
-const { AS_TOKEN, MATRIX_BASE_URL } = process.env
+const { AS_TOKEN, MATRIX_BASE_URL, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
@@ -19,10 +19,10 @@ export default async function EventPage({
   //TODO: this is a copy of PostPage needs changing (and refactor to share code?)
 
   const { slug, id } = params
-  const roomId = `!${slug}:radical.directory`
+  const roomId = `!${slug}:${SERVER_NAME}`
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
     fetch,
   })
@@ -32,7 +32,7 @@ export default async function EventPage({
   const post = await room.getEvent(`$${id}`)
   // const avatarUrl = await room.getAvatarMxc()
 
-  if (!is(OrganCalEventUnstableSchema, post.content))
+  if ("errcode" in post || !is(OrganCalEventUnstableSchema, post.content))
     return "Event not valid :("
 
   const { content } = post

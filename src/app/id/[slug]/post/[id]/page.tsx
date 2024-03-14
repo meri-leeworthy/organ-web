@@ -1,4 +1,4 @@
-const { AS_TOKEN, MATRIX_BASE_URL } = process.env
+const { AS_TOKEN, MATRIX_BASE_URL, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
@@ -14,10 +14,10 @@ export default async function PostPage({
   params: { slug: string; id: string }
 }) {
   const { slug, id } = params
-  const roomId = `!${slug}:radical.directory`
+  const roomId = `!${slug}:${SERVER_NAME}`
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
     fetch,
   })
@@ -35,7 +35,8 @@ export default async function PostPage({
 
   // console.log(safeParse(OrganPostUnstableSchema, post.content))
 
-  if (!is(OrganPostUnstableSchema, post.content)) return "Post not valid :("
+  if ("errcode" in post || !is(OrganPostUnstableSchema, post.content))
+    return "Post not valid :("
 
   const nameString =
     typeof name === "object" &&

@@ -5,6 +5,8 @@ import { useClient } from "@/hooks/useClient"
 import { useEffect, useState } from "react"
 import { Event, Room } from "simple-matrix-sdk"
 
+const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
+
 export default function RawOrgRoomEvents({
   params: { slug },
 }: {
@@ -15,7 +17,7 @@ export default function RawOrgRoomEvents({
 
   useEffect(() => {
     if (!client) return
-    const room = new Room(`!${slug}:radical.directory`, client)
+    const room = new Room(`!${slug}:${SERVER_NAME}`, client)
     console.log("room", room)
     const iterator = room?.getMessagesAsyncGenerator("b", 200)
 

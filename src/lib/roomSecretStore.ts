@@ -3,16 +3,16 @@
 import { Client, ErrorOutput, Room } from "simple-matrix-sdk"
 import { noCacheFetch } from "./utils"
 
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 export async function storeSecretInRoom(
   roomId: string,
   key: string,
-  value: string,
+  value: string
 ) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
     fetch,
   })
@@ -32,11 +32,11 @@ export async function storeSecretInRoom(
 
 export async function getSecretFromRoom(
   roomId: string,
-  key: string,
+  key: string
 ): Promise<{ body: string } | ErrorOutput> {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
     fetch: noCacheFetch,
   })

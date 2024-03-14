@@ -1,6 +1,6 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 import { bilateralAdoptTag } from "@/lib/tag"
 import { organSpaceType, organSpaceTypeValue } from "@/lib/types"
@@ -9,7 +9,7 @@ import { Client, Room } from "simple-matrix-sdk"
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   fetch,
-  params: { user_id: `@_relay_bot:radical.directory` }
+  params: { user_id: `@_relay_bot:${SERVER_NAME}` },
 })
 
 const index = new Room(TAG_INDEX!, client)
@@ -26,17 +26,17 @@ export async function addTag(formData: FormData) {
   const tagRoom = await client.createRoom({
     name: tag,
     creation_content: {
-      type: "m.space"
+      type: "m.space",
     },
     initial_state: [
       {
         type: organSpaceType,
         content: {
-          type: organSpaceTypeValue.tag
-        }
-      }
+          type: organSpaceTypeValue.tag,
+        },
+      },
     ],
-    room_alias_name: `relay_tag_${tag}`
+    room_alias_name: `relay_tag_${tag}`,
   })
 
   if ("errcode" in tagRoom) return tagRoom

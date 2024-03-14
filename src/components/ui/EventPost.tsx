@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 import { getContextualDate, getMxcUrl } from "@/lib/utils"
 import Link from "next/link"
@@ -28,10 +28,10 @@ export async function EventPost({
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
-  const room = new Room(`!${slug}:radical.directory`, client)
+  const room = new Room(`!${slug}:${SERVER_NAME}`, client)
   const avatarUrl = await room.getAvatarMxc()
 
   return (

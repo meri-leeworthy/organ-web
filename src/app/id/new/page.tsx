@@ -8,7 +8,7 @@ import {
   ContactType,
   contactTypes,
   organMetaContactUnstable,
-  organRoomType
+  organRoomType,
 } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { is } from "valibot"
@@ -17,6 +17,8 @@ import { ErrorBox } from "@/components/ui/ErrorBox"
 import { slug } from "@/lib/utils"
 import { IconNorthStar } from "@tabler/icons-react"
 import { joinRoom } from "@/app/api/join/action"
+
+const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
 
 const NewRoomPage = () => {
   const client = useClient()
@@ -57,26 +59,26 @@ const NewRoomPage = () => {
         name,
         topic,
         creation_content: {
-          type: "m.space"
+          type: "m.space",
         },
         initial_state: [
           {
             type: "m.room.power_levels",
             state_key: "",
             content: {
-              users: { "@_relay_bot:radical.directory": 100 }
-            }
+              users: { [`@_relay_bot:${SERVER_NAME}`]: 100 },
+            },
           },
           {
             type: organRoomType,
             state_key: "id",
             content: {
               type: organRoomType,
-              value: "id"
-            }
-          }
+              value: "id",
+            },
+          },
         ],
-        invite: ["@_relay_bot:radical.directory"]
+        invite: [`@_relay_bot:${SERVER_NAME}`],
       })
       if (!room) throw new Error("Failed to create room")
       console.log("Created room", room)

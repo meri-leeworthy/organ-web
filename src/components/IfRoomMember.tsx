@@ -4,6 +4,8 @@ import { useClient } from "@/hooks/useClient"
 import { xor } from "@/lib/utils"
 import { useState, useEffect } from "react"
 
+const { NEXT_PUBLIC_MATRIX_BASE_URL: MATRIX_BASE_URL } = process.env
+
 export function IfRoomMember({
   slug,
   children,
@@ -23,7 +25,7 @@ export function IfRoomMember({
       .then(result => {
         // console.log("joined rooms result", result)
         const isMember = result.joined_rooms.some(roomId => {
-          return roomId === `!${slug}:radical.directory`
+          return roomId === `!${slug}:${MATRIX_BASE_URL}`
         })
         console.log("isMember", isMember)
         setIsMember(isMember)

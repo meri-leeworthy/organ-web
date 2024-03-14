@@ -4,6 +4,8 @@ import { Pre } from "@/components/styled/Pre"
 import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { useEffect, useState } from "react"
 
+const { NEXT_PUBLIC_MATRIX_BASE_URL: MATRIX_BASE_URL } = process.env
+
 export default function RequestTester() {
   const [accessToken, setAccessToken] = useState("")
   const [userId, setUserId] = useState("")
@@ -14,7 +16,7 @@ export default function RequestTester() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [response, setResponse] = useState("")
-  const baseUrl = "https://matrix.radical.directory/_matrix/"
+  const baseUrl = MATRIX_BASE_URL + "/_matrix/"
 
   useEffect(() => {
     const accessToken = localStorage.getItem(ACCESSTOKEN_STORAGE_KEY)

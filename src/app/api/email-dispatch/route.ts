@@ -1,4 +1,4 @@
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 import { getSecretFromRoom } from "@/lib/roomSecretStore"
 import { sendEmail } from "@/lib/sendEmail"
 import {
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
   const room = new Room(roomId, client)
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
   hashes.forEach(async (hash: string) => {
     const mailboxRoomId = await client.getRoomIdFromAlias(
-      `%23relay_${hash}%3Aradical.directory`
+      `%23relay_${hash}%3A${SERVER_NAME}`
     )
     console.log(hash, "-->", mailboxRoomId)
     if (!mailboxRoomId) return

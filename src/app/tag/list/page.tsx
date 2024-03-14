@@ -1,6 +1,6 @@
 const { NODE_ENV } = process.env
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 import { noCacheFetch, props } from "@/lib/utils"
 import Link from "next/link"
@@ -8,7 +8,7 @@ import {
   Client,
   ClientEventOutput,
   EventContentOutput,
-  Room
+  Room,
 } from "simple-matrix-sdk"
 import { Item } from "./Item"
 
@@ -17,7 +17,7 @@ export default async function ListTags() {
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
-    params: { user_id: `@_relay_bot:radical.directory` }
+    params: { user_id: `@_relay_bot:${SERVER_NAME}` },
   })
 
   const index = new Room(TAG_INDEX!, client)

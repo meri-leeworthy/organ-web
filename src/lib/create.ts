@@ -10,15 +10,15 @@ import {
   organSpaceType,
   organSpaceTypeValue,
   organPageType,
-  organPageTypeValue
+  organPageTypeValue,
 } from "./types"
 import { is } from "valibot"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   fetch,
-  params: { user_id: "@_relay_bot:radical.directory" }
+  params: { user_id: "@_relay_bot:" + SERVER_NAME },
 })
 
 const tagIndex = new Room(TAG_INDEX!, client)
@@ -40,16 +40,16 @@ export async function createPost(opts: {
       {
         type: "m.room.join_rules",
         content: {
-          join_rule: "public"
-        }
+          join_rule: "public",
+        },
       },
       {
         type: organRoomType,
         content: {
-          type: organRoomTypeValue.post
-        }
-      }
-    ]
+          type: organRoomTypeValue.post,
+        },
+      },
+    ],
   })
 
   return postRoom
@@ -83,23 +83,23 @@ export async function createEvent(opts: {
       {
         type: "m.room.join_rules",
         content: {
-          join_rule: "public"
-        }
+          join_rule: "public",
+        },
       },
       {
         type: organSpaceType,
         content: {
-          type: organSpaceTypeValue.page
-        }
+          type: organSpaceTypeValue.page,
+        },
       },
       {
         type: organPageType,
         content: {
-          type: organPageTypeValue.event
-        }
+          type: organPageTypeValue.event,
+        },
       },
-      opts.meta
-    ]
+      opts.meta,
+    ],
   })
   return eventSpace
 }
@@ -118,23 +118,23 @@ export async function createPage(opts: {
     {
       type: "m.room.join_rules",
       content: {
-        join_rule: "public"
-      }
+        join_rule: "public",
+      },
     },
     {
       type: organSpaceType,
-      content: organSpaceTypeValue.page
+      content: organSpaceTypeValue.page,
     },
     {
       type: organPageType,
-      content: organPageTypeValue.id
-    }
+      content: organPageTypeValue.id,
+    },
   ]
 
   opts.location &&
     initial_state.push({
       type: organLocation,
-      content: opts.location
+      content: opts.location,
     })
 
   const pageSpace = await client.createRoom({
@@ -145,7 +145,7 @@ export async function createPage(opts: {
       opts.slug || opts.name.trim().toLowerCase().replaceAll(" ", "-"),
     // visibility: "public",
     invite: [opts.owner],
-    initial_state: initial_state
+    initial_state: initial_state,
   })
   return pageSpace
 }
@@ -167,23 +167,23 @@ export async function createTag(opts: {
       {
         type: "m.room.join_rules",
         content: {
-          join_rule: "public"
-        }
+          join_rule: "public",
+        },
       },
       {
         type: organSpaceType,
         content: {
-          type: organSpaceTypeValue.tag
-        }
+          type: organSpaceTypeValue.tag,
+        },
       },
       {
         type: "m.space.parent",
         state_key: TAG_INDEX,
         content: {
-          via: ["radical.directory"]
-        }
-      }
-    ]
+          via: [SERVER_NAME],
+        },
+      },
+    ],
   })
 
   if (is(ErrorSchema, tagSpace)) return tagSpace
@@ -191,7 +191,7 @@ export async function createTag(opts: {
   await tagIndex.sendStateEvent(
     "m.space.child",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     tagSpace.roomId
   )

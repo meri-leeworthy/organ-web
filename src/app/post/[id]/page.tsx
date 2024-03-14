@@ -2,15 +2,15 @@ import { noCacheFetch } from "@/lib/utils"
 import { Client, State } from "simple-matrix-sdk"
 import { Form } from "./Form"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const { id: idLocalPart } = params
-  const roomId = `!${idLocalPart}:radical.directory`
+  const roomId = `!${idLocalPart}:${SERVER_NAME}`
 
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
-    params: { user_id: `@_relay_bot:radical.directory` }
+    params: { user_id: `@_relay_bot:${SERVER_NAME}` },
   })
 
   const postRoom = client.getRoom(roomId)

@@ -2,11 +2,11 @@
 import { Client, Room } from "simple-matrix-sdk"
 import { normaliseTagString } from "./utils"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   fetch,
-  params: { user_id: "@_relay_bot:radical.directory" }
+  params: { user_id: "@_relay_bot:" + SERVER_NAME },
 })
 
 const tagIndex = new Room(TAG_INDEX!, client)
@@ -26,7 +26,7 @@ export async function bilateralAdoptTag(tagRoomId: string) {
     "m.space.child",
     {
       order: tagNameString,
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     tagRoomId
   )
@@ -35,7 +35,7 @@ export async function bilateralAdoptTag(tagRoomId: string) {
   const tagAddParent = await tagRoom.sendStateEvent(
     "m.space.parent",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     TAG_INDEX
   )
@@ -55,7 +55,7 @@ export async function bilateralTagAdoptPost(
   const tagRoomAddChild = await tagRoom.sendStateEvent(
     "m.space.child",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     postRoomId
   )
@@ -64,7 +64,7 @@ export async function bilateralTagAdoptPost(
   const postAddParent = await postRoom.sendStateEvent(
     "m.space.parent",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     tagRoomId
   )
@@ -74,7 +74,7 @@ export async function bilateralTagAdoptPost(
 
 export async function searchTags(tag: string) {
   const tagRoomId = await client.getRoomIdFromAlias(
-    `#relay_tag_${normaliseTagString(tag)}:radical.directory`
+    `#relay_tag_${normaliseTagString(tag)}:${SERVER_NAME}`
   )
   if (typeof tagRoomId === "object" && "errcode" in tagRoomId) return tagRoomId
   const tagRoom = new Room(tagRoomId, client)

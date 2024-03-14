@@ -1,6 +1,6 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 import { bilateralTagAdoptPost } from "@/lib/tag"
 import {
@@ -8,14 +8,14 @@ import {
   organPostType,
   organPostTypeValue,
   organRoomType,
-  organRoomTypeValue
+  organRoomTypeValue,
 } from "@/lib/types"
 import { normaliseTagString } from "@/lib/utils"
 import { Client, Room } from "simple-matrix-sdk"
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   fetch,
-  params: { user_id: `@_relay_bot:radical.directory` }
+  params: { user_id: `@_relay_bot:${SERVER_NAME}` },
 })
 
 // const index = new Room(TAG_INDEX!, client)
@@ -28,22 +28,22 @@ export async function newPost(formData: FormData) {
       {
         type: organRoomType,
         content: {
-          type: organRoomTypeValue.post
-        }
+          type: organRoomTypeValue.post,
+        },
       },
       {
         type: organPostType,
         content: {
-          type: organPostTypeValue.text
-        }
+          type: organPostTypeValue.text,
+        },
       },
       {
         type: organPostText,
         content: {
-          value: content
-        }
-      }
-    ]
+          value: content,
+        },
+      },
+    ],
   })
 
   if ("errcode" in postRoom) return postRoom
@@ -61,7 +61,7 @@ export async function addTagToPost(formData: FormData) {
 
   // check if tag space already exists
 
-  const alias = `#relay_tag_${tag}:radical.directory`
+  const alias = `#relay_tag_${tag}:${SERVER_NAME}`
 
   console.log(`alias "${alias}"`)
 

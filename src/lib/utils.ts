@@ -2,7 +2,8 @@ import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import next from "next"
 import { Room, Event } from "simple-matrix-sdk"
-const { NEXT_PUBLIC_MATRIX_BASE_URL } = process.env
+
+const { MATRIX_BASE_URL } = process.env
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -18,8 +19,8 @@ export const getCacheTagFetch =
       ...init,
       next: {
         revalidate,
-        tags
-      }
+        tags,
+      },
     })
 
 export async function getMessagesChunk(messagesIterator: AsyncGenerator) {
@@ -114,7 +115,7 @@ export function getContextualDate(ts: number) {
   }/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}`
   const timeString = new Intl.DateTimeFormat("en-AU", {
     hour: "numeric",
-    minute: "numeric"
+    minute: "numeric",
   }).format(date)
 
   const now = new Date()
@@ -144,19 +145,19 @@ export function getContextualDate(ts: number) {
     return diff < -1
       ? `${-diff} years ago`
       : diff === -1
-        ? `${date.toLocaleDateString("en-AU", {
+      ? `${date.toLocaleDateString("en-AU", {
+          day: "numeric",
+          month: "long",
+        })} last year`
+      : `${
+          // for future years just show the full date
+          (date.toLocaleDateString("en-AU"),
+          {
             day: "numeric",
-            month: "long"
-          })} last year`
-        : `${
-            // for future years just show the full date
-            (date.toLocaleDateString("en-AU"),
-            {
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            })
-          }`
+            month: "long",
+            year: "numeric",
+          })
+        }`
   }
 
   const isDateThisMonth = date.getMonth() === now.getMonth()
@@ -166,15 +167,15 @@ export function getContextualDate(ts: number) {
     return diff < -1
       ? `${-diff} months ago`
       : diff === -1
-        ? `${date.toLocaleDateString("en-AU", {
-            day: "numeric",
-            month: "long"
-          })} last month`
-        : `${date.toLocaleDateString("en-AU", {
-            //for future months this year, show the date without the year
-            day: "numeric",
-            month: "long"
-          })}`
+      ? `${date.toLocaleDateString("en-AU", {
+          day: "numeric",
+          month: "long",
+        })} last month`
+      : `${date.toLocaleDateString("en-AU", {
+          //for future months this year, show the date without the year
+          day: "numeric",
+          month: "long",
+        })}`
   }
 
   const dateDiff = now.getDate() - date.getDate()
@@ -233,12 +234,12 @@ export function getContextualDate(ts: number) {
   if (isDateBeforeLastWeek) {
     return `${date.toLocaleDateString("en-AU", {
       day: "numeric",
-      month: "long"
+      month: "long",
     })}`
   }
 
   return new Intl.DateTimeFormat("en-AU", {
-    dateStyle: "full"
+    dateStyle: "full",
   }).format(date)
 }
 
@@ -249,7 +250,7 @@ export function getMxcUrl(mxc: string) {
   const serverName = mxc.split("://")[1].split("/")[0]
   const mediaId = mxc.split("://")[1].split("/")[1]
 
-  return `https://matrix.radical.directory/_matrix/media/r0/download/${serverName}/${mediaId}`
+  return `${MATRIX_BASE_URL}/_matrix/media/r0/download/${serverName}/${mediaId}`
 }
 
 export function xor(a: boolean, b: boolean) {

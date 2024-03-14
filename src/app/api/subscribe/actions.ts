@@ -6,14 +6,14 @@ import { getOrCreateMailboxId, sendEmailFromMailbox } from "@/lib/sendEmail"
 import { organRoomSecretEmail, organRoomUserNotifications } from "@/lib/types"
 import { Client, Room } from "simple-matrix-sdk"
 
-const { MATRIX_BASE_URL, AS_TOKEN } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 export async function subscribeEmailToRoom(roomId: string, email: string) {
   const mailboxRoomId = await getOrCreateMailboxId(email)
   const stored = await storeSecretInRoom(
     mailboxRoomId as string,
     organRoomSecretEmail,
-    email,
+    email
   )
   console.log("stored", stored)
 
@@ -22,7 +22,7 @@ export async function subscribeEmailToRoom(roomId: string, email: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch,
     params: {
-      user_id: "@_relay_bot:radical.directory",
+      user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
@@ -48,7 +48,7 @@ export async function subscribeEmailToRoom(roomId: string, email: string) {
     {
       email: "every",
     },
-    hash,
+    hash
   )
 
   console.log("state sent", res)
@@ -62,7 +62,7 @@ export async function subscribeEmailToRoom(roomId: string, email: string) {
     email as string,
     `You just signed up for updates for ${nameString} on Organ!`,
     pageSpecificWelcomeEmailContent,
-    pageSpecificWelcomeEmailContent,
+    pageSpecificWelcomeEmailContent
   )
 
   return result

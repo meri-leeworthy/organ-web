@@ -1,6 +1,9 @@
 "use client"
 
-const MATRIX_BASE_URL = "https://matrix.radical.directory"
+const {
+  NEXT_PUBLIC_MATRIX_BASE_URL: MATRIX_BASE_URL,
+  NEXT_PUBLIC_SERVER_NAME: SERVER_NAME,
+} = process.env
 
 import React, { useEffect, useState } from "react"
 import { Client } from "simple-matrix-sdk"
@@ -36,7 +39,7 @@ const LoginPage = () => {
       localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
       localStorage.setItem(
         USERID_STORAGE_KEY,
-        `@${username.trim().toLowerCase()}:radical.directory`
+        `@${username.trim().toLowerCase()}:${SERVER_NAME}`
       )
       router.refresh()
     } catch (error) {
