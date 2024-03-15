@@ -420,7 +420,12 @@ export function CreateRoom() {
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await createRoom(formData)
-        setResult({ result })
+        if ("errcode" in result) {
+          setResult({ result: result.errcode })
+        } else {
+          console.log("result", result)
+          setResult({ roomId: result.roomId })
+        }
       }}>
       <input
         type="text"
