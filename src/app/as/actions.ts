@@ -131,7 +131,6 @@ export async function getAliases(formData: FormData) {
 
 export async function getRoomIdFromAlias(formData: FormData) {
   const alias = formData.get("alias") as string
-  console.log("alias", alias, encodeURIComponent(alias))
   const roomId = await client.getRoomIdFromAlias(alias)
   console.log("roomId", roomId)
   return roomId
@@ -140,5 +139,5 @@ export async function getRoomIdFromAlias(formData: FormData) {
 export async function setAlias(formData: FormData) {
   const roomId = formData.get("room") as string
   const alias = formData.get("alias") as string
-  return await client.put(`directory/room/${alias}`, { room_id: roomId })
+  return await client.getRoom(roomId).setAlias(alias)
 }
