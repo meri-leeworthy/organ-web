@@ -20,6 +20,9 @@ docker run --rm -v organ-web_synapse-data:/data -v $(pwd)/synapse:/as alpine /bi
 # start synapse
 docker-compose up -d
 
+# register a new user
+docker exec -it organ-web-synapse-1 register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml
+
 # synapse should be accessible at localhost:8008
 
 # install dependencies
