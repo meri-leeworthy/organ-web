@@ -31,22 +31,25 @@ export default async function Home() {
   const space = new Room(HOME_SPACE!, client)
   const hierarchy = await space.getHierarchy()
 
-  // console.log("hierarchy", hierarchy)
-  const children = hierarchy.filter(room => room.children_state.length === 0)
+  console.log("hierarchy", hierarchy)
+
+  const children = hierarchy?.filter(room => room.children_state.length === 0)
   const rooms = children
-    .filter(r => r !== undefined)
+    ?.filter(r => r !== undefined)
     .map(room => {
       if (!room) throw new Error("room is undefined")
       return new Room(room.room_id, noCacheClient)
     })
   await Promise.all(
-    rooms.map(async room => {
-      try {
-        await room.getName()
-      } catch (e) {
-        console.log(e)
-      }
-    })
+    rooms
+      ? rooms.map(async room => {
+          try {
+            await room.getName()
+          } catch (e) {
+            console.log(e)
+          }
+        })
+      : []
   )
 
   // rooms.forEach(room => {
@@ -55,24 +58,26 @@ export default async function Home() {
 
   const posts = (
     await Promise.all(
-      rooms.map(async room => {
-        try {
-          const messages = await room.getMessages({
-            limit: 50,
-            dir: "b",
+      rooms
+        ? rooms.map(async room => {
+            try {
+              const messages = await room.getMessages({
+                limit: 50,
+                dir: "b",
+              })
+              if ("errcode" in messages) return []
+              return messages.chunk.filter(
+                (message: any) =>
+                  message.type === "m.room.message" &&
+                  ((message.content?.msgtype === organCalEventUnstable &&
+                    new Date(message.content.start).valueOf() > Date.now()) ||
+                    message.content?.msgtype === organPostUnstable)
+              )
+            } catch (e) {
+              console.log(e)
+            }
           })
-          if ("errcode" in messages) return []
-          return messages.chunk.filter(
-            (message: any) =>
-              message.type === "m.room.message" &&
-              ((message.content?.msgtype === organCalEventUnstable &&
-                new Date(message.content.start).valueOf() > Date.now()) ||
-                message.content?.msgtype === organPostUnstable)
-          )
-        } catch (e) {
-          console.log(e)
-        }
-      })
+        : []
     )
   )
     .flat()
@@ -91,7 +96,7 @@ export default async function Home() {
       <Posts posts={[...timeline.events.values()]} />
       <h3 className="mt-6 text-lg font-medium">Collectives</h3>
       <ul>
-        {rooms.map((room, i) => (
+        {rooms?.map((room, i) => (
           <li key={i}>
             <Link href={`/id/${getIdLocalPart(room.roomId || "")}`}>
               <Suspense fallback={<>loading...</>}>
