@@ -55,7 +55,11 @@ const SignupForm = () => {
   const handleSignup = async () => {
     setLoading(true)
     try {
-      const user = await Client.register(username, password, MATRIX_BASE_URL!)
+      const user = await Client.register(
+        username,
+        password,
+        process.env.NEXT_PUBLIC_MATRIX_BASE_URL!
+      )
       if (is(ErrorSchema, user)) throw new Error(user.error)
 
       console.log(user, "User registered successfully!")
@@ -68,9 +72,13 @@ const SignupForm = () => {
         user.user_id.trim().toLowerCase()
       )
 
-      const client = new Client(MATRIX_BASE_URL!, accessToken, {
-        userId: user.user_id,
-      })
+      const client = new Client(
+        process.env.NEXT_PUBLIC_MATRIX_BASE_URL!,
+        accessToken,
+        {
+          userId: user.user_id,
+        }
+      )
 
       const clientSecret = Math.random().toString(36).substring(2, 15)
 
