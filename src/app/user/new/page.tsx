@@ -11,8 +11,6 @@ import React, { useState, useEffect } from "react"
 import { Client, ErrorSchema } from "simple-matrix-sdk"
 import { is, set } from "valibot"
 
-const { NEXT_PUBLIC_MATRIX_BASE_URL: MATRIX_BASE_URL } = process.env
-
 const SignupForm = () => {
   const [email, setEmail] = useState("")
   const [debouncedUsername, username, setUsername] = useDebounce("", 500)
@@ -34,7 +32,7 @@ const SignupForm = () => {
       if (debouncedUsername.length > 0) {
         const available = await Client.isUsernameAvailable(
           debouncedUsername,
-          MATRIX_BASE_URL!
+          process.env.NEXT_PUBLIC_MATRIX_BASE_URL!
         )
         setUsernameAvailable(available)
       }

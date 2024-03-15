@@ -18,8 +18,6 @@ import { is } from "valibot"
 import { ClientEventOutput, ErrorSchema } from "simple-matrix-sdk"
 import { HOME_SPACE } from "@/lib/constants"
 
-const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
-
 export default function OrgSlugDashboardPage({
   params,
 }: {
@@ -167,7 +165,8 @@ function RequestPublication({ slug }: { slug: string }) {
     )
     console.log("rooms", roomIds)
     const isPublished = roomIds.some(
-      (roomId: string) => roomId === `!${slug}:${SERVER_NAME}`
+      (roomId: string) =>
+        roomId === `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`
     )
     setIsPublished(isPublished)
   })
@@ -177,7 +176,7 @@ function RequestPublication({ slug }: { slug: string }) {
     const res = await fetch("/api/requestpub", {
       method: "POST",
       body: JSON.stringify({
-        roomId: `!${slug}:${SERVER_NAME}`,
+        roomId: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
       }),
     })
     console.log("res", res)

@@ -1,8 +1,4 @@
-import {
-  ACCESSTOKEN_STORAGE_KEY,
-  BASE_URL,
-  USERID_STORAGE_KEY
-} from "@/lib/constants"
+import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { Client } from "simple-matrix-sdk"
 import { useEffect, useMemo, useState } from "react"
 
@@ -18,7 +14,11 @@ export function useClient() {
 
   useEffect(() => {
     if (accessToken && userId) {
-      const client = new Client(BASE_URL, accessToken, { userId, fetch })
+      const client = new Client(
+        process.env.NEXT_PUBLIC_MATRIX_BASE_URL!,
+        accessToken,
+        { userId, fetch }
+      )
       setClient(client)
     }
   }, [accessToken, userId])

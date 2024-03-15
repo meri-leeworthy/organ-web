@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
-
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
 import { useClient } from "@/hooks/useClient"
 import {
@@ -73,7 +71,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
   const client = useClient()
   const room = useMemo(() => {
     if (!client) return
-    return new Room(`!${slug}:${SERVER_NAME}`, client)
+    return new Room(`!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`, client)
   }, [client, slug])
 
   useEffect(() => {
