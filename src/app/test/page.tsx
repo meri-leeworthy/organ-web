@@ -5,6 +5,7 @@ import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { useEffect, useState } from "react"
 
 export default function RequestTester() {
+  const [isClient, setIsClient] = useState(false)
   const [accessToken, setAccessToken] = useState("")
   const [userId, setUserId] = useState("")
   const [endpoint, setEndpoint] = useState("")
@@ -17,12 +18,15 @@ export default function RequestTester() {
   const baseUrl = process.env.NEXT_PUBLIC_MATRIX_BASE_URL + "/_matrix/"
 
   useEffect(() => {
+    setIsClient(true)
     const accessToken = localStorage.getItem(ACCESSTOKEN_STORAGE_KEY)
     const userId = localStorage.getItem(USERID_STORAGE_KEY)
 
     setAccessToken(accessToken || "")
     setUserId(userId ? userId.trim().toLowerCase() : "")
   }, [])
+
+  if (!isClient) return null
 
   async function handleRequestSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -51,13 +55,13 @@ export default function RequestTester() {
       className="max-w-lg w-full flex flex-col gap-2 *:flex *:gap-2 *:justify-between"
       onSubmit={handleRequestSubmit}>
       <p className="flex items-baseline">
-        accessToken: <pre className="font-mono text-xs">{accessToken}</pre>
+        accessToken: <code className="font-mono text-xs">{accessToken}</code>
       </p>
       <p>
-        userId: <pre className="font-mono text-xs">{userId}</pre>
+        userId: <code className="font-mono text-xs">{userId}</code>
       </p>
       <p>
-        baseurl: <pre className="font-mono text-xs">{baseUrl}</pre>
+        baseurl: <code className="font-mono text-xs">{baseUrl}</code>
       </p>
       <label className="flex w-full">
         method:
