@@ -1,0 +1,82 @@
+{
+  "prison-abolition": {
+    "name": "Prison Abolition",
+    "description": "Advocates for dismantling the current penal system and replacing it with alternatives that address the root causes of crime, focusing on rehabilitation, restorative justice, and community support."
+  },
+  "climate-justice": {
+    "name": "Climate Justice",
+    "description": "Focuses on the ethical and political issues related to climate change, emphasizing the disproportionate impact on marginalized communities and calling for equitable solutions."
+  },
+  "anti-capitalism": {
+    "name": "Anti-Capitalism",
+    "description": "Opposes the principles of capitalist economics, advocating for economic systems that prioritize public welfare over profits, such as socialism or communism."
+  },
+  "direct-action": {
+    "name": "Direct Action",
+    "description": "Tactics that achieve political or social goals through immediate action by the participants, rather than through indirect methods like voting or lobbying."
+  },
+  "food-sovereignty": {
+    "name": "Food Sovereignty",
+    "description": "The right of peoples to healthy and culturally appropriate food produced through ecologically sound and sustainable methods, and their right to define their own food and agriculture systems."
+  },
+  "mutual-aid": {
+    "name": "Mutual Aid",
+    "description": "A voluntary reciprocal exchange of resources and services for mutual benefit, emphasizing community solidarity and cooperation over competition."
+  },
+  "decolonization": {
+    "name": "Decolonization",
+    "description": "The process of deconstructing colonial ideologies of the superiority and privilege of Western thought and approaches, reclaiming and valuing knowledge and culture of colonized peoples."
+  },
+  "eco-feminism": {
+    "name": "Eco-Feminism",
+    "description": "Combines ecological concerns with feminist perspectives, highlighting the connections between the exploitation of the earth and the oppression of women and marginalized communities."
+  },
+  "queer-liberation": {
+    "name": "Queer Liberation",
+    "description": "A movement to eliminate societal stigma, discrimination, and violence against LGBTQ+ people, advocating for equal rights, acceptance, and freedom of expression."
+  },
+  "digital-privacy": {
+    "name": "Digital Privacy",
+    "description": "Advocates for the protection of personal information and the right to privacy in the digital age, opposing mass surveillance and data exploitation."
+  },
+  "workers-rights": {
+    "name": "Workers' Rights",
+    "description": "Advocacy for the rights and protection of workers, including fair wages, safe working conditions, and the right to organize and bargain collectively."
+  },
+  "universal-basic-income": {
+    "name": "Universal Basic Income",
+    "description": "A social security system in which all citizens receive a regular, unconditional sum of money, regardless of other income, to cover basic living costs."
+  },
+  "land-back": {
+    "name": "Land Back",
+    "description": "A movement advocating for the return of land to Indigenous peoples, recognizing their sovereignty and the injustices of land theft and colonization."
+  },
+  "housing-first": {
+    "name": "Housing First",
+    "description": "An approach to homelessness that provides permanent housing as the first and primary response, followed by supportive services as needed."
+  },
+  "racial-justice": {
+    "name": "Racial Justice",
+    "description": "The systematic fair treatment of people of all races that results in equitable opportunities and outcomes for everyone, actively challenging and responding to racism and discrimination."
+  },
+  "non-violent-resistance": {
+    "name": "Non-Violent Resistance",
+    "description": "A strategy of achieving social or political change through symbolic protests, civil disobedience, and other methods, without using violence."
+  },
+  "animal-rights": {
+    "name": "Animal Rights",
+    "description": "The idea that animals are entitled to the possession of their own lives and that their most basic interests—such as the need to avoid suffering—should be afforded the same consideration as similar interests of human beings."
+  },
+  "zero-waste": {
+    "name": "Zero Waste",
+    "description": "A philosophy that encourages the redesign of resource life cycles so that all products are reused, with no trash sent to landfills or incinerators."
+  },
+  "peace-movement": {
+    "name": "Peace Movement",
+    "description": "A social movement that seeks to achieve ideals such as the ending of a particular war (or all wars), minimize inter-human violence in a particular place or type of situation, and is often linked to the goal of achieving world peace."
+  },
+  "indigenous-sovereignty": {
+    "name": "Indigenous Sovereignty",
+    "description": "The inherent right of Indigenous peoples to govern themselves and their lands, recognizing their unique cultures, languages, and traditions."
+  }
+}
