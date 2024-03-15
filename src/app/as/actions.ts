@@ -1,6 +1,6 @@
 "use server"
 
-import { Client, Room } from "simple-matrix-sdk"
+import { Client, CreateRoomOpts, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
@@ -28,6 +28,24 @@ export async function joinRoomAction(formData: FormData) {
   const room = formData.get("room") as string
   const user = (formData.get("user") as string) || "bot"
   return joinRoom(room, user)
+}
+
+export async function createRoom(formData: FormData) {
+  const name = formData.get("name") as string
+  const space = formData.get("space") as string
+
+  console.log("space", space)
+
+  const opts: CreateRoomOpts = {
+    name,
+  }
+
+  if (space === "true") {
+    opts["creation_content"] = { type: "m.space" }
+  }
+  const room = await client.createRoom(opts)
+  console.log("room", room)
+  return room
 }
 
 export async function getRooms(formData: FormData): Promise<RoomDebug[]> {

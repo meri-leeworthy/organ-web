@@ -12,7 +12,8 @@ import {
   SendMessage,
   GetAliases,
   GetRoomIdFromAlias,
-  SetAlias
+  SetAlias,
+  CreateRoom,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE } = process.env
 
@@ -26,6 +27,9 @@ export default async function ApplicationServiceTest() {
           <h1>Application Service Test</h1>
 
           <p>Home space: {HOME_SPACE}</p>
+
+          <h2>Create Room</h2>
+          <CreateRoom />
 
           <h2>Get Rooms</h2>
           <GetRooms />

@@ -12,6 +12,7 @@ import {
   getAliases,
   getRoomIdFromAlias,
   setAlias,
+  createRoom,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -407,6 +408,32 @@ export function SetAlias() {
         className="border border-black"
       />
       <Button type="submit">set alias</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function CreateRoom() {
+  const [result, setResult] = useState({})
+  return (
+    <form
+      action={async (formData: FormData) => {
+        console.log("formData", formData)
+        const result = await createRoom(formData)
+        setResult({ result })
+      }}>
+      <input
+        type="text"
+        name="name"
+        placeholder="name"
+        className="border border-black"
+      />
+      <label>
+        Space?
+        <input type="checkbox" name="space" value="false" />
+      </label>
+
+      <Button type="submit">create room</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )
