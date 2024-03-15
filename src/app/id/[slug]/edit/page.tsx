@@ -159,7 +159,7 @@ function RequestPublication({ slug }: { slug: string }) {
   const homeSpace = HOME_SPACE.split(":")[0].slice(1)
   const room = useRoom(homeSpace)
   room?.getHierarchy().then(res => {
-    if (is(ErrorSchema, res)) return
+    if (!res || is(ErrorSchema, res)) return
     const roomIds = res[0].children_state.map(
       (event: ClientEventOutput) => event.state_key
     )

@@ -19,7 +19,7 @@ export default function RawOrgRoomEvents({
     room
       ?.getEvent(`$${id}`)
       .then(post => {
-        if (!post) throw new Error("Post not found")
+        if (!post || "errcode" in post) throw new Error("Post not found")
         setEvent(post)
       })
       .catch(e => {
