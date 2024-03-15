@@ -15,7 +15,7 @@ import {
   SetAlias,
   CreateRoom,
 } from "./Forms"
-const { NODE_ENV, HOME_SPACE } = process.env
+const { NODE_ENV, HOME_SPACE, TAG_INDEX } = process.env
 
 export default async function ApplicationServiceTest() {
   console.log("NODE_ENV", NODE_ENV)
@@ -27,6 +27,7 @@ export default async function ApplicationServiceTest() {
           <h1>Application Service Test</h1>
 
           <p>Home space: {HOME_SPACE}</p>
+          <p>Tag index: {TAG_INDEX}</p>
 
           <h2>Create Room</h2>
           <CreateRoom />
@@ -75,6 +76,7 @@ export default async function ApplicationServiceTest() {
             Create _relay_bot user
             <br />
             Create tag index space <br />
+            Set #relay_tagindex:localhost as alias for tag index space <br />
             Create 50 tags <br />
             Create 50 ID pages <br />
             Create 200 event pages <br />
@@ -83,7 +85,11 @@ export default async function ApplicationServiceTest() {
             Join each user to: <br />
             10 random tags, <br />
             10 random ID pages, <br />
-            50 random event pages
+            50 random event pages. <br />
+            Join each event page to: <br />
+            1 or 2 random ID pages, <br />
+            5 random tags. <br />
+            Join each ID page to: <br />5 random tags.
           </p>
         </div>
       )}
