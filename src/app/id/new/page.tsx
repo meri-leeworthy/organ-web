@@ -81,7 +81,7 @@ const NewRoomPage = () => {
               redact: 50,
               state_default: 50,
               users: {
-                "@_relay_bot:radical.directory": 100,
+                ["@_relay_bot:" + process.env.NEXT_PUBLIC_SERVER_NAME]: 100,
                 [client.userId]: 100,
               },
               users_default: 0,
