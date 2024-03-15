@@ -4,8 +4,6 @@ import { useClient } from "@/hooks/useClient"
 import { useEffect, useState } from "react"
 import { ClientEventOutput, Room } from "simple-matrix-sdk"
 
-const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
-
 export default function RawOrgRoomEvents({
   params: { slug, id },
 }: {
@@ -14,12 +12,14 @@ export default function RawOrgRoomEvents({
   const [event, setEvent] = useState<ClientEventOutput>()
   const [error, setError] = useState("")
   const client = useClient()
-  const room = client ? new Room(`!${slug}:${SERVER_NAME}`, client) : undefined
+  const room = client
+    ? new Room(`!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`, client)
+    : undefined
   useEffect(() => {
     room
       ?.getEvent(`$${id}`)
       .then(post => {
-        if (!post) throw new Error("Post not found")
+        if (!post || "errcode" in post) throw new Error("Post not found")
         setEvent(post)
       })
       .catch(e => {

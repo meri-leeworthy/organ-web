@@ -18,8 +18,6 @@ import { is } from "valibot"
 import { ClientEventOutput, ErrorSchema } from "simple-matrix-sdk"
 import { HOME_SPACE } from "@/lib/constants"
 
-const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
-
 export default function OrgSlugDashboardPage({
   params,
 }: {
@@ -161,13 +159,14 @@ function RequestPublication({ slug }: { slug: string }) {
   const homeSpace = HOME_SPACE.split(":")[0].slice(1)
   const room = useRoom(homeSpace)
   room?.getHierarchy().then(res => {
-    if (is(ErrorSchema, res)) return
+    if (!res || is(ErrorSchema, res)) return
     const roomIds = res[0].children_state.map(
       (event: ClientEventOutput) => event.state_key
     )
     console.log("rooms", roomIds)
     const isPublished = roomIds.some(
-      (roomId: string) => roomId === `!${slug}:${SERVER_NAME}`
+      (roomId: string) =>
+        roomId === `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`
     )
     setIsPublished(isPublished)
   })
@@ -177,7 +176,7 @@ function RequestPublication({ slug }: { slug: string }) {
     const res = await fetch("/api/requestpub", {
       method: "POST",
       body: JSON.stringify({
-        roomId: `!${slug}:${SERVER_NAME}`,
+        roomId: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
       }),
     })
     console.log("res", res)

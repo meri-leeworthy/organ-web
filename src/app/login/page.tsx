@@ -1,10 +1,5 @@
 "use client"
 
-const {
-  NEXT_PUBLIC_MATRIX_BASE_URL: MATRIX_BASE_URL,
-  NEXT_PUBLIC_SERVER_NAME: SERVER_NAME,
-} = process.env
-
 import React, { useEffect, useState } from "react"
 import { Client } from "simple-matrix-sdk"
 import { useRouter } from "next/navigation"
@@ -30,16 +25,18 @@ const LoginPage = () => {
     event.preventDefault()
     setLoading(true)
     try {
-      console.log("Matrix base url", MATRIX_BASE_URL)
+      console.log("Matrix base url", process.env.NEXT_PUBLIC_MATRIX_BASE_URL)
       const accessToken = await Client.login(
-        MATRIX_BASE_URL!,
+        process.env.NEXT_PUBLIC_MATRIX_BASE_URL!,
         username,
         password
       )
       localStorage.setItem(ACCESSTOKEN_STORAGE_KEY, accessToken)
       localStorage.setItem(
         USERID_STORAGE_KEY,
-        `@${username.trim().toLowerCase()}:${SERVER_NAME}`
+        `@${username.trim().toLowerCase()}:${
+          process.env.NEXT_PUBLIC_SERVER_NAME
+        }`
       )
       router.refresh()
     } catch (error) {

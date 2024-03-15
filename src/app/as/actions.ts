@@ -39,13 +39,13 @@ export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
   const { joined_rooms: roomIds } = await client.get("joined_rooms", {
     user_id: `@_relay_${user}:${SERVER_NAME}`,
   })
-  const rooms = roomIds.map((roomId: string) => {
+  const rooms = roomIds?.map((roomId: string) => {
     const room = new Room(roomId, client)
     return room
   })
   console.log("rooms", rooms, "user", user)
   const roomsWithData: RoomDebug[] = await Promise.all(
-    rooms.map(async (room: Room) => {
+    rooms?.map(async (room: Room) => {
       const roomData = await room.getHierarchy()
       // console.log("roomData", roomData)
       return roomData

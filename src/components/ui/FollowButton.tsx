@@ -4,8 +4,6 @@ import { useClient } from "@/hooks/useClient"
 import { IconCheck, IconPlus } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 
-const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
-
 export function FollowButton({ slug }: { slug: string }) {
   const [isFollowing, setIsFollowing] = useState(false)
 
@@ -18,7 +16,7 @@ export function FollowButton({ slug }: { slug: string }) {
       .then(result => {
         console.log("joined rooms result", result)
         const isMember = result.joined_rooms.some(
-          roomId => roomId === `!${slug}:${SERVER_NAME}`
+          roomId => roomId === `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`
         )
         setIsFollowing(isMember)
       })
@@ -29,7 +27,7 @@ export function FollowButton({ slug }: { slug: string }) {
     console.log("joining room")
     if (!client) return
     client
-      .joinRoom(`!${slug}:${SERVER_NAME}`)
+      .joinRoom(`!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`)
       .then(() => {
         console.log("joined room")
         setIsFollowing(true)

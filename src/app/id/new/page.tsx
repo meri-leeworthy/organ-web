@@ -22,8 +22,6 @@ import { slug } from "@/lib/utils"
 import { IconNorthStar } from "@tabler/icons-react"
 import { joinRoom } from "@/app/api/join/action"
 
-const { NEXT_PUBLIC_SERVER_NAME: SERVER_NAME } = process.env
-
 const NewRoomPage = () => {
   const client = useClient()
 
@@ -105,7 +103,7 @@ const NewRoomPage = () => {
             },
           },
         ],
-        invite: [`@_relay_bot:${SERVER_NAME}`],
+        invite: [`@_relay_bot:${process.env.NEXT_PUBLIC_SERVER_NAME}`],
       })
       if (!room) throw new Error("Failed to create room")
       console.log("Room creation result:", room)

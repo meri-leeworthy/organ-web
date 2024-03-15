@@ -14,11 +14,14 @@ Organ Web is a [Next.js](https://nextjs.org/) project using Typescript and Tailw
 # generate a configuration file in the 'synapse-data' volume
 docker-compose run --rm synapse generate
 
-# set the permissions on the volume. I think it will be named 'organ-web_synapse-data' but maybe double check with `docker volume ls` if you have issues
-docker run --rm -v organ-web_synapse-data:/data alpine chown -R 991:991 /data
+# run a setup script for appservice configuration
+docker run --rm -v organ-web_synapse-data:/data -v $(pwd)/synapse:/as alpine /bin/sh -c "chmod +x /as/setup.sh && /as/setup.sh"
 
 # start synapse
 docker-compose up -d
+
+# register a new user
+docker exec -it organ-web-synapse-1 register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml
 
 # synapse should be accessible at localhost:8008
 
