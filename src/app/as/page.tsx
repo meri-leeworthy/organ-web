@@ -69,6 +69,22 @@ export default async function ApplicationServiceTest() {
 
           <h2>Set Alias</h2>
           <SetAlias />
+
+          <h2>Seed Data</h2>
+          <p>
+            Create _relay_bot user
+            <br />
+            Create tag index space <br />
+            Create 50 tags <br />
+            Create 50 ID pages <br />
+            Create 200 event pages <br />
+            Create 500 posts <br />
+            Create 1000 users <br />
+            Join each user to: <br />
+            10 random tags, <br />
+            10 random ID pages, <br />
+            50 random event pages
+          </p>
         </div>
       )}
     </IfLoggedIn>
