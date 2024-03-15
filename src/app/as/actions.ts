@@ -45,7 +45,8 @@ export async function createRoom(formData: FormData) {
   }
   const room = await client.createRoom(opts)
   console.log("room", room)
-  return room
+  if ("errcode" in room) return room
+  return { roomId: room.roomId }
 }
 
 export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
