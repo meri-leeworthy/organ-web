@@ -11,7 +11,7 @@ import {
   sendMessage,
   getAliases,
   getRoomIdFromAlias,
-  setAlias
+  setAlias,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -39,8 +39,7 @@ export function GetRooms() {
         const rooms = await getRooms(formData)
         console.log("rooms", rooms)
         setRooms(rooms)
-      }}
-    >
+      }}>
       <input
         type="text"
         name="user"
@@ -50,7 +49,7 @@ export function GetRooms() {
       <Button type="submit">get rooms</Button>
       <p>Rooms: </p>
       <ul>
-        {rooms.map((room) => {
+        {rooms.map(room => {
           return (
             <li key={room[0].room_id} className="py-2">
               <ul className="">
@@ -87,8 +86,7 @@ export function JoinRoom() {
       action={async (formData: FormData) => {
         const result = await joinRoomAction(formData)
         setResult(result)
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -96,7 +94,7 @@ export function JoinRoom() {
         className="border border-black"
       />
       <Button type="submit">join</Button>
-      <p>Result: {JSON.stringify(result)}</p>
+      <Pre>Result: {JSON.stringify(result)}</Pre>
     </form>
   )
 }
@@ -109,8 +107,7 @@ export function Register() {
       action={async (formData: FormData) => {
         const result = await register(formData)
         setResult(result)
-      }}
-    >
+      }}>
       <input
         type="text"
         name="user"
@@ -118,7 +115,7 @@ export function Register() {
         className="border border-black"
       />
       <Button type="submit">register</Button>
-      <p>Result: {JSON.stringify(result)}</p>
+      <Pre>Result: {JSON.stringify(result)}</Pre>
     </form>
   )
 }
@@ -135,8 +132,7 @@ export function CreateMailbox() {
           formData.get("user") as string
         )
         setResult(result)
-      }}
-    >
+      }}>
       <input
         type="text"
         name="user"
@@ -150,7 +146,7 @@ export function CreateMailbox() {
         className="border border-black"
       />
       <Button type="submit">create mailbox</Button>
-      <p>Result: {JSON.stringify(result)}</p>
+      <Pre>Result: {JSON.stringify(result)}</Pre>
     </form>
   )
 }
@@ -171,8 +167,7 @@ export function SetSecret() {
           formData.get("value") as string
         )
         setResult(result)
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -209,8 +204,7 @@ export function GetSecret() {
           formData.get("key") as string
         )
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -238,8 +232,7 @@ export function GetState() {
         console.log("formData", formData)
         const result = await getStateAction(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -261,8 +254,7 @@ export function GetStateType() {
         console.log("formData", formData)
         const result = await getStateTypeAction(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -290,8 +282,7 @@ export function SetState() {
         console.log("formData", formData)
         const result = await setStateAction(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -331,8 +322,7 @@ export function SendMessage() {
         console.log("formData", formData)
         const result = await sendMessage(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -360,8 +350,7 @@ export function GetAliases() {
         console.log("formData", formData)
         const result = await getAliases(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
@@ -383,8 +372,7 @@ export function GetRoomIdFromAlias() {
         console.log("formData", formData)
         const result = await getRoomIdFromAlias(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="alias"
@@ -405,8 +393,7 @@ export function SetAlias() {
         console.log("formData", formData)
         const result = await setAlias(formData)
         setResult({ result })
-      }}
-    >
+      }}>
       <input
         type="text"
         name="room"
