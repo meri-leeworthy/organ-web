@@ -1,0 +1,17 @@
+---
+
+id: matrix-rd-relay # This can be anything, but must be unique within your homeserver
+as_token: 'secretastoken' # This again can be a random string
+hs_token: 'secrethstoken' # ..as can this
+namespaces:
+  rooms: []
+  users:
+    - regex: "@_relay_.*:localhost"
+      exclusive: false
+  aliases:
+    - regex: "#relay_.+:localhost"
+      exclusive: false
+
+sender_localpart: relay
+url: "https://localhost:3000"
+rate_limited: false
