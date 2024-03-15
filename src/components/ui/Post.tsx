@@ -24,10 +24,18 @@ export async function Post({
 
   const authorType = post.author.type
   const authorValue = post.author.value
-  const authorName =
-    authorType === "user"
-      ? (await client.getProfile(authorValue)).displayname
-      : ((await client.getRoom(authorValue).getName()).name as string)
+
+  const authorName = await (async () => {
+    if (authorType === "user") {
+      const profile = await client.getProfile(authorValue)
+      if (!profile || "errcode" in profile) return ""
+      return profile.displayname
+    } else if (authorType === "id") {
+      const room = await client.getRoom(authorValue).getName()
+      if ("errcode" in room) return ""
+      return room.name
+    }
+  })()
 
   console.log(authorName)
 
