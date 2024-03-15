@@ -87,6 +87,14 @@ export default async function Home() {
 
   // const freshPosts = deleteOldEdits(posts)
 
+  // get all tags
+  // get all id pages for each tag
+  // get all events for each tag
+  // get all events for each id page
+  // get all posts for each tag
+  // get all posts for each id page
+  // get all posts for each event
+
   return (
     <main className="flex w-full max-w-lg flex-col gap-4">
       <WelcomeEmailSignup />
