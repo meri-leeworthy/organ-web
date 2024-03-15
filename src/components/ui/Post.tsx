@@ -27,7 +27,7 @@ export async function Post({
   const authorName =
     authorType === "user"
       ? (await client.getProfile(authorValue)).displayname
-      : ((await client.getRoom(authorValue).getName()) as string)
+      : ((await client.getRoom(authorValue).getName()).name as string)
 
   console.log(authorName)
 
