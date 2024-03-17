@@ -1,8 +1,6 @@
-const { MATRIX_BASE_URL, AS_TOKEN, HOME_SPACE, SERVER_NAME } = process.env
+const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
-// export const dynamic = "force-dynamic"
-
-// TODO: why does the event show up on the org page but not the homepage?
+export const dynamic = "force-dynamic"
 
 import { Client, ClientEventOutput, Room, Timeline } from "simple-matrix-sdk"
 import Link from "next/link"
@@ -15,30 +13,33 @@ import { WelcomeEmailSignup } from "./WelcomeEmailSignup"
 
 export default async function Home() {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch,
-    params: {
-      user_id: "@_relay_bot:" + SERVER_NAME,
-    },
-  })
-
-  const noCacheClient = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: {
       user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
 
-  const space = new Room(HOME_SPACE!, client)
-  const hierarchy = await space.getHierarchy()
+  const tagIndexRoomId = await client.getRoomIdFromAlias(
+    "#relay_tagindex:" + SERVER_NAME
+  )
+
+  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
+    return tagIndexRoomId.errcode
+
+  const tagIndex = client.getRoom(tagIndexRoomId)
+
+  const hierarchy = await tagIndex.getHierarchy()
 
   console.log("hierarchy", hierarchy)
+
+  // space children are showing up in state events but not in the hierarchy :/
 
   const children = hierarchy?.filter(room => room.children_state.length === 0)
   const rooms = children
     ?.filter(r => r !== undefined)
     .map(room => {
       if (!room) throw new Error("room is undefined")
-      return new Room(room.room_id, noCacheClient)
+      return new Room(room.room_id, client)
     })
 
   await Promise.all(
@@ -53,40 +54,6 @@ export default async function Home() {
       : []
   )
 
-  // this needs to be replaced with a new way of getting posts - getHierarchy probably
-
-  const posts: any[] = []
-  // (
-  //   await Promise.all(
-  //     rooms.map(async room => {
-  //       try {
-  //         const messages = await room.getMessages({
-  //           limit: 50,
-  //           dir: "b",
-  //         })
-  //         if ("errcode" in messages) throw new Error(messages.errcode)
-  //         return messages.chunk.filter(
-  //           (message: any) =>
-  //             message.type === "m.room.message" &&
-  //             ((message.content?.msgtype === organCalEventUnstable &&
-  //               new Date(message.content.start).valueOf() > Date.now()) ||
-  //               message.content?.msgtype === organPostUnstable)
-  //         )
-  //       } catch (e) {
-  //         console.log(e)
-  //       }
-  //     })
-  //   )
-  // )
-  //   .flat()
-  //   .filter(m => m !== undefined) as ClientEventOutput[]
-
-  const timeline = new Timeline(posts)
-
-  // console.log("posts", timeline)
-
-  // const freshPosts = deleteOldEdits(posts)
-
   // get all tags
   // get all id pages for each tag
   // get all events for each tag
@@ -99,12 +66,12 @@ export default async function Home() {
     <main className="flex w-full max-w-lg flex-col gap-4">
       <WelcomeEmailSignup />
       <h3 className="mt-2 text-lg font-medium">Recent posts</h3>
-      <Posts posts={[...timeline.events.values()]} />
+      <Posts posts={[]} />
       <h3 className="mt-6 text-lg font-medium">Collectives</h3>
       <ul>
         {rooms?.map((room, i) => (
           <li key={i}>
-            <Link href={`/id/${getIdLocalPart(room.roomId || "")}`}>
+            <Link href={`/tag/${getIdLocalPart(room.roomId || "")}`}>
               <Suspense fallback={<>loading...</>}>
                 <Org room={room} />
               </Suspense>
