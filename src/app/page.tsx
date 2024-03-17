@@ -1,58 +1,21 @@
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
-export const dynamic = "force-dynamic"
+// export const dynamic = "force-dynamic"
 
-import { Client, ClientEventOutput, Room, Timeline } from "simple-matrix-sdk"
+import { Room, Event } from "simple-matrix-sdk"
 import Link from "next/link"
-import { Org } from "@/components/Org"
 import { Suspense } from "react"
-import { getIdLocalPart, noCacheFetch } from "@/lib/utils"
-import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
+import { getMessagesChunk } from "@/lib/utils"
 import { Posts } from "@/components/ui/Posts"
 import { WelcomeEmailSignup } from "./WelcomeEmailSignup"
+import { client, getTagIndex } from "@/lib/client"
+import * as v from "valibot"
 
 export default async function Home() {
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch: noCacheFetch,
-    params: {
-      user_id: "@_relay_bot:" + SERVER_NAME,
-    },
-  })
-
-  const tagIndexRoomId = await client.getRoomIdFromAlias(
-    "#relay_tagindex:" + SERVER_NAME
-  )
-
-  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
-    return tagIndexRoomId.errcode
-
-  const tagIndex = client.getRoom(tagIndexRoomId)
-
+  const tagIndex = await getTagIndex(client)
+  if (typeof tagIndex === "object" && "errcode" in tagIndex) return tagIndex
   const hierarchy = await tagIndex.getHierarchy()
-
-  console.log("hierarchy", hierarchy)
-
-  // space children are showing up in state events but not in the hierarchy :/
-
   const children = hierarchy?.filter(room => room.children_state.length === 0)
-  const rooms = children
-    ?.filter(r => r !== undefined)
-    .map(room => {
-      if (!room) throw new Error("room is undefined")
-      return new Room(room.room_id, client)
-    })
-
-  await Promise.all(
-    rooms
-      ? rooms.map(async room => {
-          try {
-            await room.getName()
-          } catch (e) {
-            console.log(e)
-          }
-        })
-      : []
-  )
 
   // get all tags
   // get all id pages for each tag
@@ -67,18 +30,38 @@ export default async function Home() {
       <WelcomeEmailSignup />
       <h3 className="mt-2 text-lg font-medium">Recent posts</h3>
       <Posts posts={[]} />
-      <h3 className="mt-6 text-lg font-medium">Collectives</h3>
+      <h3 className="mt-6 text-lg font-medium">Tags</h3>
       <ul>
-        {rooms?.map((room, i) => (
+        {children?.map((child, i) => (
           <li key={i}>
-            <Link href={`/tag/${getIdLocalPart(room.roomId || "")}`}>
+            <Link
+              href={`/tag/${
+                child.canonical_alias.split("#relay_tag_")[1].split(":")[0]
+              }`}>
               <Suspense fallback={<>loading...</>}>
-                <Org room={room} />
+                <Org room={client.getRoom(child.room_id)} name={child.name} />
               </Suspense>
             </Link>
           </li>
         ))}
       </ul>
     </main>
+  )
+}
+
+export async function Org({ room, name }: { room: Room; name?: string }) {
+  const messagesIterator = await room.getMessagesAsyncGenerator()
+  const messagesChunk: Event[] = await getMessagesChunk(messagesIterator)
+  // const messageTypes = messagesChunk.map(message => message.type)
+  const topic = messagesChunk.find(message => message.type === "m.room.topic")
+  // console.log("topic", topic)
+  return (
+    <div className="h-24 py-2 my-2 border-[#1D170C33] rounded overflow-clip">
+      <h2 className="text-base">{name || room.name?.name}</h2>
+      <p className="text-sm italic text-stone-600 line-clamp-3">
+        {v.is(v.object({ topic: v.string() }), topic?.content) &&
+          topic.content.topic.slice(0, 300)}
+      </p>
+    </div>
   )
 }
