@@ -77,11 +77,15 @@ export async function createPage(opts: {
     },
     {
       type: organSpaceType,
-      content: organSpaceTypeValue.page,
+      content: {
+        value: organSpaceTypeValue.page,
+      },
     },
     {
       type: organPageType,
-      content: organPageTypeValue.id,
+      content: {
+        value: organPageTypeValue.id,
+      },
     },
   ]
 
