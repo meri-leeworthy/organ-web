@@ -14,6 +14,8 @@ import {
   GetRoomIdFromAlias,
   SetAlias,
   CreateRoom,
+  CreateTagIndexSpace,
+  SeedTags,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE, TAG_INDEX } = process.env
 
@@ -77,7 +79,13 @@ export default async function ApplicationServiceTest() {
             <br />
             Create tag index space <br />
             Set #relay_tagindex:localhost as alias for tag index space <br />
-            Create 50 tags <br />
+          </p>
+          <CreateTagIndexSpace />
+          <p>
+            Seed tags <br />
+          </p>
+          <SeedTags />
+          <p>
             Create 50 ID pages <br />
             Create 200 event pages <br />
             Create 500 posts <br />

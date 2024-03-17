@@ -13,6 +13,8 @@ import {
   getRoomIdFromAlias,
   setAlias,
   createRoom,
+  createTagIndexSpace,
+  seedTags,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -439,6 +441,43 @@ export function CreateRoom() {
       </label>
 
       <Button type="submit">create room</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function CreateTagIndexSpace() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async () => {
+        const result = await createTagIndexSpace()
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <Button type="submit">create tag index space</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+export function SeedTags() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        const result = await seedTags(formData)
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <input
+        type="text"
+        name="tagIndexRoomId"
+        placeholder="tag index roomId"
+        className="border border-black"
+      />
+      <Button type="submit">seed tags</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )

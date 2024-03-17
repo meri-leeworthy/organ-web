@@ -4,6 +4,9 @@ import { Client, CreateRoomOpts, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
+import { organSpaceType, organSpaceTypeValue } from "@/lib/types"
+import tags from "./seed/tags.json"
+
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
@@ -58,6 +61,9 @@ export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
   const { joined_rooms: roomIds } = await client.get("joined_rooms", {
     user_id: `@_relay_${user}:${SERVER_NAME}`,
   })
+
+  console.log("roomIds", roomIds)
+
   const rooms = roomIds?.map((roomId: string) => {
     const room = new Room(roomId, client)
     return room
@@ -140,4 +146,76 @@ export async function setAlias(formData: FormData) {
   const roomId = formData.get("room") as string
   const alias = formData.get("alias") as string
   return await client.getRoom(roomId).setAlias(alias)
+}
+
+export async function createTagIndexSpace() {
+  const space = await client.createRoom({
+    name: "Tag Index",
+    creation_content: { type: "m.space" },
+    room_alias_name: "relay_tagindex",
+    initial_state: [
+      {
+        type: organSpaceType,
+        content: {
+          value: organSpaceTypeValue.index,
+        },
+      },
+    ],
+  })
+  console.log("space", space)
+  if ("errcode" in space) return space
+  return { roomId: space.roomId }
+}
+
+export async function seedTags(formData: FormData) {
+  const tagIndexRoomId = formData.get("tagIndexRoomId") as string
+
+  const tagIndex = client.getRoom(tagIndexRoomId)
+
+  // console.log("Tags", tags)
+  const results = await Promise.all(
+    Object.entries(tags).map(async ([tag, tagMeta]) => {
+      const existingTagSpace = await client.getRoomIdFromAlias(
+        "#relay_tag_" + tag + ":" + SERVER_NAME
+      )
+
+      console.log("existingTagSpace", existingTagSpace)
+
+      const tagSpace =
+        typeof existingTagSpace === "string"
+          ? client.getRoom(existingTagSpace)
+          : await client.createRoom({
+              creation_content: { type: "m.space" },
+              room_alias_name: `relay_tag_${tag}`,
+              name: tagMeta.name,
+              topic: tagMeta.description,
+              initial_state: [
+                {
+                  type: organSpaceType,
+                  content: {
+                    value: organSpaceTypeValue.tag,
+                  },
+                },
+                {
+                  type: "m.space.parent",
+                  content: {
+                    via: [SERVER_NAME],
+                  },
+                  state_key: tagIndexRoomId,
+                },
+              ],
+            })
+      // console.log("space", tagSpace)
+      if ("errcode" in tagSpace) return tagSpace
+
+      const parentResult = await tagIndex.sendStateEvent(
+        "m.space.child",
+        { via: [SERVER_NAME] },
+        tagSpace.roomId
+      )
+
+      return { roomId: tagSpace.roomId, tag, parentResult }
+    })
+  )
+  return results
 }
