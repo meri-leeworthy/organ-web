@@ -6,10 +6,10 @@ hs_token: 'secrethstoken' # ..as can this
 namespaces:
   rooms: []
   users:
-    - regex: "@_relay_.*:localhost"
+    - regex: "@_relay_.*:synapse.local"
       exclusive: false
   aliases:
-    - regex: "#relay_.+:localhost"
+    - regex: "#relay_.+:synapse.local"
       exclusive: false
 
 sender_localpart: relay
