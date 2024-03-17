@@ -12,13 +12,13 @@ import {
   organPostTypeValue,
   organPostUnstable,
   organRoomType,
-  organRoomTypeValue
+  organRoomTypeValue,
 } from "@/lib/types"
 import { Room } from "simple-matrix-sdk"
 import {
   IconCalendarEvent,
   IconCamera,
-  IconNorthStar
+  IconNorthStar,
 } from "@tabler/icons-react"
 // import { SelectAuthor } from "@/components/SelectAuthor"
 // import Link from "next/link"
@@ -114,7 +114,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
       name: title,
       topic: content,
       creation_content: {
-        type: "m.space"
+        type: "m.space",
       },
       initial_state: [
         {
@@ -124,36 +124,36 @@ export const NewPost = ({ slug }: { slug: string }) => {
             ban: 50,
             events: {
               "m.room.name": 100,
-              "m.room.power_levels": 100
+              "m.room.power_levels": 100,
             },
             events_default: 0,
             invite: 50,
             kick: 50,
             notifications: {
-              room: 20
+              room: 20,
             },
             redact: 50,
             state_default: 50,
             users: {
-              "@_relay_bot:radical.directory": 100,
-              [client.userId]: 100
+              ["@_relay_bot:" + process.env.NEXT_PUBLIC_SERVER_NAME]: 100,
+              [client.userId]: 100,
             },
-            users_default: 0
-          }
+            users_default: 0,
+          },
         },
         {
           type: organRoomType,
           state_key: "",
           content: {
-            type: organRoomTypeValue.post
-          }
+            type: organRoomTypeValue.post,
+          },
         },
         {
           type: organPostType,
           state_key: "",
           content: {
-            type: organPostTypeValue.text
-          }
+            type: organPostTypeValue.text,
+          },
         },
         {
           type: organPostMeta,
@@ -161,12 +161,15 @@ export const NewPost = ({ slug }: { slug: string }) => {
           content: {
             title,
             content,
-            author: { type: "id", value: `!${slug}:radical.directory` },
-            timestamp: new Date().valueOf()
-          }
-        }
+            author: {
+              type: "id",
+              value: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
+            },
+            timestamp: new Date().valueOf(),
+          },
+        },
       ],
-      invite: ["@_relay_bot:radical.directory"]
+      invite: ["@_relay_bot:" + process.env.NEXT_PUBLIC_SERVER_NAME],
     })
 
     // const result = await room?.sendMessage(postEvent)
@@ -213,7 +216,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
               placeholder="Title"
               aria-label="title"
               value={title}
-              onChange={(e) => setTitle((e.target as HTMLInputElement).value)}
+              onChange={e => setTitle((e.target as HTMLInputElement).value)}
             />
           )}
         </div>
@@ -227,7 +230,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
               placeholder="Location"
               aria-label="location"
               value={place}
-              onChange={(e) => setPlace((e.target as HTMLInputElement).value)}
+              onChange={e => setPlace((e.target as HTMLInputElement).value)}
             />
           )}
 
@@ -237,7 +240,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                 <input
                   type="date"
                   value={startDate}
-                  onChange={(e) =>
+                  onChange={e =>
                     setStartDate(toValidDateString(new Date(e.target.value)))
                   }
                   className="border-primary focus:outline-primary border bg-white px-1 font-medium text-[#8258ff] text-opacity-50 focus:outline-dashed focus:outline-1"
@@ -246,7 +249,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                   <input
                     type="time"
                     value={startTime}
-                    onChange={(e) => {
+                    onChange={e => {
                       // console.log("e", e)
                       setStartTime(e.currentTarget.value)
                     }}
@@ -262,7 +265,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
                     id="allday"
                     name="allday"
                     checked={allDay}
-                    onChange={(e) => setAllDay(e.target.checked)}
+                    onChange={e => setAllDay(e.target.checked)}
                     className="outline-primary checked:bg-primary mr-1 outline-4"
                   />
                 </label>
@@ -277,8 +280,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
 
               <Button
                 type="submit"
-                className="flex items-center gap-1 self-end rounded-[100%] border border-black border-opacity-40 bg-white px-2 py-1 text-sm hover:border-dashed"
-              >
+                className="flex items-center gap-1 self-end rounded-[100%] border border-black border-opacity-40 bg-white px-2 py-1 text-sm hover:border-dashed">
                 Share
               </Button>
             </div>
@@ -306,7 +308,7 @@ export function Description(props: {
         }
         rows={props.rows || 3}
         value={props.content}
-        onChange={(e) =>
+        onChange={e =>
           props.setContent(
             typeof e === "object" && e !== null && "target" in e
               ? (e.target as HTMLTextAreaElement).value
@@ -321,7 +323,7 @@ export function Description(props: {
 
 export function UploadImageButton({
   imageSrcs,
-  setImageSrcs
+  setImageSrcs,
 }: {
   imageSrcs: string | string[]
   setImageSrcs:
@@ -367,8 +369,7 @@ export function UploadImageButton({
     <div className="">
       <label
         htmlFor="image"
-        className="border-primary flex cursor-pointer items-center justify-center rounded-[100%] border border-dashed px-2 py-1 text-[#9572ff]"
-      >
+        className="border-primary flex cursor-pointer items-center justify-center rounded-[100%] border border-dashed px-2 py-1 text-[#9572ff]">
         {loading ? (
           <Spinner className="text-primary h-4 w-4 animate-spin fill-[#9572ff]" />
         ) : (
@@ -389,7 +390,7 @@ export function PostTypeButton({
   type,
   thisType,
   setType,
-  children
+  children,
 }: {
   type: PostType
   thisType: PostType
@@ -400,8 +401,7 @@ export function PostTypeButton({
     <Button
       onClick={() => setType(thisType)}
       disabled={thisType === type}
-      className="border-primary disabled:bg-primary flex items-center gap-1 border bg-white text-sm text-[#9572ff] disabled:border-transparent disabled:text-black"
-    >
+      className="border-primary disabled:bg-primary flex items-center gap-1 border bg-white text-sm text-[#9572ff] disabled:border-transparent disabled:text-black">
       {children}
     </Button>
   )

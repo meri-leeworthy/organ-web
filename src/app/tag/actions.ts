@@ -31,23 +31,23 @@ export async function createTag(opts: {
       {
         type: "m.room.join_rules",
         content: {
-          join_rule: "public"
-        }
+          join_rule: "public",
+        },
       },
       {
         type: organSpaceType,
         content: {
-          type: organSpaceTypeValue.tag
-        }
+          type: organSpaceTypeValue.tag,
+        },
       },
       {
         type: "m.space.parent",
         state_key: TAG_INDEX,
         content: {
-          via: ["radical.directory"]
-        }
-      }
-    ]
+          via: [SERVER_NAME],
+        },
+      },
+    ],
   })
 
   if (is(ErrorSchema, tagSpace)) return tagSpace
@@ -55,7 +55,7 @@ export async function createTag(opts: {
   await tagIndex.sendStateEvent(
     "m.space.child",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     tagSpace.roomId
   )
@@ -118,7 +118,7 @@ export async function bilateralAdoptTag(tagRoomId: string) {
     "m.space.child",
     {
       order: tagNameString,
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     tagRoomId
   )
@@ -127,7 +127,7 @@ export async function bilateralAdoptTag(tagRoomId: string) {
   const tagAddParent = await tagRoom.sendStateEvent(
     "m.space.parent",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     TAG_INDEX
   )
@@ -147,7 +147,7 @@ export async function bilateralTagAdoptPost(
   const tagRoomAddChild = await tagRoom.sendStateEvent(
     "m.space.child",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     postRoomId
   )
@@ -156,7 +156,7 @@ export async function bilateralTagAdoptPost(
   const postAddParent = await postRoom.sendStateEvent(
     "m.space.parent",
     {
-      via: ["radical.directory"]
+      via: [SERVER_NAME],
     },
     tagRoomId
   )
@@ -165,8 +165,12 @@ export async function bilateralTagAdoptPost(
 }
 
 export async function searchTags(tag: string) {
+  const tagString = normaliseTagString(tag)
+
+  console.log("tagString", tagString)
+
   const tagRoomId = await client.getRoomIdFromAlias(
-    `#relay_tag_${normaliseTagString(tag)}:radical.directory`
+    `#relay_tag_${tagString}:${SERVER_NAME}`
   )
   if (typeof tagRoomId === "object" && "errcode" in tagRoomId) return tagRoomId
   const tagRoom = new Room(tagRoomId, client)

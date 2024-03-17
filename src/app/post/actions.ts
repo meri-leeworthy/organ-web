@@ -49,7 +49,7 @@ export async function newPost(formData: FormData) {
           title,
           timestamp: new Date().valueOf(),
           body: content,
-          author: { type: "user", value: "@_relay_bot:radical.directory" },
+          author: { type: "user", value: "@_relay_bot:" + SERVER_NAME },
         },
       },
     ],
