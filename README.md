@@ -11,6 +11,9 @@ Organ Web is a [Next.js](https://nextjs.org/) project using Typescript and Tailw
 ## Getting Started
 
 ``` sh
+# setup environment variables
+cp .env.local.example .env.local
+
 # generate a configuration file in the 'synapse-data' volume
 docker-compose run --rm synapse generate
 
