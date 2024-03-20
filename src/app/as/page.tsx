@@ -16,6 +16,7 @@ import {
   CreateRoom,
   CreateTagIndexSpace,
   SeedTags,
+  SeedIds,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE, TAG_INDEX } = process.env
 
@@ -85,8 +86,9 @@ export default async function ApplicationServiceTest() {
             Seed tags <br />
           </p>
           <SeedTags />
+          <p>Create 50 ID pages </p>
+          <SeedIds />
           <p>
-            Create 50 ID pages <br />
             Create 200 event pages <br />
             Create 500 posts <br />
             Create 1000 users <br />

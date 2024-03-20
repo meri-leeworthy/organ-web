@@ -4,8 +4,14 @@ import { Client, CreateRoomOpts, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
-import { organSpaceType, organSpaceTypeValue } from "@/lib/types"
+import {
+  organPageType,
+  organPageTypeValue,
+  organSpaceType,
+  organSpaceTypeValue,
+} from "@/lib/types"
 import tags from "./seed/tags.json"
+import ids from "./seed/ids.json"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
@@ -163,7 +169,13 @@ export async function createTagIndexSpace() {
     ],
   })
   console.log("space", space)
-  if ("errcode" in space) return space
+  if ("errcode" in space) {
+    const roomId = await client.getRoomIdFromAlias(
+      "#relay_tagindex:" + SERVER_NAME
+    )
+    console.log("roomId", roomId)
+    return { roomId }
+  }
   return { roomId: space.roomId }
 }
 
@@ -218,4 +230,92 @@ export async function seedTags(formData: FormData) {
     })
   )
   return results
+}
+
+export async function seedIDPages(formData: FormData) {
+  const tagIndexRoomId = formData.get("tagIndexRoomId") as string
+  const tagIndex = client.getRoom(tagIndexRoomId)
+
+  // get a list of all the tag rooms from tag index
+  const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
+
+  console.log("tagIndexChildren", tagIndexChildren)
+
+  if (!tagIndexChildren) return { errcode: "No tag rooms found" }
+
+  // remove first item, which is the tag index room
+  tagIndexChildren.shift()
+
+  const tagMap = new Map()
+
+  tagIndexChildren.forEach(tag => {
+    tagMap.set(
+      tag.canonical_alias.split("#relay_tag_")[1].split(":")[0],
+      tag.room_id
+    )
+  })
+
+  // create a space for each ID,
+
+  const idSpaces = ids.map(async id => {
+    const parentEvents = id.tags
+      .map(tag => {
+        const tagRoomId = tagMap.get(tag)
+        if (!tagRoomId) return null
+        return {
+          type: "m.space.parent",
+          content: {
+            via: [SERVER_NAME],
+          },
+          state_key: tagRoomId,
+        }
+      })
+      .filter(Boolean) as {
+      type: string
+      content: { via: string[] }
+      state_key: string
+    }[]
+
+    const idSpace = await client.createRoom({
+      name: id.name,
+      creation_content: { type: "m.space" },
+      topic: id.description,
+      initial_state: [
+        {
+          type: organSpaceType,
+          content: {
+            value: organSpaceTypeValue.page,
+          },
+        },
+        {
+          type: organPageType,
+          content: {
+            value: organPageTypeValue.id,
+          },
+        },
+        ...parentEvents,
+      ],
+    })
+
+    if ("errcode" in idSpace) return idSpace
+
+    // match each ID to the tag rooms and add them as children
+    const parentResults = id.tags.map(async tag => {
+      const tagRoomId = tagMap.get(tag)
+      if (!tagRoomId) return {}
+      console.log("tagRoomId", tagRoomId)
+      const tagRoom = client.getRoom(tagRoomId)
+      const parentResult = await tagRoom.sendStateEvent(
+        "m.space.child",
+        { via: [SERVER_NAME] },
+        idSpace.roomId
+      )
+      console.log("parentResult", parentResult)
+      return { tag, parentResult }
+    })
+
+    return { roomId: idSpace.roomId, parentResults }
+  })
+
+  return { idSpaces }
 }

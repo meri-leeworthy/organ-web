@@ -15,6 +15,7 @@ import {
   createRoom,
   createTagIndexSpace,
   seedTags,
+  seedIDPages,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -478,6 +479,28 @@ export function SeedTags() {
         className="border border-black"
       />
       <Button type="submit">seed tags</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function SeedIds() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async (formData: FormData) => {
+        const result = await seedIDPages(formData)
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <input
+        type="text"
+        name="tagIndexRoomId"
+        placeholder="tag index roomId"
+        className="border border-black"
+      />
+      <Button type="submit">seed id pages</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )

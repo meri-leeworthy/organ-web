@@ -1,0 +1,282 @@
+[
+  {
+    "name": "Black Lives Matter",
+    "description": "A decentralized political and social movement advocating for non-violent civil disobedience in protest against incidents of police brutality and all racially motivated violence against Black people.",
+    "tags": ["racial-justice", "non-violent-resistance"]
+  },
+  {
+    "name": "Democratic Socialists of America (DSA)",
+    "description": "A democratic socialist organization that seeks to enact progressive change through political action and activism, advocating for policies such as Medicare for All and a Green New Deal.",
+    "tags": ["anti-capitalism", "universal-basic-income", "workers-rights"]
+  },
+  {
+    "name": "Extinction Rebellion",
+    "description": "An international movement that uses non-violent civil disobedience to demand government action on climate change and biodiversity loss.",
+    "tags": ["climate-justice", "non-violent-resistance"]
+  },
+  {
+    "name": "Anarchist Black Cross Federation",
+    "description": "A collective focused on supporting political prisoners and prisoners of war through solidarity campaigns, financial aid, and advocacy for prison abolition.",
+    "tags": ["prison-abolition", "anarchism"]
+  },
+  {
+    "name": "Food Not Bombs",
+    "description": "A loose-knit group of independent collectives that serve free vegan and vegetarian food to people in need, while also protesting war and poverty.",
+    "tags": ["mutual-aid", "anti-war"]
+  },
+  {
+    "name": "Sunrise Movement",
+    "description": "A youth-led movement advocating for political action on climate change and championing the Green New Deal as a solution to environmental and economic crises.",
+    "tags": ["climate-justice", "direct-action"]
+  },
+  {
+    "name": "Industrial Workers of the World (IWW)",
+    "description": "A global labor union that promotes the solidarity of the working class and aims to abolish the wage system, replacing it with a system of worker self-management.",
+    "tags": ["workers-rights", "anarchism"]
+  },
+  {
+    "name": "Queer Liberation Front",
+    "description": "An activist group working to combat discrimination and violence against LGBTQ+ individuals, advocating for equal rights and representation.",
+    "tags": ["queer-liberation", "non-violent-resistance"]
+  },
+  {
+    "name": "Indigenous Environmental Network",
+    "description": "A coalition of Indigenous peoples dedicated to protecting the environment and promoting Indigenous rights, particularly in relation to issues such as climate change and resource extraction.",
+    "tags": ["indigenous-sovereignty", "climate-justice"]
+  },
+  {
+    "name": "Copwatch",
+    "description": "A decentralized network of activist organizations and individuals that monitors and documents police activity, aiming to hold law enforcement accountable for abuses of power and brutality.",
+    "tags": ["racial-justice", "direct-action"]
+  },
+  {
+    "name": "Marxist Student Federation",
+    "description": "A student organization that educates and organizes around Marxist theory and principles, advocating for social and economic justice through revolutionary change.",
+    "tags": ["anti-capitalism", "workers-rights"]
+  },
+  {
+    "name": "Symbiosis",
+    "description": "A network of grassroots organizations and individuals working towards a democratic and ecologically sustainable society, based on principles of mutual aid and decentralized governance.",
+    "tags": ["mutual-aid", "ecology"]
+  },
+  {
+    "name": "Women's Strike Assembly",
+    "description": "A feminist movement that organizes strikes, protests, and actions to challenge patriarchy, capitalism, and other systems of oppression.",
+    "tags": ["feminism", "workers-rights"]
+  },
+  {
+    "name": "Anti-Imperialist Action",
+    "description": "A coalition of activists and organizations dedicated to opposing imperialism and colonialism, particularly in the context of US foreign policy and military interventions.",
+    "tags": ["anti-war", "decolonization"]
+  },
+  {
+    "name": "People's Climate Movement",
+    "description": "A coalition of environmental, labor, and social justice organizations advocating for policies to address climate change while promoting economic and racial justice.",
+    "tags": ["climate-justice", "workers-rights"]
+  },
+  {
+    "name": "Federation of Southern Cooperatives",
+    "description": "A cooperative federation that supports Black farmers and rural communities in the southern United States, promoting sustainable agriculture and economic empowerment.",
+    "tags": ["food-sovereignty", "racial-justice"]
+  },
+  {
+    "name": "Democratic Confederalism Collective",
+    "description": "An organization inspired by the ideology of democratic confederalism, advocating for decentralized, participatory democracy and gender equality in Rojava and beyond.",
+    "tags": ["direct-democracy", "feminism"]
+  },
+  {
+    "name": "Redneck Revolt",
+    "description": "An armed left-wing group that provides firearms training and community defense, while also advocating for social justice, anti-racism, and anti-capitalism.",
+    "tags": ["anti-capitalism", "community-defense"]
+  },
+  {
+    "name": "National Alliance Against Racist and Political Repression",
+    "description": "An organization that fights against racist and political repression, advocates for the rights of prisoners and communities of color, and campaigns for police accountability.",
+    "tags": ["racial-justice", "prison-abolition"]
+  },
+  {
+    "name": "Participatory Budgeting Project",
+    "description": "An organization that promotes participatory budgeting as a democratic process that allows community members to decide how to allocate public funds.",
+    "tags": ["direct-democracy", "community-empowerment"]
+  },
+  {
+    "name": "Revolutionary Abolitionist Movement",
+    "description": "A political movement dedicated to the abolition of capitalism and the state, while also supporting prison abolition, community defense, and solidarity with Indigenous struggles.",
+    "tags": ["anti-capitalism", "prison-abolition", "community-defense"]
+  },
+  {
+    "name": "Transgender Law Center",
+    "description": "An organization that works to change law, policy, and attitudes so that all people can live safely, authentically, and free from discrimination regardless of their gender identity or expression.",
+    "tags": ["queer-liberation", "legal-advocacy"]
+  },
+  {
+    "name": "Anti-Eviction Mapping Project",
+    "description": "A collective that documents and resists the displacement of marginalized communities through direct action, mapping, and community organizing.",
+    "tags": ["housing-first", "community-organizing"]
+  },
+  {
+    "name": "National Domestic Workers Alliance",
+    "description": "An organization that advocates for the rights and dignity of domestic workers, including nannies, house cleaners, and caregivers, through organizing and policy advocacy.",
+    "tags": ["workers-rights", "feminism"]
+  },
+  {
+    "name": "Anarcho-Syndicalist Federation",
+    "description": "A federation of labor unions and workers' organizations that promote anarcho-syndicalism, a form of anarchism that seeks to organize society along decentralized, worker-controlled lines.",
+    "tags": ["workers-rights", "anarchism"]
+  },
+  {
+    "name": "The Red Nation",
+    "description": "A coalition of Native and non-Native activists dedicated to the liberation of Indigenous peoples from colonialism and capitalism, advocating for land back and Indigenous sovereignty.",
+    "tags": ["indigenous-sovereignty", "anti-capitalism"]
+  },
+  {
+    "name": "Greenpeace",
+    "description": "An environmental organization that campaigns for solutions to global environmental problems such as climate change, deforestation, overfishing, and genetic engineering.",
+    "tags": ["climate-justice", "direct-action"]
+  },
+  {
+    "name": "Cooperation Jackson",
+    "description": "An organization based in Jackson, Mississippi, that promotes economic democracy and community ownership through initiatives such as worker cooperatives and community land trusts.",
+    "tags": ["mutual-aid", "cooperatives", "racial-justice"]
+  },
+  {
+    "name": "Cosecha",
+    "description": "A movement fighting for the rights and dignity of immigrants in the United States, advocating for permanent protection, dignity, and respect for all immigrants.",
+    "tags": ["racial-justice", "immigrant-rights"]
+  },
+  {
+    "name": "Just Transition Alliance",
+    "description": "An organization advocating for a just transition to a sustainable economy that protects workers, communities, and the environment, particularly in marginalized and frontline communities.",
+    "tags": ["climate-justice", "workers-rights"]
+  },
+  {
+    "name": "American Indian Movement (AIM)",
+    "description": "An Indigenous rights movement advocating for sovereignty, self-determination, and cultural preservation, while also addressing issues such as police brutality and environmental racism.",
+    "tags": ["indigenous-sovereignty", "racial-justice"]
+  },
+  {
+    "name": "Street Medics",
+    "description": "Volunteer medical professionals and allies who provide first aid and medical care at protests and direct actions, prioritizing the health and safety of activists and communities.",
+    "tags": ["direct-action", "community-health"]
+  },
+  {
+    "name": "Democratic Autonomy Collective",
+    "description": "An organization promoting democratic autonomy and self-governance in Kurdish regions and beyond, inspired by the principles of democratic confederalism.",
+    "tags": ["direct-democracy", "decentralization"]
+  },
+  {
+    "name": "National Nurses United",
+    "description": "A union of registered nurses in the United States that advocates for healthcare as a human right, safe staffing ratios, and improved working conditions for nurses.",
+    "tags": ["workers-rights", "healthcare-justice"]
+  },
+  {
+    "name": "United We Dream",
+    "description": "A youth-led immigrant rights organization that advocates for the rights of undocumented immigrants and their families, while also promoting education and leadership development.",
+    "tags": ["immigrant-rights", "youth-activism"]
+  },
+  {
+    "name": "Earth First!",
+    "description": "A radical environmental advocacy group that employs direct action tactics to protect wilderness areas and challenge corporate and government exploitation of natural resources.",
+    "tags": ["eco-feminism", "direct-action"]
+  },
+  {
+    "name": "Red Guards - Los Angeles",
+    "description": "A Maoist collective organizing in Los Angeles that advocates for revolutionary socialism and anti-imperialism, while also providing community support and mutual aid.",
+    "tags": ["anti-capitalism", "direct-action"]
+  },
+  {
+    "name": "National Coalition to Abolish the Death Penalty",
+    "description": "An organization dedicated to ending the death penalty in the United States through advocacy, education, and organizing.",
+    "tags": ["prison-abolition", "non-violent-resistance"]
+  },
+  {
+    "name": "Anarcha-Feminist Collective",
+    "description": "A feminist group that combines anarchist and feminist principles, advocating for gender equality, reproductive rights, and the dismantling of patriarchal structures.",
+    "tags": ["feminism", "anarchism"]
+  },
+  {
+    "name": "Dream Defenders",
+    "description": "An organization led by Black and Brown youth fighting for justice and liberation, with a focus on ending the prison-industrial complex, police brutality, and systemic racism.",
+    "tags": ["racial-justice", "prison-abolition"]
+  },
+  {
+    "name": "Free Software Foundation",
+    "description": "An organization dedicated to promoting computer user freedom and defending the rights of all software users, particularly through the development and distribution of free software.",
+    "tags": ["digital-privacy", "free-software"]
+  },
+  {
+    "name": "Center for Economic Democracy",
+    "description": "An organization working to build community wealth and economic democracy through initiatives such as worker cooperatives, community land trusts, and participatory budgeting.",
+    "tags": ["economic-democracy", "cooperatives"]
+  },
+  {
+    "name": "Migrant Justice",
+    "description": "An organization led by undocumented migrant farmworkers fighting for justice and human rights in Vermont's dairy industry, advocating for fair wages, housing, and working conditions.",
+    "tags": ["immigrant-rights", "workers-rights"]
+  },
+  {
+    "name": "Earth Liberation Front (ELF)",
+    "description": "A decentralized environmental direct action group that engages in sabotage and property destruction to protest against environmental destruction and speciesism.",
+    "tags": ["eco-feminism", "direct-action"]
+  },
+  {
+    "name": "National LGBTQ Task Force",
+    "description": "An organization working to advance full freedom, justice, and equality for LGBTQ+ people, focusing on policy advocacy, organizing, and leadership development.",
+    "tags": ["queer-liberation", "policy-advocacy"]
+  },
+  {
+    "name": "Fight for 15",
+    "description": "A movement advocating for a $15 minimum wage and the right to unionize for low-wage workers, particularly in the fast food and retail industries.",
+    "tags": ["workers-rights", "economic-justice"]
+  },
+  {
+    "name": "Survival International",
+    "description": "An organization advocating for the rights of Indigenous peoples around the world, focusing on issues such as land rights, cultural survival, and self-determination.",
+    "tags": ["indigenous-sovereignty", "racial-justice"]
+  },
+  {
+    "name": "Communist Party USA",
+    "description": "A communist political party in the United States that advocates for socialism, workers' rights, and social justice through electoral and grassroots organizing.",
+    "tags": ["anti-capitalism", "workers-rights"]
+  },
+  {
+    "name": "BYP100 (Black Youth Project 100)",
+    "description": "An organization of young Black activists dedicated to creating justice and freedom for all Black people, with a focus on ending systems of oppression and violence.",
+    "tags": ["racial-justice", "youth-activism"]
+  },
+  {
+    "name": "Student Nonviolent Coordinating Committee (SNCC)",
+    "description": "A civil rights organization that played a central role in the American civil rights movement, organizing nonviolent protests and advocating for racial justice and equality.",
+    "tags": ["racial-justice", "non-violent-resistance"]
+  },
+  {
+    "name": "Community to Community Development",
+    "description": "An organization working for social, economic, and environmental justice through grassroots organizing, community-based alternatives, and solidarity with global struggles.",
+    "tags": ["community-organizing", "eco-feminism"]
+  },
+  {
+    "name": "Anarchist Federation",
+    "description": "A federation of anarchist groups and individuals that promotes anarchist principles such as direct action, mutual aid, and solidarity, while opposing all forms of hierarchy and domination.",
+    "tags": ["anarchism", "mutual-aid"]
+  },
+  {
+    "name": "Stop the War Coalition",
+    "description": "A coalition of anti-war groups and individuals that opposes military intervention and imperialism, advocating for peace, diplomacy, and disarmament.",
+    "tags": ["peace-movement", "anti-war"]
+  },
+  {
+    "name": "Iraq Veterans Against the War",
+    "description": "An organization of military veterans who have served in the US military since September 11, 2001, advocating for an end to US wars and militarism, and supporting GI rights and veteran care.",
+    "tags": ["anti-war", "veterans-rights"]
+  },
+  {
+    "name": "Communities United for Police Reform",
+    "description": "A coalition of community organizations and individuals advocating for systemic changes to the NYPD and an end to discriminatory policing practices such as stop-and-frisk.",
+    "tags": ["racial-justice", "police-reform"]
+  },
+  {
+    "name": "Anti-Fascist Action",
+    "description": "A decentralized movement opposing fascism and far-right ideologies through direct action, community organizing, and self-defense.",
+    "tags": ["anti-fascism", "direct-action"]
+  }
+]
