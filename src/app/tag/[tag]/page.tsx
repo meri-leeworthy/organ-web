@@ -1,22 +1,31 @@
-import { searchTags } from "@/app/tag/actions"
+import { getTagRoomId } from "@/app/tag/actions"
 import { Item } from "./Item"
+import { client } from "@/lib/client"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
 
-  const searchTagsResult = await searchTags(tag)
-  if (!searchTagsResult) return "no result"
-  if ("errcode" in searchTagsResult) {
-    return <div>{searchTagsResult.errcode}</div>
-  }
+  const tagRoomId = await getTagRoomId(tag)
+  if (typeof tagRoomId === "object" && "errcode" in tagRoomId)
+    return JSON.stringify(tagRoomId)
+  const tagRoom = client.getRoom(tagRoomId)
+  const name = await tagRoom.getName()
+  if ("errcode" in name) return JSON.stringify(name)
+
+  const tagChildren = await tagRoom.getHierarchy({ max_depth: 1 })
+
+  tagChildren?.shift()
+
+  console.log("TagChldren", tagChildren)
 
   return (
     <div>
-      <h1>Pages & posts tagged with {tag}</h1>
+      <h1>{name.name}</h1>
       <ul>
-        {[...searchTagsResult.keys()].map(key => (
-          <Item key={key} postRoomId={key} />
-        ))}
+        {tagChildren?.map((child: any) => {
+          console.log("child", child)
+          return <Item key={child.roomId} postRoomId={child.room_id} />
+        })}
       </ul>
     </div>
   )

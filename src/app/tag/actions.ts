@@ -164,19 +164,9 @@ export async function bilateralTagAdoptPost(
   return { tagRoomAddChild, postAddParent }
 }
 
-export async function searchTags(tag: string) {
+export async function getTagRoomId(tag: string) {
   const tagString = normaliseTagString(tag)
-
-  console.log("tagString", tagString)
-
-  const tagRoomId = await client.getRoomIdFromAlias(
+  return await client.getRoomIdFromAlias(
     `#relay_tag_${tagString}:${SERVER_NAME}`
   )
-  if (typeof tagRoomId === "object" && "errcode" in tagRoomId) return tagRoomId
-  const tagRoom = new Room(tagRoomId, client)
-  const tagState = await tagRoom.getState()
-  if ("errcode" in tagState) return tagState
-  const children = tagState.getAll("m.space.child")
-  // console.log(tag, "children", children)
-  return children
 }
