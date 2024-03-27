@@ -17,6 +17,7 @@ import {
   CreateTagIndexSpace,
   SeedTags,
   SeedIds,
+  SeedEvents,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE, TAG_INDEX } = process.env
 
@@ -90,6 +91,9 @@ export default async function ApplicationServiceTest() {
           <SeedIds />
           <p>
             Create 200 event pages <br />
+          </p>
+          <SeedEvents />
+          <p>
             Create 500 posts <br />
             Create 1000 users <br />
             Join each user to: <br />

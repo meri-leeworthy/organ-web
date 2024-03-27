@@ -1,0 +1,254 @@
+[
+  {
+    "name": "Black Lives Matter March for Justice",
+    "description": "Join the movement against racial injustice and police brutality. Stand in solidarity with Black communities.",
+    "location": "Washington, D.C., USA",
+    "hosts": ["Black Lives Matter"],
+    "tags": ["racial-justice", "non-violent-resistance"]
+  },
+  {
+    "name": "DSA Medicare for All Rally",
+    "description": "Demand universal healthcare for all. Healthcare is a human right, not a privilege!",
+    "location": "New York City, New York, USA",
+    "hosts": ["Democratic Socialists of America (DSA)"],
+    "tags": ["anti-capitalism", "universal-basic-income", "workers-rights"]
+  },
+  {
+    "name": "Extinction Rebellion Climate March",
+    "description": "Take to the streets to demand urgent action on climate change. Our planet's future depends on it!",
+    "location": "London, England, UK",
+    "hosts": ["Extinction Rebellion"],
+    "tags": ["climate-justice", "non-violent-resistance"]
+  },
+  {
+    "name": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "description": "Raise funds to support political prisoners and advocate for prison abolition.",
+    "location": "Chicago, Illinois, USA",
+    "hosts": ["Anarchist Black Cross Federation"],
+    "tags": ["prison-abolition", "anarchism"]
+  },
+  {
+    "name": "Food Not Bombs Community Feast and Protest",
+    "description": "Share food, build community, and protest against war and poverty. Solidarity, not charity!",
+    "location": "San Francisco, California, USA",
+    "hosts": ["Food Not Bombs"],
+    "tags": ["mutual-aid", "anti-war"]
+  },
+  {
+    "name": "Sunrise Movement Green New Deal Rally",
+    "description": "Demand bold action on climate change and economic justice. The time for change is now!",
+    "location": "Boston, Massachusetts, USA",
+    "hosts": ["Sunrise Movement"],
+    "tags": ["climate-justice", "direct-action"]
+  },
+  {
+    "name": "IWW Workers' Solidarity Conference",
+    "description": "Unite workers and fight for a world without bosses. Solidarity forever!",
+    "location": "Minneapolis, Minnesota, USA",
+    "hosts": ["Industrial Workers of the World (IWW)"],
+    "tags": ["workers-rights", "anarchism"]
+  },
+  {
+    "name": "Queer Liberation Front Pride Parade",
+    "description": "Celebrate LGBTQ+ pride and continue the fight for queer liberation. Love is love!",
+    "location": "San Francisco, California, USA",
+    "hosts": ["Queer Liberation Front"],
+    "tags": ["queer-liberation", "non-violent-resistance"]
+  },
+  {
+    "name": "Indigenous Environmental Network Climate Summit",
+    "description": "Center Indigenous voices in the fight against climate change. Honor Indigenous sovereignty!",
+    "location": "Denver, Colorado, USA",
+    "hosts": ["Indigenous Environmental Network"],
+    "tags": ["indigenous-sovereignty", "climate-justice"]
+  },
+  {
+    "name": "Copwatch Community Patrol Training",
+    "description": "Learn how to monitor and document police activity to hold law enforcement accountable.",
+    "location": "Los Angeles, California, USA",
+    "hosts": ["Copwatch"],
+    "tags": ["racial-justice", "direct-action"]
+  },
+  {
+    "name": "Marxist Student Federation Study Group",
+    "description": "Explore Marxist theory and principles. Knowledge is power!",
+    "location": "London, England, UK",
+    "hosts": ["Marxist Student Federation"],
+    "tags": ["anti-capitalism", "workers-rights"]
+  },
+  {
+    "name": "Symbiosis Mutual Aid Workshop",
+    "description": "Learn about mutual aid and community organizing. Together, we are stronger!",
+    "location": "Portland, Oregon, USA",
+    "hosts": ["Symbiosis"],
+    "tags": ["mutual-aid", "ecology"]
+  },
+  {
+    "name": "Women's Strike Assembly Feminist Forum",
+    "description": "Discuss feminist issues and strategies for collective action. Smash the patriarchy!",
+    "location": "Berlin, Germany",
+    "hosts": ["Women's Strike Assembly"],
+    "tags": ["feminism", "workers-rights"]
+  },
+  {
+    "name": "Anti-Imperialist Action Anti-War Protest",
+    "description": "Oppose imperialism and militarism. War is not the answer!",
+    "location": "Washington, D.C., USA",
+    "hosts": ["Anti-Imperialist Action"],
+    "tags": ["anti-war", "decolonization"]
+  },
+  {
+    "name": "People's Climate Movement Rally for Justice",
+    "description": "Demand climate justice and worker solidarity. Our planet, our future!",
+    "location": "Paris, France",
+    "hosts": ["People's Climate Movement"],
+    "tags": ["climate-justice", "workers-rights"]
+  },
+  {
+    "name": "Federation of Southern Cooperatives Land Sovereignty Conference",
+    "description": "Empower Black farmers and promote food sovereignty. Land back, power to the people!",
+    "location": "Jackson, Mississippi, USA",
+    "hosts": ["Federation of Southern Cooperatives"],
+    "tags": ["food-sovereignty", "racial-justice"]
+  },
+  {
+    "name": "Democratic Confederalism Collective Symposium",
+    "description": "Explore democratic confederalism and gender equality. Building grassroots democracy!",
+    "location": "Rojava, Syria",
+    "hosts": ["Democratic Confederalism Collective"],
+    "tags": ["direct-democracy", "feminism"]
+  },
+  {
+    "name": "Redneck Revolt Community Defense Training",
+    "description": "Learn self-defense and community defense tactics. Protect your community from oppression!",
+    "location": "Atlanta, Georgia, USA",
+    "hosts": ["Redneck Revolt"],
+    "tags": ["anti-capitalism", "community-defense"]
+  },
+  {
+    "name": "National Alliance Against Racist and Political Repression Rally",
+    "description": "Demand justice for communities affected by racist and political repression. Stand together against oppression!",
+    "location": "Chicago, Illinois, USA",
+    "hosts": ["National Alliance Against Racist and Political Repression"],
+    "tags": ["racial-justice", "prison-abolition"]
+  },
+  {
+    "name": "Participatory Budgeting Project Community Workshop",
+    "description": "Learn about participatory budgeting and have a say in how public funds are allocated. Your voice matters!",
+    "location": "Toronto, Canada",
+    "hosts": ["Participatory Budgeting Project"],
+    "tags": ["direct-democracy", "community-empowerment"]
+  },
+  {
+    "name": "Revolutionary Abolitionist Movement Conference",
+    "description": "Join the movement to abolish capitalism, prisons, and the state. Another world is possible!",
+    "location": "Oakland, California, USA",
+    "hosts": ["Revolutionary Abolitionist Movement"],
+    "tags": ["anti-capitalism", "prison-abolition", "community-defense"]
+  },
+  {
+    "name": "Transgender Law Center Legal Clinic",
+    "description": "Get legal support and advocacy for transgender rights and discrimination cases. Justice for all genders!",
+    "location": "Los Angeles, California, USA",
+    "hosts": ["Transgender Law Center"],
+    "tags": ["queer-liberation", "legal-advocacy"]
+  },
+  {
+    "name": "Anti-Eviction Mapping Project Community Action Meeting",
+    "description": "Fight back against gentrification and displacement. Housing is a human right!",
+    "location": "San Francisco, California, USA",
+    "hosts": ["Anti-Eviction Mapping Project"],
+    "tags": ["housing-first", "community-organizing"]
+  },
+  {
+    "name": "National Domestic Workers Alliance Rally for Dignity",
+    "description": "Demand fair wages, labor protections, and dignity for domestic workers. Respect all work!",
+    "location": "Washington, D.C., USA",
+    "hosts": ["National Domestic Workers Alliance"],
+    "tags": ["workers-rights", "feminism"]
+  },
+  {
+    "name": "Anarcho-Syndicalist Federation General Assembly",
+    "description": "Discuss anarchist principles and strategies for worker self-management. Workers of the world, unite!",
+    "location": "Barcelona, Spain",
+    "hosts": ["Anarcho-Syndicalist Federation"],
+    "tags": ["workers-rights", "anarchism"]
+  },
+  {
+    "name": "The Red Nation Indigenous Solidarity March",
+    "description": "Stand in solidarity with Indigenous peoples in the fight against colonialism and capitalism. Land back!",
+    "location": "Albuquerque, New Mexico, USA",
+    "hosts": ["The Red Nation"],
+    "tags": ["indigenous-sovereignty", "anti-capitalism"]
+  },
+  {
+    "name": "Greenpeace Ocean Cleanup Expedition",
+    "description": "Join the fight against plastic pollution and protect our oceans. Every action counts!",
+    "location": "Sydney, Australia",
+    "hosts": ["Greenpeace"],
+    "tags": ["climate-justice", "direct-action"]
+  },
+  {
+    "name": "Cooperation Jackson Worker Cooperative Training",
+    "description": "Learn about economic democracy and community ownership. Build a new economy from the ground up!",
+    "location": "Jackson, Mississippi, USA",
+    "hosts": ["Cooperation Jackson"],
+    "tags": ["mutual-aid", "cooperatives", "racial-justice"]
+  },
+  {
+    "name": "Cosecha Immigrant Rights Rally",
+    "description": "Demand permanent protection and dignity for all immigrants. No human being is illegal!",
+    "location": "Los Angeles, California, USA",
+    "hosts": ["Cosecha"],
+    "tags": ["racial-justice", "immigrant-rights"]
+  },
+  {
+    "name": "Just Transition Alliance Climate Justice Forum",
+    "description": "Fight for a just transition to a sustainable economy that works for everyone. No workers left behind!",
+    "location": "Detroit, Michigan, USA",
+    "hosts": ["Just Transition Alliance"],
+    "tags": ["climate-justice", "workers-rights"]
+  },
+  {
+    "name": "American Indian Movement Indigenous Rights Symposium",
+    "description": "Honor Indigenous sovereignty and resist colonialism and racism. Land back, sovereignty now!",
+    "location": "Minneapolis, Minnesota, USA",
+    "hosts": ["American Indian Movement (AIM)"],
+    "tags": ["indigenous-sovereignty", "racial-justice"]
+  },
+  {
+    "name": "Street Medics First Aid Training",
+    "description": "Learn first aid skills for protests and direct actions. Safety first, solidarity always!",
+    "location": "Seattle, Washington, USA",
+    "hosts": ["Street Medics"],
+    "tags": ["direct-action", "community-health"]
+  },
+  {
+    "name": "Democratic Autonomy Collective Assembly",
+    "description": "Discuss democratic autonomy and self-governance in Kurdish regions and beyond. Power to the people!",
+    "location": "Qamishli, Syria",
+    "hosts": ["Democratic Autonomy Collective"],
+    "tags": ["direct-democracy", "decentralization"]
+  },
+  {
+    "name": "National Nurses United Healthcare Rally",
+    "description": "Demand healthcare as a human right and safe working conditions for nurses. Patients over profits!",
+    "location": "Chicago, Illinois, USA",
+    "hosts": ["National Nurses United"],
+    "tags": ["healthcare", "workers-rights"]
+  },
+  {
+    "name": "Anarcha-Feminist Collective Book Club",
+    "description": "Explore feminist literature from an anarchist perspective. Smash the patriarchy!",
+    "location": "Montreal, Canada",
+    "hosts": ["Anarcha-Feminist Collective"],
+    "tags": ["feminism", "anarchism"]
+  },
+  {
+    "name": "Refugee Solidarity Network Community Potluck",
+    "description": "Build community and support refugees through food, conversation, and solidarity. No one is illegal!",
+    "location": "Berlin, Germany",
+    "hosts": ["Refugee Solidarity Network"],
+    "tags": ["immigrant-rights", "community-empowerment"]
+  }
+]

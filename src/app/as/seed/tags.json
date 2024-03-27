@@ -78,5 +78,61 @@
   "indigenous-sovereignty": {
     "name": "Indigenous Sovereignty",
     "description": "The inherent right of Indigenous peoples to govern themselves and their lands, recognizing their unique cultures, languages, and traditions."
+  },
+  "feminism": {
+    "name": "Feminism",
+    "description": "Advocates for gender equality and the dismantling of patriarchal structures, aiming to address issues such as discrimination, sexism, and gender-based violence."
+  },
+  "anarchism": {
+    "name": "Anarchism",
+    "description": "Opposes hierarchical authority and advocates for voluntary cooperation, mutual aid, and decentralized forms of organization to achieve social, political, and economic equality."
+  },
+  "immigrant-rights": {
+    "name": "Immigrant Rights",
+    "description": "Advocates for the rights and fair treatment of immigrants, refugees, and asylum seekers, challenging discrimination, xenophobia, and immigration policies that undermine human rights."
+  },
+  "community-empowerment": {
+    "name": "Community Empowerment",
+    "description": "Focuses on strengthening communities by providing them with the resources, tools, and support necessary to address their own needs and challenges, fostering self-reliance and collective action."
+  },
+  "direct-democracy": {
+    "name": "Direct Democracy",
+    "description": "A form of democracy in which citizens have the power to directly participate in decision-making processes, bypassing intermediaries like representatives or political parties."
+  },
+  "decentralization": {
+    "name": "Decentralization",
+    "description": "Involves the distribution of power, authority, or decision-making processes away from a central authority or government, often promoting local autonomy and community self-governance."
+  },
+  "anti-war": {
+    "name": "Anti-War",
+    "description": "Opposes war and militarism, advocating for peaceful conflict resolution, diplomacy, and non-violent strategies to address international conflicts and promote global peace."
+  },
+  "ecology": {
+    "name": "Ecology",
+    "description": "Focuses on the study and preservation of ecosystems, biodiversity, and the natural environment, advocating for sustainable practices and policies to mitigate environmental degradation and address climate change."
+  },
+  "community-defense": {
+    "name": "Community Defense",
+    "description": "Involves grassroots efforts to protect communities from various threats, including violence, discrimination, and oppressive systems, often through mutual aid, self-defense, and solidarity networks."
+  },
+  "legal-advocacy": {
+    "name": "Legal Advocacy",
+    "description": "Involves using legal strategies and procedures to advocate for social justice, human rights, and systemic change, often through litigation, lobbying, and policy reform efforts."
+  },
+  "community-organizing": {
+    "name": "Community Organizing",
+    "description": "Involves mobilizing and empowering communities to collectively address social, economic, and political issues, often through grassroots organizing, coalition-building, and direct action."
+  },
+  "cooperatives": {
+    "name": "Cooperatives",
+    "description": "A business model based on democratic ownership and control, where members share ownership, decision-making, and profits, promoting economic democracy, solidarity, and mutual support."
+  },
+  "community-health": {
+    "name": "Community Health",
+    "description": "Focuses on improving the health and well-being of communities by addressing social determinants of health, promoting equitable access to healthcare, and empowering individuals and communities to take control of their health."
+  },
+  "healthcare": {
+    "name": "Healthcare",
+    "description": "Involves the prevention, diagnosis, treatment, and management of illness, injury, and disease, aiming to promote physical, mental, and social well-being through medical services and interventions."
   }
 }

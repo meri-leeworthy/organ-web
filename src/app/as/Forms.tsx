@@ -16,6 +16,8 @@ import {
   createTagIndexSpace,
   seedTags,
   seedIDPages,
+  seedEvents,
+  unsetTagIndexSpace,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -462,22 +464,33 @@ export function CreateTagIndexSpace() {
     </form>
   )
 }
+
+export function RemoveTagIndexSpace() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async () => {
+        const result = await unsetTagIndexSpace()
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <Button type="submit">remove tag index space</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
 export function SeedTags() {
   const [result, setResult] = useState({})
 
   return (
     <form
-      action={async (formData: FormData) => {
-        const result = await seedTags(formData)
+      action={async () => {
+        const result = await seedTags()
         console.log("result", result)
         setResult(result)
       }}>
-      <input
-        type="text"
-        name="tagIndexRoomId"
-        placeholder="tag index roomId"
-        className="border border-black"
-      />
       <Button type="submit">seed tags</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
@@ -490,17 +503,27 @@ export function SeedIds() {
   return (
     <form
       action={async (formData: FormData) => {
-        const result = await seedIDPages(formData)
+        const result = await seedIDPages()
         console.log("result", result)
         setResult(result)
       }}>
-      <input
-        type="text"
-        name="tagIndexRoomId"
-        placeholder="tag index roomId"
-        className="border border-black"
-      />
       <Button type="submit">seed id pages</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function SeedEvents() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async () => {
+        const result = await seedEvents()
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <Button type="submit">seed event pages</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )

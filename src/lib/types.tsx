@@ -7,7 +7,7 @@ import {
   object,
   optional,
   record,
-  string
+  string,
 } from "valibot"
 
 export const contactTypes = {
@@ -18,7 +18,7 @@ export const contactTypes = {
   facebook: "facebook",
   newsletter: "newsletter",
   linktree: "linktree",
-  link: "link"
+  link: "link",
 } as const
 export type ContactType = keyof typeof contactTypes
 
@@ -31,14 +31,14 @@ export const OrganCalEventUnstableSchema = object({
   msgtype: literal(organCalEventUnstable),
   host: object({
     name: string(),
-    id: string()
+    id: string(),
   }),
   start: string(),
   end: optional(string()),
   allDay: optional(boolean()),
   location: optional(string()),
   avatar: optional(string()),
-  source: optional(string())
+  source: optional(string()),
 })
 
 export type OrganCalEventUnstable = Output<typeof OrganCalEventUnstableSchema>
@@ -57,7 +57,7 @@ export const organRoomType = "organ.room.type"
 export const organRoomTypeValue = {
   id: "id",
   event: "event",
-  post: "post"
+  post: "post",
 } as const
 
 export const organLocation = "organ.location"
@@ -87,27 +87,27 @@ export const organSpaceType = "organ.space.type"
 export const organSpaceTypeValue = {
   index: "index",
   tag: "tag",
-  page: "page"
+  page: "page",
 } as const
 
 export const organPostType = "organ.post.type"
 export const organPostTypeValue = {
   text: "text",
   image: "image",
-  event: "event"
+  event: "event",
 } as const
 
 export const organPageType = "organ.page.type"
 export const organPageTypeValue = {
   tag: "tag",
   id: "id",
-  event: "event"
+  event: "event",
 } as const
 
 export const organIndexType = "organ.index.type"
 export const organIndexTypeValue = {
   tag: "tag",
-  user: "user"
+  user: "user",
 } as const
 
 export const organPostText = "organ.post.text"
@@ -167,7 +167,7 @@ export const OrganPostUnstableSchema = object({
   msgtype: literal(organPostUnstable),
   author: object({
     name: string("author name must be a string"),
-    id: string("author id must be string")
+    id: string("author id must be string"),
   }),
   source: optional(string()),
   media: optional(array(string("media must be an array of strings"))),
@@ -176,7 +176,7 @@ export const OrganPostUnstableSchema = object({
   ),
   "m.relates_to": optional(
     record(string("m.relates_to record key must be string"), any())
-  )
+  ),
 })
 
 export type OrganPostUnstable = Output<typeof OrganPostUnstableSchema>
