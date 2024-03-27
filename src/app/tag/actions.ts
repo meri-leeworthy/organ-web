@@ -3,12 +3,12 @@
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 import { organSpaceType, organSpaceTypeValue } from "@/lib/types"
-import { normaliseTagString } from "@/lib/utils"
+import { noCacheFetch, normaliseTagString } from "@/lib/utils"
 import { Client, ErrorSchema, Room } from "simple-matrix-sdk"
 import { is } from "valibot"
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-  fetch,
+  fetch: noCacheFetch,
   params: { user_id: `@_relay_bot:${SERVER_NAME}` },
 })
 
@@ -166,7 +166,7 @@ export async function bilateralTagAdoptPost(
 
 export async function getTagRoomId(tag: string) {
   const tagString = normaliseTagString(tag)
-  return await client.getRoomIdFromAlias(
-    `#relay_tag_${tagString}:${SERVER_NAME}`
-  )
+  const alias = `#relay_tag_${tagString}:${SERVER_NAME}`
+  console.log("Alias", alias)
+  return await client.getRoomIdFromAlias(alias)
 }
