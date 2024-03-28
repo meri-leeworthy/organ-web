@@ -22,6 +22,9 @@ const config = {
       body: ["Fluxisch", "sans-serif"],
     },
     extend: {
+      dropShadow: {
+        hard: "3px 3px 0 rgba(0, 0, 0, 0.4)",
+      },
       colors: {
         primary: "#ddd2ff",
         primarydark: "#916fff",
