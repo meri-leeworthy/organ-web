@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
+import { State } from "simple-matrix-sdk"
 import { twMerge } from "tailwind-merge"
+import { RoomTypes, SubTypes, organSpaceTypeValue } from "./types"
 
 const { MATRIX_BASE_URL } = process.env
 
@@ -315,4 +317,29 @@ export function normaliseTagString(tag: string) {
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "-")
+}
+
+export function isOrganRoomType<T extends RoomTypes>(
+  state: State,
+  type: T,
+  subType?: SubTypes<T>
+) {
+  const roomTypeEvent =
+    type === "post"
+      ? state.get("organ.room.type")
+      : state.get("organ.space.type")
+  if (!roomTypeEvent) return false
+
+  const roomType = props(roomTypeEvent, "content", "value")
+  if (roomType !== type) return false
+
+  if (subType) {
+    const subTypeEvent = state.get(`organ.${type}.type`)
+    if (!subTypeEvent) return false
+
+    const subTypeValue = props(subTypeEvent, "content", "value")
+    if (subTypeValue !== subType) return false
+  }
+
+  return true
 }

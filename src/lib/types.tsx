@@ -129,6 +129,31 @@ export type OrganPostMeta = {
   author: OrganAuthor
 }
 
+export const organRoomTypeTree = {
+  index: {
+    tag: "tag",
+    user: "user",
+  },
+  tag: "tag",
+  page: {
+    tag: "tag",
+    id: "id",
+    event: "event",
+  },
+  post: {
+    text: "text",
+    image: "image",
+    event: "event",
+  },
+} as const
+
+export type RoomTypes = keyof typeof organRoomTypeTree
+export type SubTypes<T> = T extends RoomTypes
+  ? (typeof organRoomTypeTree)[T] extends string
+    ? never
+    : keyof (typeof organRoomTypeTree)[T]
+  : never
+
 export type OrganAuthor = { type: "user" | "id"; value: string }
 
 // SPACE/ROOM STATE MODEL
