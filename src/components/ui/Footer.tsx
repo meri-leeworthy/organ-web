@@ -4,15 +4,18 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <section className="absolute text-end right-0 w-80 mt-24 text-sm leading-tight p-4 bg-green-300">
+    <section className="absolute bottom-0 text-end right-0 w-80 mt-24 text-sm leading-tight p-4 bg-green-400">
+      <Link href="/">
+        <h1 className="py-1 text-xl font-black leading-4">organ</h1>
+      </Link>
+
       <div className="flex items-center justify-end gap-2 my-4 ml-auto w-full">
         <CreatePageAccount />
         <LoginLogout />
       </div>
 
       <P className="my-4">
-        organ is a project by{" "}
-        <a href="https://radical.directory">Radical Directory</a>
+        a project by <a href="https://radical.directory">Radical Directory</a>
       </P>
 
       <P>

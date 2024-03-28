@@ -4,7 +4,7 @@ const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 // export const dynamic = "force-dynamic"
 
 import { Room, Client, ClientEventOutput, Timeline } from "simple-matrix-sdk"
-import { getMessagesChunk, noCacheFetch } from "@/lib/utils"
+import { getIdLocalPart, getMessagesChunk, noCacheFetch } from "@/lib/utils"
 import { Contact } from "@/components/ui/Contact"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import { IconDotsVertical, IconSettings } from "@tabler/icons-react"
@@ -27,17 +27,24 @@ export default async function OrgSlugPage({
 }: {
   params: { slug: string }
 }) {
+  // slug should be scoped alias substring
   const { slug } = params
-  const roomId = `!${slug}:${SERVER_NAME}`
 
+  // get room id from slug
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: {
       user_id: "@_relay_bot:" + SERVER_NAME,
     },
   })
+  const roomId = await client.getRoomIdFromAlias(
+    `#relay_id_${slug}:${SERVER_NAME}`
+  )
+  if (typeof roomId === "object" && "errcode" in roomId)
+    return JSON.stringify(roomId)
 
-  const room = new Room(roomId, client)
+  console.log("roomId", roomId)
+  const room = client.getRoom(roomId)
 
   const nameResult = await room.getName()
   const name =
@@ -92,27 +99,7 @@ export default async function OrgSlugPage({
 
   return (
     <>
-      <div className="my-6 mb-8 flex w-full flex-col gap-4 sm:flex-row-reverse">
-        <div className="flex items-center justify-between gap-1 sm:ml-auto sm:flex-col-reverse sm:items-end">
-          <span className="text-xs uppercase opacity-60">
-            <strong>{memberCount - 1}</strong> followers
-          </span>
-          <div className="flex flex-row-reverse flex-wrap items-center gap-2">
-            <IfRoomMember slug={slug}>
-              <Dropdown>
-                <DropdownItem href={`/id/${slug}/notifications`}>
-                  Notification Settings
-                </DropdownItem>
-                <IfModerator slug={slug}>
-                  <DropdownItem href={`/id/${slug}/edit`}>
-                    Page Settings
-                  </DropdownItem>
-                </IfModerator>
-              </Dropdown>
-            </IfRoomMember>
-            <FollowButton slug={slug} />
-          </div>
-        </div>
+      <div className="my-2 mb-8 flex w-full flex-col gap-4 sm:flex-row-revers max-w-xl">
         <div className={`flex ${avatarUrl && "gap-4"}`}>
           <Suspense fallback={<div>loading...</div>}>
             {avatarUrl && <AvatarFull url={avatarUrl} />}
@@ -123,9 +110,29 @@ export default async function OrgSlugPage({
             </h2>
           </div>
         </div>
+        <div className="flex items-center justify-between gap-1 ">
+          <span className="text-xs uppercase opacity-60">
+            <strong>{memberCount - 1}</strong> followers
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <IfRoomMember slug={getIdLocalPart(roomId)}>
+            <Dropdown>
+              <DropdownItem href={`/id/${slug}/notifications`}>
+                Notification Settings
+              </DropdownItem>
+              <IfModerator slug={getIdLocalPart(roomId)}>
+                <DropdownItem href={`/id/${slug}/edit`}>
+                  Page Settings
+                </DropdownItem>
+              </IfModerator>
+            </Dropdown>
+          </IfRoomMember>
+          <FollowButton slug={getIdLocalPart(roomId)} />
+        </div>
       </div>
 
-      <main className="flex w-full flex-col gap-4 lg:flex-row-reverse xl:gap-6">
+      <main className="flex w-full flex-col gap-4 lg:flex-row-reverse xl:gap-6 max-w-xl">
         <section className="flex w-full flex-col justify-start lg:w-48 lg:flex-col-reverse lg:justify-end xl:w-64">
           <p className="my-4 whitespace-pre-line text-sm italic lg:text-xs lg:opacity-80 xl:text-sm">
             {is(object({ topic: string() }), topic?.content) &&
@@ -135,11 +142,11 @@ export default async function OrgSlugPage({
         </section>
 
         <section className="flex w-full flex-col gap-4">
-          <EmailSubscribe slug={slug} dismissable />
+          {/* <EmailSubscribe slug={slug} dismissable /> */}
 
           <Suspense fallback={<div>loading...</div>}>
-            <IfModerator slug={slug}>
-              <NewPost slug={slug} />
+            <IfModerator slug={getIdLocalPart(roomId)}>
+              <NewPost slug={getIdLocalPart(roomId)} />
             </IfModerator>
           </Suspense>
 
@@ -158,29 +165,29 @@ export async function generateMetadata({
   const { slug } = params
   const roomId = `!${slug}:${SERVER_NAME}`
 
-  const room = new Room(
-    roomId,
-    new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-      params: {
-        user_id: "@_relay_bot:" + SERVER_NAME,
-      },
-      fetch,
-    })
-  )
+  // const room = new Room(
+  //   roomId,
+  //   new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
+  //     params: {
+  //       user_id: "@_relay_bot:" + SERVER_NAME,
+  //     },
+  //     fetch,
+  //   })
+  // )
 
-  const messagesIterator = room.getMessagesAsyncGenerator()
-  const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
-    messagesIterator
-  ).catch(() => console.error("error getting messages"))
-  const topic = messagesChunk?.find(message => message.type === "m.room.topic")
+  // const messagesIterator = room.getMessagesAsyncGenerator()
+  // const messagesChunk: ClientEventOutput[] = await getMessagesChunk(
+  //   messagesIterator
+  // ).catch(() => console.error("error getting messages"))
+  // const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
-  return {
-    title: room.name?.name,
-    description:
-      (is(object({ topic: string() }), topic?.content) &&
-        topic.content.topic) ||
-      "",
-  }
+  // return {
+  //   title: room.name?.name,
+  //   description:
+  //     (is(object({ topic: string() }), topic?.content) &&
+  //       topic.content.topic) ||
+  //     "",
+  // }
 }
 
 function AvatarFull({ url }: { url: string | undefined }) {

@@ -1,10 +1,11 @@
 import { getTagRoomId } from "@/app/tag/actions"
 import { client } from "@/lib/client"
-import { props } from "@/lib/utils"
+import { getIdLocalPart, props } from "@/lib/utils"
 import { IconTag } from "@tabler/icons-react"
 import { ClientEventSchema, Room } from "simple-matrix-sdk"
 import * as v from "valibot"
 import { FlexGridList, FlexGridListItem } from "@/components/ui/FlexGridList"
+import Link from "next/link"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
@@ -42,21 +43,19 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
 }
 
 export async function Item({ postRoomId }: { postRoomId: string }) {
-  const postRoom = new Room(postRoomId, client)
+  const room = new Room(postRoomId, client)
 
-  const state = await postRoom.getState()
+  const state = await room.getState()
   if ("errcode" in state) return "no state"
 
-  const spaceTypeEvent = state.get("organ.space.type")
-  // if (!spaceTypeEvent) return "not a space"
+  const aliasEvent = state.get("m.room.canonical_alias")
 
+  const alias = props(aliasEvent, "content", "alias")
+
+  const spaceTypeEvent = state.get("organ.space.type")
   if (!v.is(ClientEventSchema, spaceTypeEvent)) return "incorrect event schema"
 
-  const { content: spaceType } = spaceTypeEvent
-
   const pageTypeEvent = state.get("organ.page.type")
-  // if (!pageTypeEvent) return "not a page"
-
   if (!v.is(ClientEventSchema, pageTypeEvent)) return "incorrect event schema"
 
   const { content: pageType } = pageTypeEvent
@@ -74,16 +73,32 @@ export async function Item({ postRoomId }: { postRoomId: string }) {
   const name = (state.get("m.room.name")?.content as { name: string }).name
   const topic = (state.get("m.room.topic")?.content as { topic: string }).topic
 
-  return pageType.value === "id" ? (
-    <FlexGridListItem>
-      <p className="font-bold">{name}</p>
-      <p>{topic}</p>
-    </FlexGridListItem>
-  ) : pageType.value === "event" ? (
-    <FlexGridListItem>
-      <p>Event</p>
-      <p>{name}</p>
-      <p>{topic}</p>
-    </FlexGridListItem>
-  ) : null
+  if (pageType.value === "id") {
+    if (typeof alias !== "string")
+      return (
+        <FlexGridListItem>
+          {JSON.stringify({ alias, name, topic })}
+        </FlexGridListItem>
+      )
+    return (
+      <Link
+        href={`/id/${alias.split("#relay_id_")[1].split(":")[0]}`}
+        key={room.roomId}>
+        <FlexGridListItem>
+          <p className="font-bold pt-2">{name}</p>
+          <p>{topic}</p>
+        </FlexGridListItem>
+      </Link>
+    )
+  }
+  if (pageType.value === "event")
+    return (
+      <Link href={"/event/" + getIdLocalPart(room.roomId)} key={room.roomId}>
+        <FlexGridListItem>
+          <p className="pt-2 text-xs uppercase">Event</p>
+          <p className="font-bold">{name}</p>
+          <p>{topic}</p>
+        </FlexGridListItem>
+      </Link>
+    )
 }

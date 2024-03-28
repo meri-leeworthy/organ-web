@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative flex flex-col justify-center w-screen min-h-screen">
+      <body className="relative flex flex-col w-screen min-h-screen">
         {process.env.NODE_ENV === "development" && (
           <Script src="http://localhost:8097" />
         )}
@@ -30,10 +30,8 @@ export default function RootLayout({
             </Link> */}
           <Menu />
         </header>
-        <div className="flex flex-col items-center w-full p-2  lg:p-4">
-          {children}
-        </div>
-        <div className="w-full relative bottom-0">
+        <div className="flex flex-col w-full p-2 mb-80 lg:p-4">{children}</div>
+        <div className="w-full absolute bottom-0">
           <Footer />
         </div>
       </body>
