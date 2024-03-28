@@ -1,6 +1,5 @@
 "use client"
 
-import { Username } from "@/components/ui"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,10 +16,12 @@ export function Menu() {
   const client = useClient()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="focus-visible:outline-green-300 p-1">
+      <DropdownMenuTrigger className="focus-visible:outline-green-300 focus-visible:outline-dashed focus-visible:outline-4 p-1">
         <IconMenu />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        align="end"
+        className="rounded-none shadow-none drop-shadow-hard">
         <DropdownMenuItem onSelect={() => router.push("/")}>
           Home
         </DropdownMenuItem>

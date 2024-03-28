@@ -2,7 +2,7 @@ import Link from "next/link"
 import "@/styles/globals.css"
 import { Footer } from "@/components/ui"
 import Script from "next/script"
-import { Menu } from "./Menu"
+import { Menu } from "../components/ui/Menu"
 
 export const metadata = {
   title: "Organ",
