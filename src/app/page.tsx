@@ -1,11 +1,8 @@
-const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
-
 export const dynamic = "force-dynamic"
 
-import { Room, Event } from "simple-matrix-sdk"
+import { Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { Suspense } from "react"
-import { getMessagesChunk } from "@/lib/utils"
 import { Posts } from "@/components/ui/Posts"
 import { WelcomeEmailSignup } from "./WelcomeEmailSignup"
 import { client, getTagIndex } from "@/lib/client"

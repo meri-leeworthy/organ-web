@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
+const { MATRIX_BASE_URL, SERVER_NAME } = process.env
 
-// export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic"
 
 import { Room, Client, ClientEventOutput, Timeline } from "simple-matrix-sdk"
 import { getIdLocalPart, getMessagesChunk, noCacheFetch } from "@/lib/utils"
@@ -21,6 +21,7 @@ import { FollowButton } from "@/components/ui/FollowButton"
 import { is, object, string } from "valibot"
 import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 import { IfRoomMember } from "@/components/IfRoomMember"
+import { client } from "@/lib/client"
 
 export default async function OrgSlugPage({
   params,
@@ -31,19 +32,11 @@ export default async function OrgSlugPage({
   const { slug } = params
 
   // get room id from slug
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch: noCacheFetch,
-    params: {
-      user_id: "@_relay_bot:" + SERVER_NAME,
-    },
-  })
   const roomId = await client.getRoomIdFromAlias(
     `#relay_id_${slug}:${SERVER_NAME}`
   )
   if (typeof roomId === "object" && "errcode" in roomId)
     return JSON.stringify(roomId)
-
-  console.log("roomId", roomId)
   const room = client.getRoom(roomId)
 
   const nameResult = await room.getName()
@@ -53,33 +46,19 @@ export default async function OrgSlugPage({
     "name" in nameResult &&
     typeof nameResult.name === "string" &&
     nameResult.name
-  const messagesIterator = room.getMessagesAsyncGenerator()
 
-  const messagesChunk: ClientEventOutput[] = []
+  const state = await room.getState()
+  if ("errcode" in state) return JSON.stringify(state)
 
-  // await getMessagesChunk(
-  //   messagesIterator
-  // ).catch(() => console.error("error getting messages"))
+  const avatar = state.get("m.room.avatar")
+  const topic = state.get("m.room.topic")
 
-  const messages = messagesChunk?.filter(
-    message => message.type === "m.room.message"
-  )
+  const spaceChildren = await room.getHierarchy({ max_depth: 1 })
+  console.log("spaceChildren", spaceChildren)
 
-  const posts = messages?.filter(
-    message =>
-      is(OrganPostUnstableSchema, message.content) ||
-      is(OrganCalEventUnstableSchema, message.content)
-  )
+  spaceChildren?.shift()
 
-  const timeline = posts && new Timeline(posts)
-
-  const avatar = messagesChunk?.find(
-    (message: ClientEventOutput) => message.type === "m.room.avatar"
-  )
-  const imageUri: string | undefined = is(
-    object({ url: string() }),
-    avatar?.content
-  )
+  const imageUri = is(object({ url: string() }), avatar?.content)
     ? avatar.content.url
     : undefined
   const serverName = imageUri && imageUri.split("://")[1].split("/")[0]
@@ -89,7 +68,6 @@ export default async function OrgSlugPage({
       ? `${MATRIX_BASE_URL}/_matrix/media/r0/download/${serverName}/${mediaId}`
       : undefined
   const contactKVs = await fetchContactKVs(room)
-  const topic = messagesChunk?.find(message => message.type === "m.room.topic")
 
   const members = await room.getMembers()
   // console.log("members", members)
@@ -150,7 +128,11 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <Posts posts={[...timeline?.events.values()]} />
+          <p>posts here</p>
+
+          <Posts
+            postIds={spaceChildren?.map(child => child.room_id as string) || []}
+          />
         </section>
       </main>
     </>

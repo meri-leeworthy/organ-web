@@ -18,6 +18,7 @@ import {
   seedIDPages,
   seedEvents,
   unsetTagIndexSpace,
+  seedPosts,
 } from "./actions"
 import { useState } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
@@ -524,6 +525,22 @@ export function SeedEvents() {
         setResult(result)
       }}>
       <Button type="submit">seed event pages</Button>
+      <Pre> Result: {JSON.stringify(result)}</Pre>
+    </form>
+  )
+}
+
+export function SeedPosts() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async () => {
+        const result = await seedPosts()
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <Button type="submit">seed posts</Button>
       <Pre> Result: {JSON.stringify(result)}</Pre>
     </form>
   )

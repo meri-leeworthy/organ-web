@@ -1,19 +1,31 @@
-import { organCalEventUnstable, organPostUnstable } from "@/lib/types"
+import {
+  organCalEventUnstable,
+  organPostMeta,
+  organPostUnstable,
+} from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
-import { slug } from "@/lib/utils"
-import { Event } from "simple-matrix-sdk"
+import { isOrganRoomType, props, slug } from "@/lib/utils"
+import { ClientEventSchema, Event } from "simple-matrix-sdk"
+import { client } from "@/lib/client"
+import * as v from "valibot"
 
-export function Posts({ posts }: { posts: Event[] }) {
-  // console.log("posts", posts)
+export function Posts({ postIds }: { postIds: string[] }) {
+  console.log("postIds", postIds)
 
-  const sortedPosts = posts.sort((a, b) => {
-    return b.originServerTs - a.originServerTs
-  })
+  // get post state
+
+  // const sortedPosts = postIds.sort((a, b) => {
+  //   return b.originServerTs - a.originServerTs
+  // })
 
   return (
     <section className="">
-      {sortedPosts.map((post, i) => {
+      {postIds.map((id, i) => {
+        return <TextPost key={i} id={id} />
+      })}
+
+      {/* {sortedPosts.map((post, i) => {
         const content = post.content
         const originServerTs = post.originServerTs
         const eventId = post.eventId
@@ -52,7 +64,27 @@ export function Posts({ posts }: { posts: Event[] }) {
               />
             )
         }
-      })}
+      })} */}
     </section>
+  )
+}
+
+async function TextPost({ id }: { id: string }) {
+  const room = client.getRoom(id)
+  const state = await room.getState()
+  if ("errcode" in state) return JSON.stringify(state)
+  console.log(id, "state", state)
+  console.log("roomtype", state.get("organ.room.type"))
+  const validPost = isOrganRoomType(state, "post")
+  if (!validPost) return "incorrect room type"
+  const post = state.get(organPostMeta)
+  if (!post) return "no post"
+  const body = props(post, "content", "body")
+  if (typeof body !== "string") return "no content"
+
+  return (
+    <div>
+      <p>{body}</p>
+    </div>
   )
 }

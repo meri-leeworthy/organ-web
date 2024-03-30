@@ -1,4 +1,3 @@
-import Link from "next/link"
 import "@/styles/globals.css"
 import { Footer } from "@/components/ui"
 import Script from "next/script"

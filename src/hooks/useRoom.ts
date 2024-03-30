@@ -1,4 +1,4 @@
-const { SERVER_NAME, MATRIX_BASE_URL } = process.env
+"use client"
 
 import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { Client, Room } from "simple-matrix-sdk"
@@ -17,8 +17,15 @@ export function useRoom(slug: string) {
   useEffect(() => {
     if (!accessToken || !userId) return
 
-    const client = new Client(MATRIX_BASE_URL!, accessToken, { userId, fetch })
-    const room = new Room(`!${slug}:${SERVER_NAME}`, client)
+    const client = new Client(
+      process.env.NEXT_PUBLIC_MATRIX_BASE_URL!,
+      accessToken,
+      { userId, fetch }
+    )
+    const room = new Room(
+      `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
+      client
+    )
     setRoom(room)
   }, [slug, accessToken, userId])
 

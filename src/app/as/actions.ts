@@ -13,12 +13,17 @@ import {
   organPageEventMeta,
   organPageType,
   organPageTypeValue,
+  organPostMeta,
+  organRoomType,
+  organRoomTypeValue,
   organSpaceType,
   organSpaceTypeValue,
 } from "@/lib/types"
 import tags from "./seed/tags.json"
 import ids from "./seed/ids.json"
 import events from "./seed/events.json"
+import posts from "./seed/posts.json"
+import { get } from "http"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
@@ -362,61 +367,10 @@ function normalizeName(name: string): string {
 }
 
 export async function seedEvents() {
-  // get a list of all the ID spaces
-  // this is done by searching each tag in the tag-index and making a map
-  // i.e. if a page doesn't have a tag it's not discoverable
-
-  const tagIndexRoomId = await client.getRoomIdFromAlias(
-    "#relay_tagindex:" + SERVER_NAME
-  )
-  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
-    return tagIndexRoomId
-  const tagIndex = client.getRoom(tagIndexRoomId)
-
-  // get a list of all the tag rooms from tag index
-  const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
-
-  if (!tagIndexChildren) return { errcode: "No tag rooms found" }
-  console.log("tagIndexChildren", tagIndexChildren)
-
-  // remove tag index room
-  tagIndexChildren.shift()
-
-  // get the canonical alias for each tag and map to roomID
-  const tagsMap = new Map<string, string>()
-  tagIndexChildren.forEach(tag => {
-    tagsMap.set(
-      tag.canonical_alias.split("#relay_tag_")[1].split(":")[0],
-      tag.room_id
-    )
-  })
-
-  console.log("tagsMap", tagsMap)
-
-  // create a set of ID Page room IDs
-  const idsSet = new Set<string>()
-  tagIndexChildren.forEach(tag => {
-    tag.children_state.forEach((id: ClientEventOutput) => {
-      idsSet.add(id.state_key!)
-    })
-  })
-
-  // get the canonical alias for each ID Page and map to roomID
-  const idsMap = new Map<string, string>()
-  for (const id of idsSet) {
-    const idSpace = client.getRoom(id)
-
-    const aliasResponse = await idSpace.getCanonicalAlias()
-
-    if ("errcode" in aliasResponse) continue
-
-    const alias = aliasResponse.alias.split("#relay_id_")[1].split(":")[0]
-
-    console.log("idSpace", idSpace.roomId)
-    console.log("canonical alias", alias)
-
-    idsMap.set(alias, idSpace.roomId)
-  }
+  const tagsMap = await getTagsMap()
+  if ("errcode" in tagsMap) return tagsMap
+  const idsMap = await getIdsMap()
+  if ("errcode" in idsMap) return idsMap
 
   // create event spaces
   const createEventsResults = await Promise.all(
@@ -528,4 +482,135 @@ function generateRandomTimestamp(): number {
   const randomTimestamp = currentTimestamp + randomOffset // Add random offset to current timestamp
   const roundedTimestamp = Math.round(randomTimestamp / (5 * 60)) * (5 * 60) // Round to nearest 5-minute interval
   return roundedTimestamp
+}
+
+export async function seedPosts() {
+  // const tagsMap = await getTagsMap()
+  // if ("errcode" in tagsMap) return tagsMap
+  const idsMap = await getIdsMap()
+  if ("errcode" in idsMap) return idsMap
+
+  const createPostsResults = await Promise.all(
+    posts.map(async post => {
+      console.log(post)
+      const id = idsMap.get(post.id)
+      if (!id) return { errcode: "ID not found" }
+
+      const postRoom = await client.createRoom({
+        topic: post.text,
+        initial_state: [
+          {
+            type: organRoomType,
+            content: {
+              value: organRoomTypeValue.post,
+            },
+          },
+          {
+            type: organPostMeta,
+            content: {
+              body: post.text,
+              author: {
+                type: "id",
+                value: id,
+                timestamp: Date.now(),
+              },
+            },
+          },
+          {
+            type: "m.space.parent",
+            content: {
+              via: [SERVER_NAME],
+            },
+            state_key: id,
+          },
+        ],
+      })
+
+      if ("errcode" in postRoom) return postRoom
+
+      // add the post as child to the id space
+
+      const idSpace = client.getRoom(id)
+      await idSpace.sendStateEvent(
+        "m.space.child",
+        { via: [SERVER_NAME], order: Date.now() },
+        postRoom.roomId
+      )
+
+      return postRoom.roomId
+    })
+  )
+
+  return createPostsResults
+}
+
+async function getIdsMap() {
+  // get a list of all the ID spaces
+  // this is done by searching each tag in the tag-index and making a map
+  // i.e. if a page doesn't have a tag it's not discoverable
+
+  const tagIndexChildren = await getTagIndexChildren()
+  if ("errcode" in tagIndexChildren) return tagIndexChildren
+
+  // create a set of ID Page room IDs
+  const idsSet = new Set<string>()
+  tagIndexChildren.forEach(tag => {
+    tag.children_state.forEach((id: ClientEventOutput) => {
+      idsSet.add(id.state_key!)
+    })
+  })
+  // get the canonical alias for each ID Page and map to roomID
+  const idsMap = new Map<string, string>()
+  for (const id of idsSet) {
+    const idSpace = client.getRoom(id)
+
+    const aliasResponse = await idSpace.getCanonicalAlias()
+
+    if ("errcode" in aliasResponse) continue
+
+    const alias = aliasResponse.alias.split("#relay_id_")[1].split(":")[0]
+
+    console.log("idSpace", idSpace.roomId)
+    console.log("canonical alias", alias)
+
+    idsMap.set(alias, idSpace.roomId)
+  }
+
+  return idsMap
+}
+
+async function getTagsMap() {
+  const tagIndexChildren = await getTagIndexChildren()
+  if ("errcode" in tagIndexChildren) return tagIndexChildren
+
+  // get the canonical alias for each tag and map to roomID
+  const tagsMap = new Map<string, string>()
+  tagIndexChildren.forEach(tag => {
+    tagsMap.set(
+      tag.canonical_alias.split("#relay_tag_")[1].split(":")[0],
+      tag.room_id
+    )
+  })
+
+  return tagsMap
+}
+
+async function getTagIndexChildren() {
+  const tagIndexRoomId = await client.getRoomIdFromAlias(
+    "#relay_tagindex:" + SERVER_NAME
+  )
+  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
+    return tagIndexRoomId
+  const tagIndex = client.getRoom(tagIndexRoomId)
+
+  // get a list of all the tag rooms from tag index
+  const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
+
+  if (!tagIndexChildren) return { errcode: "No tag rooms found" }
+  console.log("tagIndexChildren", tagIndexChildren)
+
+  // remove tag index room
+  tagIndexChildren.shift()
+
+  return tagIndexChildren
 }

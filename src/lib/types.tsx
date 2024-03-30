@@ -110,11 +110,11 @@ export const organIndexTypeValue = {
   user: "user",
 } as const
 
-export const organPostText = "organ.post.text"
-export type OrganPostText = {
-  type: typeof organPostText
-  content: { value: string }
-}
+// export const organPostText = "organ.post.text"
+// export type OrganPostText = {
+//   type: typeof organPostText
+//   content: { value: string }
+// }
 
 export const organPostMeta = "organ.post.meta"
 export type OrganPostMetaState = {
