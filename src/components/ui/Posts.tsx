@@ -5,10 +5,11 @@ import {
 } from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
-import { isOrganRoomType, props, slug } from "@/lib/utils"
+import { getContextualDate, isOrganRoomType, props, slug } from "@/lib/utils"
 import { ClientEventSchema, Event } from "simple-matrix-sdk"
 import { client } from "@/lib/client"
 import * as v from "valibot"
+import { FlexGridList, FlexGridListItem } from "./FlexGridList"
 
 export function Posts({ postIds }: { postIds: string[] }) {
   console.log("postIds", postIds)
@@ -21,9 +22,11 @@ export function Posts({ postIds }: { postIds: string[] }) {
 
   return (
     <section className="">
-      {postIds.map((id, i) => {
-        return <TextPost key={i} id={id} />
-      })}
+      <FlexGridList>
+        {postIds.map((id, i) => {
+          return <TextPost key={i} id={id} />
+        })}
+      </FlexGridList>
 
       {/* {sortedPosts.map((post, i) => {
         const content = post.content
@@ -76,15 +79,21 @@ async function TextPost({ id }: { id: string }) {
   console.log(id, "state", state)
   console.log("roomtype", state.get("organ.room.type"))
   const validPost = isOrganRoomType(state, "post")
-  if (!validPost) return "incorrect room type"
+  if (!validPost) return null
   const post = state.get(organPostMeta)
   if (!post) return "no post"
+
   const body = props(post, "content", "body")
-  if (typeof body !== "string") return "no content"
+  const timestamp = props(post, "content", "timestamp")
+  if (typeof body !== "string" || typeof timestamp !== "number")
+    return "no content"
+
+  const date = new Date(timestamp)
 
   return (
-    <div>
+    <FlexGridListItem>
+      <time className="text-xs uppercase">{getContextualDate(timestamp)}</time>
       <p>{body}</p>
-    </div>
+    </FlexGridListItem>
   )
 }

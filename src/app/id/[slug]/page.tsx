@@ -110,7 +110,7 @@ export default async function OrgSlugPage({
         </div>
       </div>
 
-      <main className="flex w-full flex-col gap-4 lg:flex-row-reverse xl:gap-6 max-w-xl">
+      <main className="flex w-full flex-col gap-4 lg:flex-row-reverse xl:gap-6 ">
         <section className="flex w-full flex-col justify-start lg:w-48 lg:flex-col-reverse lg:justify-end xl:w-64">
           <p className="my-4 whitespace-pre-line text-sm italic lg:text-xs lg:opacity-80 xl:text-sm">
             {is(object({ topic: string() }), topic?.content) &&
@@ -127,8 +127,6 @@ export default async function OrgSlugPage({
               <NewPost slug={getIdLocalPart(roomId)} />
             </IfModerator>
           </Suspense>
-
-          <p>posts here</p>
 
           <Posts
             postIds={spaceChildren?.map(child => child.room_id as string) || []}

@@ -37,7 +37,7 @@ export default async function Home() {
     <main className="flex w-full flex-col gap-4">
       {/* <WelcomeEmailSignup /> */}
       <h3 className="mt-2 text-lg font-medium">Recent posts</h3>
-      <Posts posts={[]} />
+      <Posts postIds={[] as string[]} />
       <h3 className="mt-6 text-lg font-medium">Tags</h3>
       <FlexGridList>
         {sortedChildren?.map((child, i) => (
