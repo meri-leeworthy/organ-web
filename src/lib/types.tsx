@@ -53,82 +53,6 @@ export const organPostUnstable = "organ.post.unstable"
 export const organRoomUserNotifications = "organ.room.user.notifications"
 export const organRoomSecretEmail = "organ.room.secret.email"
 
-export const organRoomType = "organ.room.type"
-export const organRoomTypeValue = {
-  id: "id",
-  event: "event",
-  post: "post",
-} as const
-
-export const organLocation = "organ.location"
-export type OrganLocation =
-  | {
-      type: "text"
-      value: string
-    }
-  | {
-      type: "page"
-      value: string //RoomID
-    }
-
-export const organPageEventMeta = "organ.page.event.meta"
-export type OrganPageEventMeta = {
-  type: typeof organPageEventMeta
-  content: {
-    start: string
-    end: string
-    allDay?: boolean
-    location?: OrganLocation
-    url?: string
-  }
-}
-
-export const organSpaceType = "organ.space.type"
-export const organSpaceTypeValue = {
-  index: "index",
-  tag: "tag",
-  page: "page",
-} as const
-
-export const organPostType = "organ.post.type"
-export const organPostTypeValue = {
-  text: "text",
-  image: "image",
-  event: "event",
-} as const
-
-export const organPageType = "organ.page.type"
-export const organPageTypeValue = {
-  tag: "tag",
-  id: "id",
-  event: "event",
-} as const
-
-export const organIndexType = "organ.index.type"
-export const organIndexTypeValue = {
-  tag: "tag",
-  user: "user",
-} as const
-
-// export const organPostText = "organ.post.text"
-// export type OrganPostText = {
-//   type: typeof organPostText
-//   content: { value: string }
-// }
-
-export const organPostMeta = "organ.post.meta"
-export type OrganPostMetaState = {
-  type: typeof organPostMeta
-  content: OrganPostMeta
-}
-
-export type OrganPostMeta = {
-  title?: string
-  body: string
-  timestamp: number
-  author: OrganAuthor
-}
-
 export const organRoomTypeTree = {
   index: {
     tag: "tag",
@@ -153,6 +77,76 @@ export type SubTypes<T> = T extends RoomTypes
     ? never
     : keyof (typeof organRoomTypeTree)[T]
   : never
+
+export const organRoomType = "organ.room.type"
+export const organSpaceType = "organ.space.type"
+export const organPostType = "organ.post.type"
+export const organPageType = "organ.page.type"
+export const organIndexType = "organ.index.type"
+export const organPageEventMeta = "organ.page.event.meta"
+export const organPostMeta = "organ.post.meta"
+
+export const organRoomTypeValue = {
+  id: "id",
+  event: "event",
+  post: "post",
+} as const
+
+export type OrganLocation =
+  | {
+      type: "text"
+      value: string
+    }
+  | {
+      type: "page"
+      value: string //RoomID
+    }
+
+export type OrganPageEventMeta = {
+  type: typeof organPageEventMeta
+  content: {
+    start: string
+    end: string
+    allDay?: boolean
+    location?: OrganLocation
+    url?: string
+  }
+}
+
+export const organSpaceTypeValue = {
+  index: "index",
+  tag: "tag",
+  page: "page",
+} as const
+
+export const organPostTypeValue = {
+  text: "text",
+  image: "image",
+  event: "event",
+} as const
+
+export const organPageTypeValue = {
+  tag: "tag",
+  id: "id",
+  event: "event",
+} as const
+
+export const organIndexTypeValue = {
+  tag: "tag",
+  user: "user",
+} as const
+
+export type OrganPostMetaState = {
+  type: typeof organPostMeta
+  content: OrganPostMeta
+}
+
+export type OrganPostMeta = {
+  title?: string
+  body: string
+  timestamp: number
+  author: OrganAuthor
+}
 
 export type OrganAuthor = { type: "user" | "id"; value: string }
 

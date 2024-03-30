@@ -14,6 +14,8 @@ import {
   organPageType,
   organPageTypeValue,
   organPostMeta,
+  organPostType,
+  organPostTypeValue,
   organRoomType,
   organRoomTypeValue,
   organSpaceType,
@@ -23,7 +25,6 @@ import tags from "./seed/tags.json"
 import ids from "./seed/ids.json"
 import events from "./seed/events.json"
 import posts from "./seed/posts.json"
-import { get } from "http"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
@@ -32,8 +33,7 @@ const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
   params: { user_id: "@_relay_bot:" + SERVER_NAME },
 })
 
-export async function register(formData: FormData) {
-  const user = formData.get("user") as string
+export async function register(user: string) {
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
   })
@@ -186,9 +186,9 @@ export async function createTagIndexSpace() {
       "#relay_tagindex:" + SERVER_NAME
     )
     console.log("roomId", roomId)
-    return { roomId }
+    return { message: "Tag Index already created", roomId }
   }
-  return { roomId: space.roomId }
+  return { message: "Tag Index created", roomId: space.roomId }
 }
 
 export async function unsetTagIndexSpace() {
@@ -217,7 +217,7 @@ export async function seedTags() {
         "#relay_tag_" + tag + ":" + SERVER_NAME
       )
 
-      console.log("existingTagSpace", existingTagSpace)
+      // console.log("existingTagSpace", existingTagSpace)
 
       const tagSpace =
         typeof existingTagSpace === "string"
@@ -255,7 +255,13 @@ export async function seedTags() {
       return { roomId: tagSpace.roomId, tag, parentResult }
     })
   )
-  return results
+  const tagsResultsSuccessCount = results.filter(
+    result => !("errcode" in result)
+  ).length
+
+  return {
+    message: `${tagsResultsSuccessCount} out of ${results.length} tag spaces successfully created`,
+  }
 }
 
 export async function seedIDPages() {
@@ -269,7 +275,7 @@ export async function seedIDPages() {
   // get a list of all the tag rooms from tag index
   const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
 
-  console.log("tagIndexChildren", tagIndexChildren)
+  // console.log("tagIndexChildren", tagIndexChildren)
 
   if (!tagIndexChildren) return { errcode: "No tag rooms found" }
 
@@ -287,70 +293,80 @@ export async function seedIDPages() {
 
   // create a space for each ID,
 
-  const idSpaces = ids.map(async id => {
-    const parentEvents = id.tags
-      .map(tag => {
-        const tagRoomId = tagMap.get(tag)
-        if (!tagRoomId) return null
-        return {
-          type: "m.space.parent",
-          content: {
-            via: [SERVER_NAME],
-          },
-          state_key: tagRoomId,
-        }
-      })
-      .filter(Boolean) as {
-      type: string
-      content: { via: string[] }
-      state_key: string
-    }[]
+  const idSpaces = await Promise.all(
+    ids.map(async id => {
+      const parentEvents = id.tags
+        .map(tag => {
+          const tagRoomId = tagMap.get(tag)
+          if (!tagRoomId) return null
+          return {
+            type: "m.space.parent",
+            content: {
+              via: [SERVER_NAME],
+            },
+            state_key: tagRoomId,
+          }
+        })
+        .filter(Boolean) as {
+        type: string
+        content: { via: string[] }
+        state_key: string
+      }[]
 
-    const idSpace = await client.createRoom({
-      name: id.name,
-      creation_content: { type: "m.space" },
-      topic: id.description,
-      room_alias_name: `relay_id_${id.alias}`,
-      initial_state: [
-        {
-          type: organSpaceType,
-          content: {
-            value: organSpaceTypeValue.page,
+      const idSpace = await client.createRoom({
+        name: id.name,
+        creation_content: { type: "m.space" },
+        topic: id.description,
+        room_alias_name: `relay_id_${id.alias}`,
+        initial_state: [
+          {
+            type: organSpaceType,
+            content: {
+              value: organSpaceTypeValue.page,
+            },
           },
-        },
-        {
-          type: organPageType,
-          content: {
-            value: organPageTypeValue.id,
+          {
+            type: organPageType,
+            content: {
+              value: organPageTypeValue.id,
+            },
           },
-        },
-        ...parentEvents,
-      ],
+          ...parentEvents,
+        ],
+      })
+
+      if ("errcode" in idSpace) return idSpace
+
+      // match each ID to the tag rooms and add them as children
+      const parentResults = await Promise.all(
+        id.tags.map(async tag => {
+          const tagRoomId = tagMap.get(tag)
+          if (!tagRoomId) return {}
+          // console.log("tagRoomId", tagRoomId)
+          const tagRoom = client.getRoom(tagRoomId)
+          const parentResult = await tagRoom.sendStateEvent(
+            "m.space.child",
+            { via: [SERVER_NAME] },
+            idSpace.roomId
+          )
+          // console.log("parentResult", parentResult)
+          return { tag, parentResult }
+        })
+      )
+
+      return { roomId: idSpace.roomId, parentResults }
     })
+  )
 
-    if ("errcode" in idSpace) return idSpace
+  const idSpaceSuccessCount = idSpaces.filter(
+    idSpace => !("errcode" in idSpace)
+  ).length
 
-    // match each ID to the tag rooms and add them as children
-    const parentResults = await Promise.all(
-      id.tags.map(async tag => {
-        const tagRoomId = tagMap.get(tag)
-        if (!tagRoomId) return {}
-        console.log("tagRoomId", tagRoomId)
-        const tagRoom = client.getRoom(tagRoomId)
-        const parentResult = await tagRoom.sendStateEvent(
-          "m.space.child",
-          { via: [SERVER_NAME] },
-          idSpace.roomId
-        )
-        console.log("parentResult", parentResult)
-        return { tag, parentResult }
-      })
-    )
+  console.log("idSpaces success count", idSpaceSuccessCount)
 
-    return { roomId: idSpace.roomId, parentResults }
-  })
-
-  return { idSpaces }
+  return {
+    message: `${idSpaceSuccessCount} out of ${idSpaces.length} id spaces successfully created`,
+  }
 }
 
 function normalizeName(name: string): string {
@@ -375,7 +391,7 @@ export async function seedEvents() {
   // create event spaces
   const createEventsResults = await Promise.all(
     events.map(async event => {
-      console.log(event)
+      // console.log(event)
       // get room IDs for hosts and tags
       const hostIds = event.hosts.map((host: string) => {
         const normalisedName = normalizeName(host)
@@ -384,8 +400,8 @@ export async function seedEvents() {
       const tagIds = event.tags.map((tag: string) => {
         return tagsMap.get(tag)
       })
-      console.log("hostIds", hostIds)
-      console.log("tagIds", tagIds)
+      // console.log("hostIds", hostIds)
+      // console.log("tagIds", tagIds)
 
       const parentEventsHosts = hostIds.map(hostId => {
         return {
@@ -470,7 +486,13 @@ export async function seedEvents() {
     })
   )
 
-  return createEventsResults
+  const createEventsSuccessCount = createEventsResults.filter(
+    result => typeof result === "string"
+  ).length
+
+  return {
+    message: `${createEventsSuccessCount} out of ${createEventsResults.length} event spaces successfully created`,
+  }
 }
 
 function generateRandomTimestamp(): number {
@@ -492,7 +514,7 @@ export async function seedPosts() {
 
   const createPostsResults = await Promise.all(
     posts.map(async post => {
-      console.log(post)
+      // console.log(post)
       const id = idsMap.get(post.id)
       if (!id) return { errcode: "ID not found" }
 
@@ -503,6 +525,12 @@ export async function seedPosts() {
             type: organRoomType,
             content: {
               value: organRoomTypeValue.post,
+            },
+          },
+          {
+            type: organPostType,
+            content: {
+              value: organPostTypeValue.text,
             },
           },
           {
@@ -541,7 +569,13 @@ export async function seedPosts() {
     })
   )
 
-  return createPostsResults
+  const createPostsSuccessCount = createPostsResults.filter(
+    result => typeof result === "string"
+  ).length
+
+  return {
+    message: `${createPostsSuccessCount} out of ${createPostsResults.length} post rooms successfully created`,
+  }
 }
 
 async function getIdsMap() {
@@ -570,8 +604,8 @@ async function getIdsMap() {
 
     const alias = aliasResponse.alias.split("#relay_id_")[1].split(":")[0]
 
-    console.log("idSpace", idSpace.roomId)
-    console.log("canonical alias", alias)
+    // console.log("idSpace", idSpace.roomId)
+    // console.log("canonical alias", alias)
 
     idsMap.set(alias, idSpace.roomId)
   }
@@ -607,7 +641,7 @@ async function getTagIndexChildren() {
   const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
 
   if (!tagIndexChildren) return { errcode: "No tag rooms found" }
-  console.log("tagIndexChildren", tagIndexChildren)
+  // console.log("tagIndexChildren", tagIndexChildren)
 
   // remove tag index room
   tagIndexChildren.shift()

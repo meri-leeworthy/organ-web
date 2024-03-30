@@ -19,6 +19,7 @@ import {
   SeedIds,
   SeedEvents,
   SeedPosts,
+  SeedAll,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE, TAG_INDEX } = process.env
 
@@ -33,6 +34,39 @@ export default async function ApplicationServiceTest() {
 
           <p>Home space: {HOME_SPACE}</p>
           <p>Tag index: {TAG_INDEX}</p>
+
+          <h2>Seed Test Data</h2>
+          <SeedAll />
+          <p>
+            Create _relay_bot user
+            <br />
+            Create tag index space <br />
+            Set #relay_tagindex:localhost as alias for tag index space <br />
+          </p>
+          <CreateTagIndexSpace />
+          <p>
+            Seed tags <br />
+          </p>
+          <SeedTags />
+          <p>Create 50 ID pages </p>
+          <SeedIds />
+          <p>
+            Create 200 event pages <br />
+          </p>
+          <SeedEvents />
+          <p>Seed posts</p>
+          <SeedPosts />
+          <p>
+            Create 1000 users <br />
+            Join each user to: <br />
+            10 random tags, <br />
+            10 random ID pages, <br />
+            50 random event pages. <br />
+            Join each event page to: <br />
+            1 or 2 random ID pages, <br />
+            5 random tags. <br />
+            Join each ID page to: <br />5 random tags.
+          </p>
 
           <h2>Create Room</h2>
           <CreateRoom />
@@ -75,38 +109,6 @@ export default async function ApplicationServiceTest() {
 
           <h2>Set Alias</h2>
           <SetAlias />
-
-          <h2>Seed Data</h2>
-          <p>
-            Create _relay_bot user
-            <br />
-            Create tag index space <br />
-            Set #relay_tagindex:localhost as alias for tag index space <br />
-          </p>
-          <CreateTagIndexSpace />
-          <p>
-            Seed tags <br />
-          </p>
-          <SeedTags />
-          <p>Create 50 ID pages </p>
-          <SeedIds />
-          <p>
-            Create 200 event pages <br />
-          </p>
-          <SeedEvents />
-          <p>Seed posts</p>
-          <SeedPosts />
-          <p>
-            Create 1000 users <br />
-            Join each user to: <br />
-            10 random tags, <br />
-            10 random ID pages, <br />
-            50 random event pages. <br />
-            Join each event page to: <br />
-            1 or 2 random ID pages, <br />
-            5 random tags. <br />
-            Join each ID page to: <br />5 random tags.
-          </p>
         </div>
       )}
     </IfLoggedIn>

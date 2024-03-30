@@ -20,10 +20,13 @@ import {
   unsetTagIndexSpace,
   seedPosts,
 } from "./actions"
-import { useState } from "react"
+import React, { Suspense, useState, useTransition } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
 import { getSecretFromRoom, storeSecretInRoom } from "@/lib/roomSecretStore"
 import { Pre } from "@/components/styled/Pre"
+import { Progress } from "@/components/ui/progress"
+
+import { useFormState, useFormStatus } from "react-dom"
 
 export type RoomDebug = {
   room_id: string
@@ -101,7 +104,7 @@ export function JoinRoom() {
         className="border border-black"
       />
       <Button type="submit">join</Button>
-      <Pre>Result: {JSON.stringify(result)}</Pre>
+      <Pre>{JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -112,7 +115,8 @@ export function Register() {
   return (
     <form
       action={async (formData: FormData) => {
-        const result = await register(formData)
+        const user = formData.get("user") as string
+        const result = await register(user)
         setResult(result)
       }}>
       <input
@@ -122,7 +126,7 @@ export function Register() {
         className="border border-black"
       />
       <Button type="submit">register</Button>
-      <Pre>Result: {JSON.stringify(result)}</Pre>
+      <Pre>{JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -153,7 +157,7 @@ export function CreateMailbox() {
         className="border border-black"
       />
       <Button type="submit">create mailbox</Button>
-      <Pre>Result: {JSON.stringify(result)}</Pre>
+      <Pre>{JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -194,7 +198,7 @@ export function SetSecret() {
         className="border border-black"
       />
       <Button type="submit">set secret</Button>
-      <Pre>Result: {JSON.stringify(result)}</Pre>
+      <Pre>{JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -225,7 +229,7 @@ export function GetSecret() {
         className="border border-black"
       />
       <Button type="submit">get secret</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -247,7 +251,7 @@ export function GetState() {
         className="border border-black"
       />
       <Button type="submit">get state</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -275,7 +279,7 @@ export function GetStateType() {
         className="border border-black"
       />
       <Button type="submit">get state</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -315,7 +319,7 @@ export function SetState() {
         className="border border-black"
       />
       <Button type="submit">set state</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -343,7 +347,7 @@ export function SendMessage() {
         className="border border-black"
       />
       <Button type="submit">send message</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -365,7 +369,7 @@ export function GetAliases() {
         className="border border-black"
       />
       <Button type="submit">get aliases</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -387,7 +391,7 @@ export function GetRoomIdFromAlias() {
         className="border border-black"
       />
       <Button type="submit">get roomId from alias</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -414,7 +418,7 @@ export function SetAlias() {
         className="border border-black"
       />
       <Button type="submit">set alias</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -445,7 +449,7 @@ export function CreateRoom() {
       </label>
 
       <Button type="submit">create room</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -461,7 +465,7 @@ export function CreateTagIndexSpace() {
         setResult(result)
       }}>
       <Button type="submit">create tag index space</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -477,7 +481,7 @@ export function RemoveTagIndexSpace() {
         setResult(result)
       }}>
       <Button type="submit">remove tag index space</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -493,7 +497,7 @@ export function SeedTags() {
         setResult(result)
       }}>
       <Button type="submit">seed tags</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -509,7 +513,7 @@ export function SeedIds() {
         setResult(result)
       }}>
       <Button type="submit">seed id pages</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -525,7 +529,7 @@ export function SeedEvents() {
         setResult(result)
       }}>
       <Button type="submit">seed event pages</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
@@ -541,7 +545,72 @@ export function SeedPosts() {
         setResult(result)
       }}>
       <Button type="submit">seed posts</Button>
-      <Pre> Result: {JSON.stringify(result)}</Pre>
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
+    </form>
+  )
+}
+
+const initialState = {
+  message: "",
+}
+
+export function SeedAll() {
+  const [isPending, startTransition] = useTransition()
+
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    const tempResult: any[] = []
+    const registerResult = await register("bot")
+    tempResult.push(registerResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+
+    const tagIndexResult = await createTagIndexSpace()
+    tempResult.push(tagIndexResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+
+    const seedTagsResult = await seedTags()
+    tempResult.push(seedTagsResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+
+    const seedIdResult = await seedIDPages()
+    tempResult.push(seedIdResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+
+    const seedEventResult = await seedEvents()
+    tempResult.push(seedEventResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+
+    const seedPostResult = await seedPosts()
+    tempResult.push(seedPostResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+    console.log("tempResult", tempResult)
+  }
+
+  const [result, setResult] = useState<any[]>([])
+
+  return (
+    <form onSubmit={submitHandler}>
+      <Button type="submit">seed all</Button>
+      {isPending && <p>loading...</p>}
+      <Progress
+        value={Math.round(100 * (result.length / 6))}
+        max={6}
+        className="my-2"
+      />
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )
 }
