@@ -110,7 +110,13 @@ export async function getStateAction(formData: FormData) {
   const room = new Room(roomId, client)
   const state = await room.getState()
   console.log("state", state)
-  return state
+  if ("errcode" in state) return JSON.stringify(state)
+  const arrayState = Array.from(state.map.entries())
+  console.log("array state", arrayState)
+  const fullyDecodedState = arrayState.map(([key, value]) => {
+    return [key, Array.from(value.entries())]
+  })
+  return { result: fullyDecodedState }
 }
 
 export async function getStateTypeAction(formData: FormData) {
@@ -540,8 +546,8 @@ export async function seedPosts() {
               author: {
                 type: "id",
                 value: id,
-                timestamp: Date.now(),
               },
+              timestamp: Date.now(),
             },
           },
           {
