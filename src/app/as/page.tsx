@@ -27,7 +27,7 @@ export default async function ApplicationServiceTest() {
   console.log("NODE_ENV", NODE_ENV)
 
   return (
-    <IfLoggedIn>
+    <>
       {NODE_ENV === "development" && (
         <div className="max-w-lg">
           <h1>Application Service Test</h1>
@@ -111,6 +111,6 @@ export default async function ApplicationServiceTest() {
           <SetAlias />
         </div>
       )}
-    </IfLoggedIn>
+    </>
   )
 }
