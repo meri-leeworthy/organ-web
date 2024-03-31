@@ -8,7 +8,7 @@ import {
 } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
-import { noCacheFetch } from "@/lib/utils"
+import { noCacheFetch, props } from "@/lib/utils"
 import {
   organPageEventMeta,
   organPageType,
@@ -25,6 +25,7 @@ import tags from "./seed/tags.json"
 import ids from "./seed/ids.json"
 import events from "./seed/events.json"
 import posts from "./seed/posts.json"
+import eventposts from "./seed/event-posts.json"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
@@ -254,7 +255,7 @@ export async function seedTags() {
 
       const parentResult = await tagIndex.sendStateEvent(
         "m.space.child",
-        { via: [SERVER_NAME] },
+        { via: [SERVER_NAME], order: tag },
         tagSpace.roomId
       )
 
@@ -352,7 +353,7 @@ export async function seedIDPages() {
           const tagRoom = client.getRoom(tagRoomId)
           const parentResult = await tagRoom.sendStateEvent(
             "m.space.child",
-            { via: [SERVER_NAME] },
+            { via: [SERVER_NAME], order: id.alias },
             idSpace.roomId
           )
           // console.log("parentResult", parentResult)
@@ -452,8 +453,8 @@ export async function seedEvents() {
           {
             type: organPageEventMeta,
             content: {
-              start: eventTime.toISOString(),
-              end: eventTime.toISOString(),
+              start: `${eventTime.valueOf()}`,
+              end: `${eventTime.valueOf() + 1000 * 60 * 60 * 2}`,
               location: {
                 type: "text",
                 value: event.location,
@@ -473,7 +474,7 @@ export async function seedEvents() {
         const hostRoom = client.getRoom(hostId)
         await hostRoom.sendStateEvent(
           "m.space.child",
-          { via: [SERVER_NAME] },
+          { via: [SERVER_NAME], order: `${eventTime.valueOf()}` },
           eventSpace.roomId
         )
       })
@@ -483,7 +484,7 @@ export async function seedEvents() {
         const tagRoom = client.getRoom(tagId)
         await tagRoom.sendStateEvent(
           "m.space.child",
-          { via: [SERVER_NAME] },
+          { via: [SERVER_NAME], order: `${eventTime.valueOf()}` },
           eventSpace.roomId
         )
       })
@@ -502,21 +503,92 @@ export async function seedEvents() {
 }
 
 function generateRandomTimestamp(): number {
-  const currentTimestamp = Math.floor(Date.now() / 1000) // Current UNIX timestamp in seconds
-  const threeMonthsInSeconds = 90 * 24 * 60 * 60 // 90 days in seconds
+  const currentTimestamp = Date.now() // Current timestamp in millisecondsseconds
+  const threeMonthsInMilliseconds = 90 * 24 * 60 * 60 * 1000 // 90 days in seconds
   const randomOffset =
-    Math.floor(Math.random() * (2 * threeMonthsInSeconds + 1)) -
-    threeMonthsInSeconds // Random offset within 3 months
+    Math.floor(Math.random() * (2 * threeMonthsInMilliseconds + 1)) -
+    threeMonthsInMilliseconds // Random offset within 3 months
   const randomTimestamp = currentTimestamp + randomOffset // Add random offset to current timestamp
-  const roundedTimestamp = Math.round(randomTimestamp / (5 * 60)) * (5 * 60) // Round to nearest 5-minute interval
+  const roundedTimestamp =
+    Math.round(randomTimestamp / (5 * 60 * 1000)) * (5 * 60 * 1000) // Round to nearest 5-minute interval
   return roundedTimestamp
 }
 
 export async function seedPosts() {
+  // image mxc://synapse.local/FNdtUuJDojpzYEuVFZEAWlUl
+
+  // should be posts in events
+  // would be good for half of the posts (per id) to be image posts
+
   // const tagsMap = await getTagsMap()
   // if ("errcode" in tagsMap) return tagsMap
   const idsMap = await getIdsMap()
   if ("errcode" in idsMap) return idsMap
+
+  const eventsMap = await getEventsMap()
+  console.log("continuing eventsMap", eventsMap)
+  if (!eventsMap || "errcode" in eventsMap) return eventsMap
+
+  const createEventsPostsResults = await Promise.all(
+    eventposts.map(async post => {
+      // console.log(post)
+      const id = eventsMap.get(post.event)
+      if (!id) return { errcode: "ID not found" }
+
+      const postRoom = await client.createRoom({
+        topic: post.text,
+        initial_state: [
+          {
+            type: organRoomType,
+            content: {
+              value: organRoomTypeValue.post,
+            },
+          },
+          {
+            type: organPostType,
+            content: {
+              value: organPostTypeValue.text,
+            },
+          },
+          {
+            type: organPostMeta,
+            content: {
+              body: post.text,
+              author: {
+                type: "id",
+                value: id,
+              },
+              timestamp: Date.now(),
+            },
+          },
+          {
+            type: "m.space.parent",
+            content: {
+              via: [SERVER_NAME],
+            },
+            state_key: id,
+          },
+        ],
+      })
+
+      if ("errcode" in postRoom) return postRoom
+
+      // add the post as child to the id space
+
+      const idSpace = client.getRoom(id)
+      await idSpace.sendStateEvent(
+        "m.space.child",
+        { via: [SERVER_NAME], order: Date.now() },
+        postRoom.roomId
+      )
+
+      return postRoom.roomId
+    })
+  )
+
+  const createEventsPostsSuccessCount = createEventsPostsResults.filter(
+    result => typeof result === "string"
+  ).length
 
   const createPostsResults = await Promise.all(
     posts.map(async post => {
@@ -580,7 +652,7 @@ export async function seedPosts() {
   ).length
 
   return {
-    message: `${createPostsSuccessCount} out of ${createPostsResults.length} post rooms successfully created`,
+    message: `${createPostsSuccessCount} out of ${createPostsResults.length} post rooms and ${createEventsPostsSuccessCount} out of ${createEventsPostsResults.length} event post rooms successfully created`,
   }
 }
 
@@ -601,12 +673,12 @@ async function getIdsMap() {
   })
   // get the canonical alias for each ID Page and map to roomID
   const idsMap = new Map<string, string>()
-  for (const id of idsSet) {
+  idsSet.forEach(async id => {
     const idSpace = client.getRoom(id)
 
     const aliasResponse = await idSpace.getCanonicalAlias()
 
-    if ("errcode" in aliasResponse) continue
+    if ("errcode" in aliasResponse) return
 
     const alias = aliasResponse.alias.split("#relay_id_")[1].split(":")[0]
 
@@ -614,7 +686,7 @@ async function getIdsMap() {
     // console.log("canonical alias", alias)
 
     idsMap.set(alias, idSpace.roomId)
-  }
+  })
 
   return idsMap
 }
@@ -653,4 +725,68 @@ async function getTagIndexChildren() {
   tagIndexChildren.shift()
 
   return tagIndexChildren
+}
+
+async function getEventsMap() {
+  const tagIndexChildren = await getTagIndexChildren()
+  if ("errcode" in tagIndexChildren) return tagIndexChildren
+
+  const tagIds = tagIndexChildren.map(tag => tag.room_id)
+
+  // create a set of event room IDs
+  const tagChildrenSet = new Set<string>()
+
+  // this takes the
+  await Promise.all(
+    tagIds.map(async tag => {
+      const tagSpace = client.getRoom(tag)
+
+      const tagChildren = await tagSpace.getHierarchy({ max_depth: 1 })
+      tagChildren?.shift()
+
+      tagChildren?.forEach(tagChild => {
+        // console.log("tagChildren", tagChild.children_state)
+
+        tagChild.children_state.forEach((event: ClientEventOutput) => {
+          tagChildrenSet.add(event.state_key!)
+        })
+      })
+    })
+  )
+
+  console.log("tagChildrenSet", tagChildrenSet)
+
+  // get the canonical alias for each event and map to roomID
+  const eventsMap = new Map<string, string>()
+
+  function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  for (const tagChild of tagChildrenSet) {
+    await delay(10)
+    const childSpace = client.getRoom(tagChild)
+    try {
+      const childState = await childSpace.getState()
+      if (!childState || "errcode" in childState) continue
+
+      const typeEvent = childState.get("organ.page.type")
+      const type = props(typeEvent, "content", "value")
+
+      if (type !== organPageTypeValue.event) continue
+
+      const nameEvent = childState.get("m.room.name")
+      const name = props(nameEvent, "content", "name")
+      if (!name) continue
+
+      // console.log("name", name)
+
+      eventsMap.set(name as string, childSpace.roomId)
+    } catch (e) {
+      console.log("error with tagChild: ", tagChild)
+      console.error(e)
+    }
+  }
+
+  return eventsMap
 }

@@ -22,6 +22,9 @@ import { is, object, string } from "valibot"
 import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 import { IfRoomMember } from "@/components/IfRoomMember"
 import { client } from "@/lib/client"
+import { Events } from "@/components/ui/Events"
+
+// TODO: show EVENTS in the ID space
 
 export default async function OrgSlugPage({
   params,
@@ -58,6 +61,8 @@ export default async function OrgSlugPage({
 
   spaceChildren?.shift()
 
+  const postIds = spaceChildren?.map(child => child.room_id as string)
+
   const imageUri = is(object({ url: string() }), avatar?.content)
     ? avatar.content.url
     : undefined
@@ -88,11 +93,6 @@ export default async function OrgSlugPage({
             </h2>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-1 ">
-          <span className="text-xs uppercase opacity-60">
-            <strong>{memberCount - 1}</strong> followers
-          </span>
-        </div>
         <div className="flex flex-wrap items-center gap-2">
           <IfRoomMember slug={getIdLocalPart(roomId)}>
             <Dropdown>
@@ -107,6 +107,9 @@ export default async function OrgSlugPage({
             </Dropdown>
           </IfRoomMember>
           <FollowButton slug={getIdLocalPart(roomId)} />
+          <span className="text-xs uppercase opacity-60">
+            <strong>{memberCount - 1}</strong> followers
+          </span>
         </div>
       </div>
 
@@ -128,9 +131,11 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <Posts
-            postIds={spaceChildren?.map(child => child.room_id as string) || []}
-          />
+          <h2>Events</h2>
+          <Events postIds={postIds || []} />
+
+          <h2>Posts</h2>
+          <Posts postIds={postIds || []} />
         </section>
       </main>
     </>

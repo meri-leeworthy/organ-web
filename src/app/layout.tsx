@@ -29,7 +29,7 @@ export default function RootLayout({
             </Link> */}
           <Menu />
         </header>
-        <div className="flex flex-col w-full p-2 mb-80 lg:p-4">{children}</div>
+        <div className="flex flex-col w-full p-4 mb-80 lg:p-4">{children}</div>
         <div className="w-full absolute bottom-0">
           <Footer />
         </div>

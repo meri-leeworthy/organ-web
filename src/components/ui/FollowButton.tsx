@@ -1,11 +1,13 @@
 "use client"
 
 import { useClient } from "@/hooks/useClient"
-import { IconCheck, IconPlus } from "@tabler/icons-react"
+import { IconCheck, IconPlus, IconReload } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
+import { Button } from "./button"
 
 export function FollowButton({ slug }: { slug: string }) {
   const [isFollowing, setIsFollowing] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const client = useClient()
 
@@ -25,27 +27,38 @@ export function FollowButton({ slug }: { slug: string }) {
 
   function handleJoinRoom() {
     console.log("joining room")
+    setIsLoading(true)
     if (!client) return
     client
       .joinRoom(`!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`)
-      .then(() => {
+      .then(res => {
         console.log("joined room")
+        if ("errcode" in res) {
+          setIsLoading(false)
+          return console.error("error joining room", res)
+        }
         setIsFollowing(true)
+        setIsLoading(false)
       })
-      .catch((err: any) => console.error("error joining room", err))
   }
 
   if (!client) return null
 
   return (
-    <button
+    <Button
       onClick={handleJoinRoom}
-      disabled={isFollowing}
-      className="flex items-center justify-center px-1 text-sm font-medium text-white border border-transparent rounded bg-primarydark disabled:border-primarydark disabled:bg-white disabled:text-black disabled:opacity-60">
+      disabled={isFollowing || isLoading}
+      className="px-2 py-1 bg-primary text-black hover:text-primary">
+      {isLoading ? (
+        <IconReload size={16} className="mr-2 animate-spin" />
+      ) : isFollowing ? (
+        <IconCheck size={16} className="mr-2" />
+      ) : (
+        <IconPlus size={16} className="mr-2" />
+      )}
       <span className="mr-1 text-xs uppercase">
-        {isFollowing ? "Following" : "Follow"}
+        {isLoading ? "Loading" : isFollowing ? "Following" : "Follow"}
       </span>
-      {isFollowing ? <IconCheck size={16} /> : <IconPlus size={16} />}
-    </button>
+    </Button>
   )
 }

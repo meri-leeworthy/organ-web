@@ -1,0 +1,252 @@
+[
+  {
+    "text": "In the heart of Washington, D.C., we unite for justice. Stand with us to fight against racial injustice and police brutality. Your voice matters. #BlackLivesMatter #StandTogether",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice", "non-violent-resistance"]
+  },
+  {
+    "text": "Racial injustice has no place in our society. Join us as we march for a future where everyone is truly equal. #JusticeForAll #BLMMarch",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice"]
+  },
+  {
+    "text": "Today, we march. Tomorrow, we continue the fight. Every step we take is a step towards justice. #BlackLivesMatter #EqualityForAll",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["non-violent-resistance"]
+  },
+  {
+    "text": "Silence is complicity. Raise your voice against racial injustice at the March for Justice. We can't wait any longer for change. #NoJusticeNoPeace #BLM",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice"]
+  },
+  {
+    "text": "It's time to dismantle systemic racism. Join us in D.C. and let's make history together. Your presence is powerful. #BlackLivesMatter #EndRacism",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice", "non-violent-resistance"]
+  },
+  {
+    "text": "We march for those who can't. For those who've been silenced by racial injustice. Stand with us, because every life deserves justice. #BLM #MarchForJustice",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice"]
+  },
+  {
+    "text": "This march is more than a protest; it's a declaration that we won't stand for racial injustice any longer. Be a part of the change. #BLM #JusticeNow",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["non-violent-resistance"]
+  },
+  {
+    "text": "Injustice anywhere is a threat to justice everywhere. Join us in Washington, D.C. as we march for justice, equality, and freedom. #BLMMarch #Equality",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice"]
+  },
+  {
+    "text": "We stand in solidarity with Black communities against police brutality and racial injustice. Your support is crucial. #Solidarity #BlackLivesMatter",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["non-violent-resistance", "racial-justice"]
+  },
+  {
+    "text": "Our march is a step towards dismantling the structures that uphold racial injustice. Be a part of this historic movement. #JusticeForAll #BLM",
+    "event": "Black Lives Matter March for Justice",
+    "tags": ["racial-justice"]
+  },
+  {
+    "text": "No one should go bankrupt because they're sick. Rally with us in NYC for Medicare for All. #HealthcareNotWealthcare #DSARally",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["anti-capitalism", "universal-basic-income", "workers-rights"]
+  },
+  {
+    "text": "Healthcare is a right, not a privilege. Stand with us as we demand universal healthcare for all Americans. #MedicareForAll #DSANow",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["universal-basic-income", "workers-rights"]
+  },
+  {
+    "text": "It's time to end the healthcare profit machine. Join the DSA as we rally for Medicare for All and put people over profit. #DSAForThePeople #UniversalHealthcare",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["anti-capitalism", "workers-rights"]
+  },
+  {
+    "text": "Every person deserves access to healthcare. Help us make Medicare for All a reality. The time for action is now! #HealthcareForAll #DSARally",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["universal-basic-income"]
+  },
+  {
+    "text": "Healthcare should never be a luxury item. Join us in fighting for a system that cares for all, regardless of income. #MedicareForAll #FightForHealthcare",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["anti-capitalism", "workers-rights"]
+  },
+  {
+    "text": "Let's rally together and demand a healthcare system that works for everyone, not just the wealthy. #DSARally #UniversalHealthcare",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["universal-basic-income"]
+  },
+  {
+    "text": "The DSA is on the front lines fighting for healthcare justice. Be part of the movement for Medicare for All. #HealthcareRevolution #DSA",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["anti-capitalism", "workers-rights"]
+  },
+  {
+    "text": "Imagine a world where your health isn't determined by your wealth. We're fighting for that world. Join us. #MedicareForAll #DSARally",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["universal-basic-income", "anti-capitalism"]
+  },
+  {
+    "text": "Our health shouldn't be for sale. Stand with the DSA as we fight for a healthcare system that prioritizes people, not profits. #PeopleOverProfit #DSARally",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["workers-rights", "anti-capitalism"]
+  },
+  {
+    "text": "The fight for Medicare for All is the fight for human rights. Rally with us and demand the healthcare justice we all deserve. #HealthcareIsAHumanRight #DSA",
+    "event": "DSA Medicare for All Rally",
+    "tags": ["universal-basic-income", "workers-rights"]
+  },
+  {
+    "text": "The time to act is now. Join us in London to demand urgent action on climate change. Our future depends on it. #ExtinctionRebellion #ClimateEmergency",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["climate-justice", "non-violent-resistance"]
+  },
+  {
+    "text": "Our planet can't wait. We're marching for immediate action on climate change. Be a part of the solution. #ActNowForFuture #ExtinctionRebellion",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["climate-justice"]
+  },
+  {
+    "text": "Climate change is a crisis that requires action, not words. March with us to demand real change. #RebelForLife #ClimateAction",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["non-violent-resistance"]
+  },
+  {
+    "text": "Rise up for climate justice. Join the Extinction Rebellion and demand a livable planet for all. #ClimateMarch #TheTimeIsNow",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["climate-justice"]
+  },
+  {
+    "text": "Every action counts in the fight against climate change. March with Extinction Rebellion to show you care about our planet's future. #ActNow #ClimateCrisis",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["non-violent-resistance"]
+  },
+  {
+    "text": "We demand a greener, fairer future. Join us in the streets of London to fight for climate justice. #ExtinctionRebellion #ClimateJusticeNow",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["climate-justice"]
+  },
+  {
+    "text": "Climate change isn't waiting, and neither are we. Take to the streets with us and demand action. #ExtinctionRebellion #UrgentAction",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["non-violent-resistance"]
+  },
+  {
+    "text": "The climate crisis is a wake-up call. March with Extinction Rebellion to demand the change we need. #ClimateAlarm #RebelForFuture",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["climate-justice"]
+  },
+  {
+    "text": "Our actions today shape our planet's future. Join Extinction Rebellion in demanding a sustainable world. #SustainableFuture #ClimateMarch",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["non-violent-resistance"]
+  },
+  {
+    "text": "It's time for bold climate action. Stand with Extinction Rebellion and march for the planet's future. #ClimateActionNow #Rebel",
+    "event": "Extinction Rebellion Climate March",
+    "tags": ["climate-justice"]
+  },
+  {
+    "text": "Support those who fought for freedom. Join our fundraiser to aid political prisoners. Every dollar makes a difference. #PrisonAbolition #AnarchistSupport",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition", "anarchism"]
+  },
+  {
+    "text": "Stand with political prisoners. Our fundraiser supports those who've been silenced. Be their voice. #FreeThemAll #AnarchistBlackCross",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition"]
+  },
+  {
+    "text": "Political prisoners need our help. Support our fundraiser and contribute to the fight against injustice. #SolidarityForever #PrisonAbolition",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["anarchism"]
+  },
+  {
+    "text": "Fighting for justice comes at a cost. Help us support those who've paid the price. Join our fundraising efforts. #SupportPoliticalPrisoners #ABC",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition", "anarchism"]
+  },
+  {
+    "text": "Our comrades behind bars need us. Raise funds and awareness for political prisoners with the Anarchist Black Cross. #AnarchismInAction #PrisonSupport",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition"]
+  },
+  {
+    "text": "Advocate for those who cannot. Our fundraiser aids political prisoners in their struggle for freedom. #AnarchistSolidarity #FightInjustice",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["anarchism"]
+  },
+  {
+    "text": "Justice knows no bars. Support our fundraiser to help political prisoners fight for freedom and dignity. #PrisonAbolition #ABC",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition", "anarchism"]
+  },
+  {
+    "text": "Together, we can make a difference. Support political prisoners through our fundraiser. Every act of solidarity counts. #Unity #AnarchistSupport",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition"]
+  },
+  {
+    "text": "Support the fight against oppressive systems. Our fundraiser aids those imprisoned for their beliefs. #AnarchistBlackCross #FreedomFighters",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["anarchism"]
+  },
+  {
+    "text": "Political prisoners deserve our support. Contribute to our fundraiser and stand against injustice. #Solidarity #PrisonAbolition",
+    "event": "Anarchist Black Cross Prisoner Support Fundraiser",
+    "tags": ["prison-abolition", "anarchism"]
+  },
+  {
+    "text": "Join us for a community feast that fights against war and poverty. Share food, share love. #FoodNotBombs #CommunitySolidarity",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid", "anti-war"]
+  },
+  {
+    "text": "Food is a right, not a privilege. Come share a meal with us and stand against poverty and war. #ShareFoodShareLove #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid"]
+  },
+  {
+    "text": "Build community, not war. Join Food Not Bombs in sharing a feast and protesting against violence. #CommunityFeast #AntiWar",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["anti-war"]
+  },
+  {
+    "text": "Solidarity in every meal. Our community feast stands as a protest against war and for mutual aid. #FoodNotBombs #SolidarityNotCharity",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid", "anti-war"]
+  },
+  {
+    "text": "Share a meal, make a statement. Join our feast as we advocate for peace and mutual support. #PeacefulProtest #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid"]
+  },
+  {
+    "text": "Feeding bodies, nourishing communities. Our feast is a stand against the machinery of war and poverty. #NourishCommunity #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["anti-war"]
+  },
+  {
+    "text": "In a world full of war, we choose to spread love through food. Join our community feast and make a difference. #ChooseLove #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid", "anti-war"]
+  },
+  {
+    "text": "Every plate we share is a protest against war and poverty. Be a part of our movement. #ShareAPlate #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid"]
+  },
+  {
+    "text": "Together, we can create a world where no one is hungry and everyone is free from war. Join us. #WorldWithoutWar #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["anti-war"]
+  },
+  {
+    "text": "Our feast is our protest. Our community is our strength. Stand with Food Not Bombs against war and poverty. #StrengthInCommunity #FoodNotBombs",
+    "event": "Food Not Bombs Community Feast and Protest",
+    "tags": ["mutual-aid", "anti-war"]
+  }
+]

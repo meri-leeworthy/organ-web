@@ -6,6 +6,7 @@ import { ClientEventSchema, Room } from "simple-matrix-sdk"
 import * as v from "valibot"
 import { FlexGridList, FlexGridListItem } from "@/components/ui/FlexGridList"
 import Link from "next/link"
+import { Event } from "@/components/ui/Events"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
@@ -85,7 +86,7 @@ export async function Item({ postRoomId }: { postRoomId: string }) {
         href={`/id/${alias.split("#relay_id_")[1].split(":")[0]}`}
         key={room.roomId}>
         <FlexGridListItem>
-          <p className="font-bold pt-2">{name}</p>
+          <h3 className="font-medium py-1">{name}</h3>
           <p>{topic}</p>
         </FlexGridListItem>
       </Link>
@@ -93,12 +94,13 @@ export async function Item({ postRoomId }: { postRoomId: string }) {
   }
   if (pageType.value === "event")
     return (
-      <Link href={"/event/" + getIdLocalPart(room.roomId)} key={room.roomId}>
-        <FlexGridListItem>
-          <p className="pt-2 text-xs uppercase">Event</p>
-          <p className="font-bold">{name}</p>
-          <p>{topic}</p>
-        </FlexGridListItem>
-      </Link>
+      <Event id={room.roomId} key={room.roomId} />
+      // <Link href={"/event/" + getIdLocalPart(room.roomId)} key={room.roomId}>
+      //   <FlexGridListItem>
+      //     <p className="pt-2 text-xs uppercase">Event</p>
+      //     <p className="font-bold">{name}</p>
+      //     <p>{topic}</p>
+      //   </FlexGridListItem>
+      // </Link>
     )
 }

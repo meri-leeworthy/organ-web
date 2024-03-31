@@ -1,22 +1,25 @@
 import {
   organCalEventUnstable,
+  organPageEventMeta,
   organPostMeta,
   organPostUnstable,
 } from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
-import { getContextualDate, isOrganRoomType, props, slug } from "@/lib/utils"
-import { ClientEventSchema, Event } from "simple-matrix-sdk"
+import {
+  getContextualDate,
+  getIdLocalPart,
+  isOrganRoomType,
+  props,
+  slug,
+} from "@/lib/utils"
 import { client } from "@/lib/client"
 import * as v from "valibot"
-import {
-  FlexGridList,
-  FlexGridListItem,
-  FlexList,
-  FlexListItem,
-} from "./FlexGridList"
+import { FlexGridList, FlexGridListItem } from "./FlexGridList"
+import Link from "next/link"
+import { IconCalendarEvent, IconTag } from "@tabler/icons-react"
 
-export function Posts({ postIds }: { postIds: string[] }) {
+export function Events({ postIds }: { postIds: string[] }) {
   console.log("postIds", postIds)
 
   // get post state
@@ -27,11 +30,11 @@ export function Posts({ postIds }: { postIds: string[] }) {
 
   return (
     <section className="">
-      <FlexList>
+      <FlexGridList>
         {postIds.map((id, i) => {
-          return <TextPost key={i} id={id} />
+          return <Event key={i} id={id} />
         })}
-      </FlexList>
+      </FlexGridList>
 
       {/* {sortedPosts.map((post, i) => {
         const content = post.content
@@ -77,26 +80,44 @@ export function Posts({ postIds }: { postIds: string[] }) {
   )
 }
 
-async function TextPost({ id }: { id: string }) {
+export async function Event({ id }: { id: string }) {
   const room = client.getRoom(id)
   const state = await room.getState()
   if ("errcode" in state) return JSON.stringify(state)
   console.log(id, "state", state)
   console.log("roomtype", state.get("organ.room.type"))
-  const validPost = isOrganRoomType(state, "post")
+  const validPost = isOrganRoomType(state, "page", "event")
   if (!validPost) return null
-  const post = state.get(organPostMeta)
-  if (!post) return "no post"
+  const event = state.get(organPageEventMeta)
+  if (!event) return "no event"
 
-  const body = props(post, "content", "body")
-  const timestamp = props(post, "content", "timestamp")
-  if (typeof body !== "string" || typeof timestamp !== "number")
-    return "no content"
+  const nameEvent = state.get("m.room.name")
+  const name = props(nameEvent, "content", "name")
+  if (typeof name !== "string") return "no name"
+
+  const topicEvent = state.get("m.room.topic")
+  const topic = props(topicEvent, "content", "topic")
+  if (typeof topic !== "string") return "no topic"
+
+  const start = props(event, "content", "start")
+  const end = props(event, "content", "end")
+  if (typeof start !== "string" || typeof end !== "string") return "no content"
+
+  // const date = new Date(timestamp)
+
+  const date = getContextualDate(parseInt(start))
 
   return (
-    <FlexListItem>
-      <time className="text-xs uppercase">{getContextualDate(timestamp)}</time>
-      <p>{body}</p>
-    </FlexListItem>
+    <Link href={"/event/" + getIdLocalPart(id)}>
+      <FlexGridListItem>
+        <time className="text-xs uppercase">{date}</time>
+        <h3 className="flex items-start gap-1 font-medium">
+          {/* <IconCalendarEvent className="m-1" size={20} /> */}
+          {name}
+        </h3>
+        <p>{topic}</p>
+        {/* <time className="text-xs uppercase">{getContextualDate(timestamp)}</time> */}
+      </FlexGridListItem>
+    </Link>
   )
 }
