@@ -21,7 +21,7 @@ export function Menu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="rounded-none shadow-none drop-shadow-hard">
+        className="rounded-none shadow-none drop-shadow-hard border-black">
         <DropdownMenuItem onSelect={() => router.push("/")}>
           Home
         </DropdownMenuItem>

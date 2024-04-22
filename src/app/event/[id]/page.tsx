@@ -43,8 +43,8 @@ export default async function EventPage({
   const url = props(metaEvent, "content", "url")
 
   const children = state.getAll("m.space.child")
-  if (!children) return "no children"
-  const childIds = [...children.keys()]
+  // if (!children) return "no children"
+  const childIds = children ? [...children.keys()] : []
 
   if (typeof start !== "string" || typeof end !== "string") return "no date"
 

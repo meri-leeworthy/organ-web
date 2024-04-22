@@ -86,12 +86,6 @@ export const organIndexType = "organ.index.type"
 export const organPageEventMeta = "organ.page.event.meta"
 export const organPostMeta = "organ.post.meta"
 
-export const organRoomTypeValue = {
-  id: "id",
-  event: "event",
-  post: "post",
-} as const
-
 export type OrganLocation =
   | {
       type: "text"
@@ -112,6 +106,12 @@ export type OrganPageEventMeta = {
     url?: string
   }
 }
+
+export const organRoomTypeValue = {
+  id: "id", // deprecated
+  event: "event", // deprecated
+  post: "post",
+} as const
 
 export const organSpaceTypeValue = {
   index: "index",

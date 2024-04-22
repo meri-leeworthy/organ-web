@@ -23,7 +23,7 @@ const config = {
     },
     extend: {
       dropShadow: {
-        hard: "3px 3px 0 rgba(0, 0, 0, 0.4)",
+        hard: "3px 3px 0 rgba(0, 0, 0, 1)",
       },
       colors: {
         primary: "#ddd2ff",

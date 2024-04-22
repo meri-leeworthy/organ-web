@@ -5,7 +5,13 @@ import {
 } from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
-import { getContextualDate, isOrganRoomType, props, slug } from "@/lib/utils"
+import {
+  getContextualDate,
+  getIdLocalPart,
+  isOrganRoomType,
+  props,
+  slug,
+} from "@/lib/utils"
 import { ClientEventSchema, Event } from "simple-matrix-sdk"
 import { client } from "@/lib/client"
 import * as v from "valibot"
@@ -15,6 +21,7 @@ import {
   FlexList,
   FlexListItem,
 } from "./FlexGridList"
+import Link from "next/link"
 
 export function Posts({ postIds }: { postIds: string[] }) {
   console.log("postIds", postIds)
@@ -94,9 +101,13 @@ async function TextPost({ id }: { id: string }) {
     return "no content"
 
   return (
-    <FlexListItem>
-      <time className="text-xs uppercase">{getContextualDate(timestamp)}</time>
-      <p>{body}</p>
-    </FlexListItem>
+    <Link href={`/post/${getIdLocalPart(id)}`}>
+      <FlexListItem>
+        <time className="text-xs uppercase">
+          {getContextualDate(timestamp)}
+        </time>
+        <p>{body}</p>
+      </FlexListItem>
+    </Link>
   )
 }
