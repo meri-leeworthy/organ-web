@@ -4,16 +4,16 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
 import { useClient } from "@/hooks/useClient"
 import {
-  OrganCalEventUnstable,
-  OrganPostUnstable,
-  organCalEventUnstable,
-  organPostMeta,
+  // OrganCalEventUnstable,
+  // OrganPostUnstable,
+  // organCalEventUnstable,
   organPostType,
-  organPostTypeValue,
-  organPostUnstable,
+  // organPostTypeValue,
   organRoomType,
+  organRoomTypeTree,
   organRoomTypeValue,
-} from "@/lib/types"
+} from "@/types/schema"
+
 import { Room } from "simple-matrix-sdk"
 import {
   IconCalendarEvent,
@@ -25,6 +25,7 @@ import {
 import { Spinner } from "./Spinner"
 import { getMxcUrl, toValidDateString } from "@/lib/utils"
 import { Input, Textarea, Button } from "../styled"
+import { organPostMeta } from "@/types/post"
 
 type PostType = "post" | "event"
 
@@ -152,7 +153,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
           type: organPostType,
           state_key: "",
           content: {
-            type: organPostTypeValue.text,
+            type: organRoomTypeTree.post.text,
           },
         },
         {

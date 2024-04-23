@@ -2,8 +2,8 @@
 
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
-import { organSpaceType, organSpaceTypeValue } from "@/lib/types"
 import { noCacheFetch, normaliseTagString } from "@/lib/utils"
+import { organSpaceType, organSpaceTypeValue } from "@/types/schema"
 import { Client, ErrorSchema, Room } from "simple-matrix-sdk"
 import { is } from "valibot"
 

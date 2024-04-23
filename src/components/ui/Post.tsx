@@ -6,7 +6,7 @@ import { EditMenu } from "@/components/ui/EditMenu"
 import { Avatar } from "@/components/ui/Avatar"
 import { Client, Room } from "simple-matrix-sdk"
 import { IfModerator } from "../IfModerator"
-import { OrganPostMeta } from "@/lib/types"
+import { OrganPostMeta } from "@/types/post"
 
 export async function Post({
   post,

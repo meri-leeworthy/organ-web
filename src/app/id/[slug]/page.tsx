@@ -11,10 +11,7 @@ import { IconDotsVertical, IconSettings } from "@tabler/icons-react"
 import Link from "next/link"
 import { IfModerator } from "@/components/IfModerator"
 import { Dropdown, DropdownItem, NewPost } from "@/components/ui"
-import {
-  OrganPostUnstableSchema,
-  OrganCalEventUnstableSchema,
-} from "@/lib/types"
+
 import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"

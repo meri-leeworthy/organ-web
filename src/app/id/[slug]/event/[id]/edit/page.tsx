@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react"
 import { IconCalendarEvent } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { OrganCalEventUnstableSchema, organCalEventUnstable } from "@/lib/types"
+// import { OrganCalEventUnstableSchema, organCalEventUnstable } from "@/lib/types"
 import { is } from "valibot"
 import {
   Description,
@@ -17,6 +17,7 @@ import { getMxcUrl, toValidDateString } from "@/lib/utils"
 import { useRoom } from "@/hooks/useRoom"
 import { IfModerator } from "@/components/IfModerator"
 import Redirect from "@/components/Redirect"
+import { OrganPageEventMetaSchema } from "@/types/event"
 
 export default function EditEventPage({
   params,
@@ -40,26 +41,30 @@ export default function EditEventPage({
   const router = useRouter()
   const room = useRoom(params.slug)
 
-  useEffect(() => {
-    room?.getEvent(`$${params.id}`).then(post => {
-      if (!post) setError("Event not found")
-      if (post.type !== "m.room.message") setError("Event not valid")
-      if (!is(OrganCalEventUnstableSchema, post.content)) {
-        setError("Event not valid")
-        return
-      }
-      setTitle(post.content?.title || "")
-      setContent(post.content?.body || "")
-      setHost(post.content?.host || {})
-      setPlace(post.content?.location || "")
-      setStartDate(post.content?.start.split("T")[0] || "")
-      setStartTime(post.content?.start.split("T")[1] || "")
-      setEndDate(post.content?.end?.split("T")[0] || "")
-      setEndTime(post.content?.end?.split("T")[1] || "")
-      setAllDay(post.content?.allDay || false)
-      setAvatar(post.content?.avatar || "")
-    })
-  }, [params.id, params.slug, room, router])
+  // useEffect(() => {
+  //   room?.getEvent(`$${params.id}`).then(post => {
+  //     if (!post) setError("Event not found")
+  //     if ("errcode" in post) {
+  //       setError("Event not found")
+  //       return
+  //     }
+  //     if (post.type !== "m.room.message") setError("Event not valid")
+  //     if (!is(OrganPageEventMetaSchema, post.content)) {
+  //       setError("Event not valid")
+  //       return
+  //     }
+  //     setTitle(post.content?.title || "")
+  //     setContent(post.content?.body || "")
+  //     setHost(post.content?.host || {})
+  //     setPlace(post.content?.location || "")
+  //     setStartDate(post.content?.start.split("T")[0] || "")
+  //     setStartTime(post.content?.start.split("T")[1] || "")
+  //     setEndDate(post.content?.end?.split("T")[0] || "")
+  //     setEndTime(post.content?.end?.split("T")[1] || "")
+  //     setAllDay(post.content?.allDay || false)
+  //     setAvatar(post.content?.avatar || "")
+  //   })
+  // }, [params.id, params.slug, room, router])
 
   if (!room)
     return (
@@ -74,7 +79,7 @@ export default function EditEventPage({
     event.preventDefault()
     setIsLoading(true)
     const messageEvent = {
-      msgtype: organCalEventUnstable,
+      // msgtype: organCalEventUnstable,
       title,
       body: content,
       host,
@@ -86,7 +91,7 @@ export default function EditEventPage({
       tags: [],
       "m.new_content": {
         body: content,
-        msgtype: organCalEventUnstable,
+        // msgtype: organCalEventUnstable,
         title,
         host,
         location: place,

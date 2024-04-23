@@ -1,5 +1,5 @@
+import { contactTypes, organMetaContactUnstable } from "@/types/properties"
 import { Room } from "simple-matrix-sdk"
-import { contactTypes, organMetaContactUnstable } from "@/lib/types"
 
 export async function fetchContactKVs(room: Room) {
   const promises = Object.entries(contactTypes).map(([contactType]) =>

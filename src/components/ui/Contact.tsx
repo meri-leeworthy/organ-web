@@ -1,3 +1,4 @@
+import { ContactType } from "@/types/properties"
 import {
   // IconBrandFacebook,
   // IconBrandLinktree,
@@ -8,7 +9,6 @@ import {
   // IconWorld,
   IconLink,
 } from "@tabler/icons-react"
-import { ContactType } from "@/lib/types"
 
 export function Contact({
   contactKVs,

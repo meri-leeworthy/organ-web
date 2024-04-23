@@ -2,20 +2,16 @@ const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 import { getSecretFromRoom } from "@/lib/roomSecretStore"
 import { sendEmail } from "@/lib/sendEmail"
 import {
-  OrganCalEventUnstable,
-  OrganPostUnstable,
   organRoomSecretEmail,
   organRoomUserNotifications,
-} from "@/lib/types"
+} from "@/types/schema"
+import { OrganPostMeta } from "@/types/post"
 import { NextRequest, NextResponse } from "next/server"
 import { Client, Room } from "simple-matrix-sdk"
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
-  const {
-    roomId,
-    post,
-  }: { roomId: string; post: OrganPostUnstable | OrganCalEventUnstable } = body
+  const { roomId, post }: { roomId: string; post: OrganPostMeta } = body
 
   // this endpoint probably should be authenticated - only admins should be able to call it
 
@@ -47,7 +43,8 @@ export async function POST(request: NextRequest) {
 
   // get all the state events with organ.room.user.notifications
 
-  if (typeof state === "object" && "errcode" in state) return state
+  if (typeof state === "object" && "errcode" in state)
+    return NextResponse.json(state)
 
   const notificationPrefsMapIterator = state
     .getAll(organRoomUserNotifications)

@@ -7,8 +7,8 @@ import { Alert, AlertDescription, AlertTitle } from "./alert"
 import { Input } from "./input"
 import { Button } from "./button"
 import { Switch } from "./switch"
-import { organRoomUserNotifications } from "@/lib/types"
 import { set } from "valibot"
+import { organRoomUserNotifications } from "@/types/schema"
 
 export function EmailSubscribe({
   slug,

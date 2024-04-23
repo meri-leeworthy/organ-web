@@ -4,16 +4,7 @@ import { useState } from "react"
 import { useClient } from "@/hooks/useClient"
 import { Input, Button, Textarea } from "@/components/styled"
 // import { EditableContacts } from "../[slug]/edit/EditableContactSection"
-import {
-  ContactType,
-  contactTypes,
-  organMetaContactUnstable,
-  organPageType,
-  organPageTypeValue,
-  organRoomType,
-  organSpaceType,
-  organSpaceTypeValue,
-} from "@/lib/types"
+
 import { useRouter } from "next/navigation"
 import { is } from "valibot"
 import { ErrorSchema } from "simple-matrix-sdk"
@@ -21,6 +12,13 @@ import { ErrorBox } from "@/components/ui/ErrorBox"
 import { slug } from "@/lib/utils"
 import { IconNorthStar } from "@tabler/icons-react"
 import { joinRoom } from "@/app/api/join/action"
+import {
+  organPageType,
+  organRoomType,
+  organRoomTypeTree,
+  organSpaceType,
+  organSpaceTypeValue,
+} from "@/types/schema"
 
 const NewRoomPage = () => {
   const client = useClient()
@@ -89,17 +87,14 @@ const NewRoomPage = () => {
           },
           {
             type: organSpaceType,
-            state_key: "",
             content: {
-              type: organSpaceTypeValue.page,
+              value: organSpaceTypeValue.page,
             },
           },
           {
             type: organPageType,
-            state_key: "",
             content: {
-              type: organRoomType,
-              value: "id",
+              value: organRoomTypeTree.page.id,
             },
           },
         ],

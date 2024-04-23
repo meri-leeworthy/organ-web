@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   const res = await unsubscribeEmailFromRoom(roomId, email)
   console.log("res", res)
 
-  if (res && "errcode" in res)
+  if (res && typeof res === "object" && "errcode" in res)
     return NextResponse.json({
       now: Date.now(),
       message: "Failed to join room!",

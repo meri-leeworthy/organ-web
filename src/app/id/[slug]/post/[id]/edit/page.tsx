@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react"
 import { IconNorthStar } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { OrganPostUnstableSchema, organPostUnstable } from "@/lib/types"
 import { is } from "valibot"
 import Redirect from "@/components/Redirect"
 import { useRoom } from "@/hooks/useRoom"
 import { IfModerator } from "@/components/IfModerator"
+import { OrganPostMetaSchema } from "@/types/post"
 
 export default function EditPostPage({
   params,
@@ -28,8 +28,9 @@ export default function EditPostPage({
       ?.getEvent(`$${params.id}`)
       .then(post => {
         if (!post) throw new Error("Post not found")
+        if ("errcode" in post) throw new Error("Post not found")
         if (post.type !== "m.room.message") throw new Error("Post not valid")
-        if (!is(OrganPostUnstableSchema, post.content))
+        if (!is(OrganPostMetaSchema, post.content))
           throw new Error("Post not valid")
 
         setTitle(post.content.title || "")
@@ -56,28 +57,28 @@ export default function EditPostPage({
     console.log("id", params.id)
     event.preventDefault()
     setIsLoading(true)
-    const messageEvent = {
-      msgtype: organPostUnstable,
-      title,
-      body: content,
-      author,
-      tags: [],
-      "m.new_content": {
-        body: content,
-        msgtype: organPostUnstable,
-        title,
-        author,
-        tags: [],
-      },
-      "m.relates_to": {
-        rel_type: "m.replace",
-        event_id: `$${params.id}`,
-      },
-    }
-    //this should EDIT the post, not create a new one
-    await room?.sendMessage(messageEvent)
-    setIsLoading(false)
-    router.push(`/id/${params.slug}/post/${params.id}`)
+    // const messageEvent = {
+    //   msgtype: organPostUnstable,
+    //   title,
+    //   body: content,
+    //   author,
+    //   tags: [],
+    //   "m.new_content": {
+    //     body: content,
+    //     msgtype: organPostUnstable,
+    //     title,
+    //     author,
+    //     tags: [],
+    //   },
+    //   "m.relates_to": {
+    //     rel_type: "m.replace",
+    //     event_id: `$${params.id}`,
+    //   },
+    // }
+    // //this should EDIT the post, not create a new one
+    // await room?.sendMessage(messageEvent)
+    // setIsLoading(false)
+    // router.push(`/id/${params.slug}/post/${params.id}`)
   }
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {

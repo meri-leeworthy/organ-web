@@ -1,8 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
 
-import { OrganMetaContactUnstable, organMetaContactUnstable } from "@/lib/types"
-
 import { SectionType, sections } from "./SectionType"
 import { useRoom } from "@/hooks/useRoom"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
@@ -10,6 +8,10 @@ import { IconCheck, IconEdit, IconLink, IconPlus } from "@tabler/icons-react"
 import { Spinner } from "@/components/ui"
 import * as v from "valibot"
 import { ClientEventSchema } from "simple-matrix-sdk"
+import {
+  OrganMetaContactUnstable,
+  organMetaContactUnstable,
+} from "@/types/properties"
 
 export function EditableContactSection({
   slug,

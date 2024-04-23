@@ -3,7 +3,10 @@
 import { getHmac32 } from "@/lib/getHmac"
 import { storeSecretInRoom } from "@/lib/roomSecretStore"
 import { getOrCreateMailboxId, sendEmailFromMailbox } from "@/lib/sendEmail"
-import { organRoomSecretEmail, organRoomUserNotifications } from "@/lib/types"
+import {
+  organRoomSecretEmail,
+  organRoomUserNotifications,
+} from "@/types/schema"
 import { Client, Room } from "simple-matrix-sdk"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env

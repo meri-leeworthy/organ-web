@@ -1,15 +1,15 @@
 "use server"
 
-import { Client, Room } from "simple-matrix-sdk"
+import { OrganPageEventMeta, organPageEventMeta } from "@/types/event"
+import { OrganLocation } from "@/types/properties"
 import {
-  OrganPageEventMeta,
-  OrganLocation,
-  organLocation,
+  organPageType,
+  organRoomTypeTree,
   organSpaceType,
   organSpaceTypeValue,
-  organPageType,
-  organPageTypeValue,
-} from "./types"
+} from "@/types/schema"
+import { StateEvent } from "@/types/utilities"
+import { Client, Room } from "simple-matrix-sdk"
 
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
@@ -22,7 +22,7 @@ export async function createEvent(opts: {
   owner: string
   title: string
   description: string
-  meta: OrganPageEventMeta
+  meta: StateEvent<typeof organPageEventMeta, OrganPageEventMeta>
   // events?: string[] //linked events
   // pages?: string[] //parents
   // tags?: string[] //parents
@@ -49,7 +49,7 @@ export async function createEvent(opts: {
       {
         type: organPageType,
         content: {
-          type: organPageTypeValue.event,
+          type: organRoomTypeTree.page.event,
         },
       },
       opts.meta,
@@ -84,14 +84,14 @@ export async function createPage(opts: {
     {
       type: organPageType,
       content: {
-        value: organPageTypeValue.id,
+        value: organRoomTypeTree.page.id,
       },
     },
   ]
 
   opts.location &&
     initial_state.push({
-      type: organLocation,
+      type: "organ.location",
       content: opts.location,
     })
 

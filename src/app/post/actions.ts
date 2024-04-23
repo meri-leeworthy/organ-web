@@ -3,15 +3,14 @@
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
 import { bilateralTagAdoptPost } from "@/app/tag/actions"
-import {
-  organPostMeta,
-  organPostText,
-  organPostType,
-  organPostTypeValue,
-  organRoomType,
-  organRoomTypeValue,
-} from "@/lib/types"
 import { normaliseTagString } from "@/lib/utils"
+import { organPostMeta } from "@/types/post"
+import {
+  organPostType,
+  organRoomType,
+  organRoomTypeTree,
+  organRoomTypeValue,
+} from "@/types/schema"
 import { Client, Room } from "simple-matrix-sdk"
 
 const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
@@ -40,7 +39,7 @@ export async function newPost(formData: FormData) {
       {
         type: organPostType,
         content: {
-          type: organPostTypeValue.text,
+          type: organRoomTypeTree.post.text,
         },
       },
       {

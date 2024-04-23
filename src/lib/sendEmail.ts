@@ -5,7 +5,7 @@ const { MATRIX_BASE_URL, AS_TOKEN, SENDGRID_API_KEY, SERVER_NAME } = process.env
 import { Client, Room } from "simple-matrix-sdk"
 import { getHmac32 } from "./getHmac"
 import { storeSecretInRoom } from "./roomSecretStore"
-import { organRoomSecretEmail } from "./types"
+import { organRoomSecretEmail } from "@/types/schema"
 
 async function sendEmailSendgrid(
   to: string,

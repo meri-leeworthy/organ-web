@@ -1,8 +1,3 @@
-import {
-  organCalEventUnstable,
-  organPostMeta,
-  organPostUnstable,
-} from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
 import {
@@ -22,6 +17,7 @@ import {
   FlexListItem,
 } from "./FlexGridList"
 import Link from "next/link"
+import { organPostMeta } from "@/types/post"
 
 export function Posts({ postIds }: { postIds: string[] }) {
   console.log("postIds", postIds)

@@ -10,17 +10,18 @@ import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch, props } from "@/lib/utils"
 import {
-  organPageEventMeta,
   organPageType,
-  organPageTypeValue,
-  organPostMeta,
+  // organPageTypeValue,
   organPostType,
-  organPostTypeValue,
+  organRoomTypeTree,
+  // organPostTypeValue,
   organRoomType,
   organRoomTypeValue,
   organSpaceType,
   organSpaceTypeValue,
-} from "@/lib/types"
+} from "@/types/schema"
+import { organPostMeta } from "@/types/post"
+import { organPageEventMeta } from "@/types/event"
 import tags from "./seed/tags.json"
 import ids from "./seed/ids.json"
 import events from "./seed/events.json"
@@ -335,7 +336,7 @@ export async function seedIDPages() {
           {
             type: organPageType,
             content: {
-              value: organPageTypeValue.id,
+              value: organRoomTypeTree.page.id,
             },
           },
           ...parentEvents,
@@ -447,7 +448,7 @@ export async function seedEvents() {
           {
             type: organPageType,
             content: {
-              value: organPageTypeValue.event,
+              value: organRoomTypeTree.page.event,
             },
           },
           {
@@ -547,7 +548,7 @@ export async function seedPosts() {
           {
             type: organPostType,
             content: {
-              value: organPostTypeValue.text,
+              value: organRoomTypeTree.post.text,
             },
           },
           {
@@ -608,7 +609,7 @@ export async function seedPosts() {
           {
             type: organPostType,
             content: {
-              value: organPostTypeValue.text,
+              value: organRoomTypeTree.post.text,
             },
           },
           {
@@ -773,7 +774,7 @@ async function getEventsMap() {
       const typeEvent = childState.get("organ.page.type")
       const type = props(typeEvent, "content", "value")
 
-      if (type !== organPageTypeValue.event) continue
+      if (type !== organRoomTypeTree.page.event) continue
 
       const nameEvent = childState.get("m.room.name")
       const name = props(nameEvent, "content", "name")

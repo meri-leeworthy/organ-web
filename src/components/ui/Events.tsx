@@ -1,9 +1,3 @@
-import {
-  organCalEventUnstable,
-  organPageEventMeta,
-  organPostMeta,
-  organPostUnstable,
-} from "@/lib/types"
 import { Post } from "@/components/ui/Post"
 import { EventPost } from "@/components/ui/EventPost"
 import {
@@ -18,6 +12,7 @@ import * as v from "valibot"
 import { FlexGridList, FlexGridListItem } from "./FlexGridList"
 import Link from "next/link"
 import { IconCalendarEvent, IconTag } from "@tabler/icons-react"
+import { organPageEventMeta } from "@/types/event"
 
 export function Events({ postIds }: { postIds: string[] }) {
   console.log("postIds", postIds)

@@ -5,8 +5,8 @@ const { AS_TOKEN, MATRIX_BASE_URL, SERVER_NAME } = process.env
 import { Client, Room } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
-import { OrganPostUnstableSchema } from "@/lib/types"
 import { is } from "valibot"
+import { OrganPostMetaSchema } from "@/types/post"
 
 export default async function PostPage({
   params,
@@ -35,7 +35,7 @@ export default async function PostPage({
 
   // console.log(safeParse(OrganPostUnstableSchema, post.content))
 
-  if ("errcode" in post || !is(OrganPostUnstableSchema, post.content))
+  if ("errcode" in post || !is(OrganPostMetaSchema, post.content))
     return "Post not valid :("
 
   const nameString =
