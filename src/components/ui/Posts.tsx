@@ -18,9 +18,10 @@ import {
 } from "./FlexGridList"
 import Link from "next/link"
 import { organPostMeta } from "@/types/post"
+import { Child } from "./ChildrenCarousel"
 
-export function Posts({ postIds }: { postIds: string[] }) {
-  console.log("postIds", postIds)
+export function Posts({ posts }: { posts: Child[] }) {
+  console.log("postIds", posts)
 
   // get post state
 
@@ -31,8 +32,8 @@ export function Posts({ postIds }: { postIds: string[] }) {
   return (
     <section className="">
       <FlexList>
-        {postIds.map((id, i) => {
-          return <TextPost key={i} id={id} />
+        {posts.map((post, i) => {
+          return <TextPost key={i} post={post} />
         })}
       </FlexList>
 
@@ -80,29 +81,31 @@ export function Posts({ postIds }: { postIds: string[] }) {
   )
 }
 
-async function TextPost({ id }: { id: string }) {
-  const room = client.getRoom(id)
-  const state = await room.getState()
-  if ("errcode" in state) return JSON.stringify(state)
-  console.log(id, "state", state)
-  console.log("roomtype", state.get("organ.room.type"))
-  const validPost = isOrganRoomType(state, "post")
-  if (!validPost) return null
-  const post = state.get(organPostMeta)
-  if (!post) return "no post"
+async function TextPost({ post }: { post: Child }) {
+  // const room = client.getRoom(id)
+  // const state = await room.getState()
+  // if ("errcode" in state) return JSON.stringify(state)
+  // console.log(id, "state", state)
+  // console.log("roomtype", state.get("organ.room.type"))
+  // const validPost = isOrganRoomType(state, "post")
+  // if (!validPost) return null
+  // const post = state.get(organPostMeta)
+  // if (!post) return "no post"
 
-  const body = props(post, "content", "body")
-  const timestamp = props(post, "content", "timestamp")
-  if (typeof body !== "string" || typeof timestamp !== "number")
-    return "no content"
+  // const body = props(post, "content", "body")
+  // const timestamp = props(post, "content", "timestamp")
+  // if (typeof body !== "string" || typeof timestamp !== "number")
+  //   return "no content"
 
   return (
-    <Link href={`/post/${getIdLocalPart(id)}`}>
+    <Link href={`/post/${getIdLocalPart(post.roomId)}`}>
       <FlexListItem>
-        <time className="text-xs uppercase">
-          {getContextualDate(timestamp)}
-        </time>
-        <p>{body}</p>
+        {post.timestamp && (
+          <time className="text-xs uppercase">
+            {getContextualDate(post.timestamp)}
+          </time>
+        )}
+        <p>{post.topic}</p>
       </FlexListItem>
     </Link>
   )

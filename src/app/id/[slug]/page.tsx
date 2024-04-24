@@ -20,8 +20,9 @@ import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 import { IfRoomMember } from "@/components/IfRoomMember"
 import { client } from "@/lib/client"
 import { Events } from "@/components/ui/Events"
-
-// TODO: show EVENTS in the ID space
+import { AvatarFull } from "./AvatarFull"
+import { getChild } from "@/app/tag/[tag]/page"
+import { Child } from "@/components/ui/ChildrenCarousel"
 
 export default async function OrgSlugPage({
   params,
@@ -60,6 +61,20 @@ export default async function OrgSlugPage({
 
   const postIds = spaceChildren?.map(child => child.room_id as string)
 
+  const allChildren = (
+    spaceChildren
+      ? await Promise.all(
+          spaceChildren.map(
+            async child => await getChild(child.room_id, child.canonical_alias)
+          )
+        )
+      : []
+  ).filter(Boolean) as Child[]
+
+  const posts = allChildren.filter(
+    child => "roomType" in child && child["roomType"] === "post"
+  )
+
   const imageUri = is(object({ url: string() }), avatar?.content)
     ? avatar.content.url
     : undefined
@@ -79,16 +94,14 @@ export default async function OrgSlugPage({
 
   return (
     <>
-      <div className="my-2 mb-8 flex w-full flex-col gap-4 sm:flex-row-revers max-w-xl">
-        <div className={`flex ${avatarUrl && "gap-4"}`}>
+      <div className="my-2 mb-4 flex w-full flex-col gap-4">
+        <div className={`flex w-full ${avatarUrl ? "gap-4" : ""}`}>
           <Suspense fallback={<div>loading...</div>}>
             {avatarUrl && <AvatarFull url={avatarUrl} />}
           </Suspense>
-          <div className="flex items-end justify-between gap-2 sm:grow">
-            <h2 className="flex w-72 gap-2 text-3xl font-bold lg:text-4xl">
-              {name}
-            </h2>
-          </div>
+          {/* <div className="flex items-end justify-between gap-2 sm:grow"> */}
+          <h2 className="text-3xl font-bold lg:text-4xl">{name}</h2>
+          {/* </div> */}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <IfRoomMember slug={getIdLocalPart(roomId)}>
@@ -103,16 +116,16 @@ export default async function OrgSlugPage({
               </IfModerator>
             </Dropdown>
           </IfRoomMember>
-          <FollowButton slug={getIdLocalPart(roomId)} />
+          {/* <FollowButton slug={getIdLocalPart(roomId)} />
           <span className="text-xs uppercase opacity-60">
             <strong>{memberCount - 1}</strong> followers
-          </span>
+          </span> */}
         </div>
       </div>
 
-      <main className="flex w-full flex-col gap-4 lg:flex-row-reverse xl:gap-6 ">
-        <section className="flex w-full flex-col justify-start lg:w-48 lg:flex-col-reverse lg:justify-end xl:w-64">
-          <p className="my-4 whitespace-pre-line text-sm italic lg:text-xs lg:opacity-80 xl:text-sm">
+      <main className="flex w-full flex-col gap-4 xl:gap-6 ">
+        <section className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-xl">
+          <p className="whitespace-pre-line text-sm italic lg:opacity-80">
             {is(object({ topic: string() }), topic?.content) &&
               topic.content.topic}
           </p>
@@ -132,7 +145,7 @@ export default async function OrgSlugPage({
           <Events postIds={postIds || []} />
 
           <h2>Posts</h2>
-          <Posts postIds={postIds || []} />
+          <Posts posts={posts || []} />
         </section>
       </main>
     </>
@@ -170,19 +183,4 @@ export async function generateMetadata({
   //       topic.content.topic) ||
   //     "",
   // }
-}
-
-function AvatarFull({ url }: { url: string | undefined }) {
-  return (
-    <div className="relative min-w-20">
-      <div
-        className={`absolute h-full w-full ${
-          url ? "bg-transparent" : "bg-[#1D170C33]"
-        }`}
-      />
-      {url && (
-        <img src={url} alt="avatar" className="w-20 opacity-100 lg:w-40" />
-      )}
-    </div>
-  )
 }

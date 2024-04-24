@@ -1,7 +1,7 @@
 import { getTagRoomId } from "@/app/tag/actions"
 import { client } from "@/lib/client"
 import { IconTag } from "@tabler/icons-react"
-import { Child, EventsCarousel } from "./EventsCarousel"
+import { Child, ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 import { props } from "@/lib/utils"
 import { organPageEventMeta } from "@/types/event"
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/types/schema"
 import { FlexGridList } from "@/components/ui/FlexGridList"
 import { Item } from "@/components/ui/Item"
+import { Posts } from "@/components/ui/Posts"
 
 // TODO: only show future events
 // TODO: show events in a carousel
@@ -19,7 +20,10 @@ import { Item } from "@/components/ui/Item"
 // fetch all children state here and pass it to the children
 // define relevant state as simple objects and not classes
 
-async function getChild(roomId: string, alias?: string): Promise<Child | null> {
+export async function getChild(
+  roomId: string,
+  alias?: string
+): Promise<Child | null> {
   console.log("roomId", roomId)
   const state = await client.getRoom(roomId).getState()
   if ("errcode" in state) {
@@ -89,7 +93,11 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
     child => "pageType" in child && child["pageType"] === "id"
   )
 
-  // console.log("TagChldren", tagChildren)
+  const posts = allChildren.filter(
+    child => "roomType" in child && child["roomType"] === "post"
+  )
+
+  console.log("posts", posts)
 
   return (
     <div>
@@ -98,16 +106,26 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
         {name.name}
       </h1>
 
-      <h2 className="mt-6">Upcoming Events</h2>
-      {tagChildren && <EventsCarousel tagChildren={events as Child[]} />}
+      {events && (
+        <>
+          <h2 className="mt-6">Upcoming Events</h2>
+          <ChildrenCarousel spaceChildren={events as Child[]} />
+        </>
+      )}
 
-      <h2>Groups</h2>
-      <FlexGridList>
-        {ids?.map(child => {
-          console.log("child", child)
-          return <Item key={child.roomId} id={child} />
-        })}
-      </FlexGridList>
+      {ids && (
+        <>
+          <h2>Groups</h2>
+          <ChildrenCarousel spaceChildren={ids as Child[]} />
+        </>
+      )}
+
+      {posts && (
+        <>
+          <h2>Posts</h2>
+          <Posts posts={posts || []} />
+        </>
+      )}
     </div>
   )
 }

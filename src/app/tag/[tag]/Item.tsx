@@ -2,7 +2,7 @@ import { client } from "@/lib/client"
 import { props } from "@/lib/utils"
 import { ClientEventSchema, Room } from "simple-matrix-sdk"
 import * as v from "valibot"
-import { Child } from "./EventsCarousel"
+import { Child } from "../../../components/ui/ChildrenCarousel"
 
 export async function Item({ id }: { id: Child }) {
   const postRoom = new Room(id.roomId, client)
