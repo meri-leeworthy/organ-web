@@ -109,6 +109,8 @@ function doubleDigit(number: number) {
 }
 
 export function getContextualDate(ts: number) {
+  // NEEDS TO USE TIMESTAMP COMPARISONS INSTEAD OF DATE, MONTH, ETC
+
   const date = new Date(ts)
 
   const dateString = `${date.getDate()}/${

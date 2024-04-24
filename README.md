@@ -53,15 +53,15 @@ For development purposes, you can seed the database with some test data. This ca
 - [ ] Homepage hits error when run against prod server
 - [ ] Event pages don't show good UI when there are no posts
 - [ ] Post pages need building out
-    - Nice typography thinking about how to display long posts - narrow columns
-    - Author avatar, link working
-    - Posts can have titles (room name)
+  - [ ] Nice typography thinking about how to display long posts - narrow columns
+  - [ ] Author avatar, link working
+  - [ ] Posts can have titles (room name)
 - [ ] Posts should be able to support rich text
 - [ ] Posts should be able to support images
 - [ ] Posts should be able to support INTERNAL links (to other posts, pages, events)
 - [ ] Better UI for tag pages and ID pages
 - [ ] Implement canonical ID pages for tags
-    - [ ] tags linked to specific IDs etc
+  - [ ] tags linked to specific IDs etc
 - [ ] Seed data for users
-    - [ ] generating a bunch of users
-    - [ ] users following lots of pages
+  - [ ] generating a bunch of users
+  - [ ] users following lots of pages

@@ -2,9 +2,10 @@ import { client } from "@/lib/client"
 import { props } from "@/lib/utils"
 import { ClientEventSchema, Room } from "simple-matrix-sdk"
 import * as v from "valibot"
+import { Child } from "./EventsCarousel"
 
-export async function Item({ postRoomId }: { postRoomId: string }) {
-  const postRoom = new Room(postRoomId, client)
+export async function Item({ id }: { id: Child }) {
+  const postRoom = new Room(id.roomId, client)
 
   const state = await postRoom.getState()
   if ("errcode" in state) return "no state"
