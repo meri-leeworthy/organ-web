@@ -31,9 +31,7 @@ export function EventsCarousel({ tagChildren }: { tagChildren: Child[] }) {
       <CarouselContent>
         {tagChildren?.map((child: any) => {
           return (
-            <CarouselItem
-              key={child.roomId + Math.random()}
-              className="basis-1/3">
+            <CarouselItem key={child.roomId + Math.random()} className="">
               <EventCarouselItem event={child} />
             </CarouselItem>
           )
