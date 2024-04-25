@@ -10,6 +10,7 @@ import posts from "./seed/posts.json"
 import eventposts from "./seed/event-posts.json"
 import { noCacheClient as client } from "@/lib/client"
 import { getEventsMap, getTagsMap, getIdsMap } from "./getMaps"
+import { getTimestampWithinSixMonths, getRandomTag } from "./utils"
 
 const { SERVER_NAME } = process.env
 
@@ -196,15 +197,4 @@ export async function seedPosts() {
   return {
     message: `${createPostsSuccessCount} out of ${createPostsResults.length} post rooms and ${createEventsPostsSuccessCount} out of ${createEventsPostsResults.length} event post rooms successfully created`,
   }
-}
-export function getTimestampWithinSixMonths() {
-  const yearTs = 365 * 24 * 60 * 60 * 1000
-  const randomWithinSixMonths = Math.floor(Math.random() * yearTs) - yearTs / 2
-  return Date.now() + randomWithinSixMonths
-}
-
-export async function getRandomTag(tagsMap: Map<string, string>) {
-  const tagsArray = Array.from(tagsMap.keys())
-  const randomIndex = Math.floor(Math.random() * tagsArray.length)
-  return tagsArray[randomIndex]
 }

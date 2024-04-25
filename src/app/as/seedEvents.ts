@@ -10,6 +10,7 @@ import events from "./seed/events.json"
 import { getIdsMap } from "./getMaps"
 import { getTagsMap } from "./getMaps"
 import { noCacheClient as client } from "@/lib/client"
+import { normalizeName, generateRandomTimestamp } from "./utils"
 
 const { SERVER_NAME } = process.env
 
@@ -123,28 +124,4 @@ export async function seedEvents() {
   return {
     message: `${createEventsSuccessCount} out of ${createEventsResults.length} event spaces successfully created`,
   }
-}
-export function normalizeName(name: string): string {
-  // Convert to lowercase
-  let normalized = name.toLowerCase()
-
-  // Remove punctuation
-  normalized = normalized.replace(/[^\w\s]/g, "")
-
-  // Replace spaces with hyphens
-  normalized = normalized.replace(/\s+/g, "-")
-
-  return normalized
-}
-
-export function generateRandomTimestamp(): number {
-  const currentTimestamp = Date.now() // Current timestamp in millisecondsseconds
-  const threeMonthsInMilliseconds = 90 * 24 * 60 * 60 * 1000 // 90 days in seconds
-  const randomOffset =
-    Math.floor(Math.random() * (2 * threeMonthsInMilliseconds + 1)) -
-    threeMonthsInMilliseconds // Random offset within 3 months
-  const randomTimestamp = currentTimestamp + randomOffset // Add random offset to current timestamp
-  const roundedTimestamp =
-    Math.round(randomTimestamp / (5 * 60 * 1000)) * (5 * 60 * 1000) // Round to nearest 5-minute interval
-  return roundedTimestamp
 }

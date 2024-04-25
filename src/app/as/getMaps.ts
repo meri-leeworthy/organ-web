@@ -6,6 +6,41 @@ import { organRoomTypeTree } from "@/types/schema"
 
 const { SERVER_NAME } = process.env
 
+export async function getTagIndexChildren() {
+  const tagIndexRoomId = await client.getRoomIdFromAlias(
+    "#relay_tagindex:" + SERVER_NAME
+  )
+  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
+    return tagIndexRoomId
+  const tagIndex = client.getRoom(tagIndexRoomId)
+
+  // get a list of all the tag rooms from tag index
+  const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
+
+  if (!tagIndexChildren) return { errcode: "No tag rooms found" }
+  // console.log("tagIndexChildren", tagIndexChildren)
+  // remove tag index room
+  tagIndexChildren.shift()
+
+  return tagIndexChildren
+}
+
+export async function getTagsMap() {
+  const tagIndexChildren = await getTagIndexChildren()
+  if ("errcode" in tagIndexChildren) return tagIndexChildren
+
+  // get the canonical alias for each tag and map to roomID
+  const tagsMap = new Map<string, string>()
+  tagIndexChildren.forEach(tag => {
+    tagsMap.set(
+      tag.canonical_alias.split("#relay_tag_")[1].split(":")[0],
+      tag.room_id
+    )
+  })
+
+  return tagsMap
+}
+
 export async function getIdsMap() {
   // get a list of all the ID spaces
   // this is done by searching each tag in the tag-index and making a map
@@ -33,21 +68,7 @@ export async function getIdsMap() {
 
   return idsMap
 }
-export async function getTagsMap() {
-  const tagIndexChildren = await getTagIndexChildren()
-  if ("errcode" in tagIndexChildren) return tagIndexChildren
 
-  // get the canonical alias for each tag and map to roomID
-  const tagsMap = new Map<string, string>()
-  tagIndexChildren.forEach(tag => {
-    tagsMap.set(
-      tag.canonical_alias.split("#relay_tag_")[1].split(":")[0],
-      tag.room_id
-    )
-  })
-
-  return tagsMap
-}
 export async function getEventsMap() {
   const tagIndexChildren = await getTagIndexChildren()
   if ("errcode" in tagIndexChildren) return tagIndexChildren
@@ -98,22 +119,4 @@ export async function getEventsMap() {
   }
 
   return eventsMap
-}
-export async function getTagIndexChildren() {
-  const tagIndexRoomId = await client.getRoomIdFromAlias(
-    "#relay_tagindex:" + SERVER_NAME
-  )
-  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
-    return tagIndexRoomId
-  const tagIndex = client.getRoom(tagIndexRoomId)
-
-  // get a list of all the tag rooms from tag index
-  const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
-
-  if (!tagIndexChildren) return { errcode: "No tag rooms found" }
-  // console.log("tagIndexChildren", tagIndexChildren)
-  // remove tag index room
-  tagIndexChildren.shift()
-
-  return tagIndexChildren
 }
