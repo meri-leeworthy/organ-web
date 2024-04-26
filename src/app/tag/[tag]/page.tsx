@@ -1,57 +1,12 @@
 import { getTagRoomId } from "@/app/tag/actions"
 import { client } from "@/lib/client"
 import { IconTag } from "@tabler/icons-react"
-import { Child, ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
-import { props } from "@/lib/utils"
-import { organPageEventMeta } from "@/types/event"
-import {
-  organPageType,
-  organRoomTypeTree,
-  organSpaceType,
-} from "@/types/schema"
+import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
+import { Child } from "../../../lib/getChild"
 import { FlexGridList } from "@/components/ui/FlexGridList"
 import { Item } from "@/components/ui/Item"
 import { Posts } from "@/components/ui/Posts"
-
-// TODO: only show future events
-// TODO: show events in a carousel
-// TODO: show posts
-
-// fetch all children state here and pass it to the children
-// define relevant state as simple objects and not classes
-
-export async function getChild(
-  roomId: string,
-  alias?: string
-): Promise<Child | null> {
-  console.log("roomId", roomId)
-  const state = await client.getRoom(roomId).getState()
-  if ("errcode" in state) {
-    console.log("no state")
-    return null
-  }
-
-  const child: Record<string, any> = { roomId }
-
-  alias && (child["alias"] = alias)
-  const nameEvent = state.get("m.room.name")
-  child["name"] = props(nameEvent, "content", "name")
-  const topicEvent = state.get("m.room.topic")
-  child["topic"] = props(topicEvent, "content", "topic")
-  const roomTypeEvent =
-    state.get(organSpaceType) || state.get("organ.room.type")
-  child["roomType"] = props(roomTypeEvent, "content", "value")
-  if (child["roomType"] === "page") {
-    const pageTypeEvent = state.get(organPageType)
-    child["pageType"] = props(pageTypeEvent, "content", "value")
-    if (child["pageType"] === organRoomTypeTree.page.event) {
-      const eventMetaEvent = state.get(organPageEventMeta)
-      child["eventMeta"] = props(eventMetaEvent, "content")
-    }
-  }
-
-  return child as Child
-}
+import { getChild } from "../../../lib/getChild"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
@@ -86,7 +41,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
     child =>
       "pageType" in child &&
       child["pageType"] === "event" &&
-      child["eventMeta"].start > Date.now()
+      parseInt(child["eventMeta"]!.start) > Date.now()
   )
 
   const ids = allChildren.filter(
@@ -120,7 +75,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
         </>
       )}
 
-      {posts && (
+      {posts.length > 0 && (
         <>
           <h2>Posts</h2>
           <Posts posts={posts || []} />

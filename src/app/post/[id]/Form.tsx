@@ -12,8 +12,7 @@ export function Form({ postId }: { postId: string }) {
         const res = await addTagToPost(formData)
         console.log("res", res)
       }}
-      className="flex flex-col gap-2 p-2"
-    >
+      className="flex flex-col gap-2 p-2 max-w-sm">
       <input type="hidden" name="postId" value={postId} />
       <Input type="text" name="tag" />
       <Button type="submit">Add Tag</Button>

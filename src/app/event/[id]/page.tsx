@@ -1,7 +1,10 @@
+import { getChild } from "@/lib/getChild"
+import { Child } from "@/lib/getChild"
 import { Posts } from "@/components/ui/Posts"
 import { client } from "@/lib/client"
 import { getContextualDate, isOrganRoomType, props } from "@/lib/utils"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
+import { State } from "simple-matrix-sdk"
 
 const { SERVER_NAME } = process.env
 
@@ -43,6 +46,40 @@ export default async function EventPage({
   const url = props(metaEvent, "content", "url")
 
   const children = state.getAll("m.space.child")
+
+  const posts = (await Promise.all(
+    [...(children ? children.keys() : [])]
+      .map(
+        async childId => await getChild(childId)
+        // async childId => await client.getRoom(childId).getState()
+      )
+      .filter(Boolean)
+  )) as Child[]
+
+  // const postsState = (
+  //   childrenState.filter(childState => !("errcode" in childState)) as State[]
+  // ).filter(
+  //   childState =>
+  //     isOrganRoomType(childState, "post", "text") &&
+  //     childState.get("organ.post.meta")?.content
+  // )
+
+  // const posts: Child[] = postsState.map(roomState => {
+  //   const post = roomState.get("organ.post.meta")?.content as {
+  //     title: string
+  //     body: string
+  //     timestamp: number
+  //   }
+  //   console.log("post", post)
+  //   return {
+  //     roomId: "roomState.roomId",
+  //     roomType: "post",
+  //     name: post!.title,
+  //     topic: post.body,
+  //     timestamp: post.timestamp,
+  //   }
+  // })
+
   const childIds = children ? [...children.keys()] : []
 
   if (typeof start !== "string" || typeof end !== "string") return "no date"
@@ -91,7 +128,7 @@ export default async function EventPage({
 
       <p className="py-4">{typeof topic === "string" && topic}</p>
 
-      <Posts postIds={childIds} />
+      <Posts posts={posts} />
     </>
   )
 }

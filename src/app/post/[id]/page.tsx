@@ -1,4 +1,4 @@
-import { noCacheFetch } from "@/lib/utils"
+import { getContextualDate, noCacheFetch } from "@/lib/utils"
 import { Client, State } from "simple-matrix-sdk"
 import { Form } from "./Form"
 import { Post } from "@/components/ui/Post"
@@ -31,12 +31,32 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   console.log("post", post)
   if (!v.is(OrganPostMetaSchema, post)) return "invalid post"
 
+  const authorType = post.author.type
+  const authorValue = post.author.value
+
+  const authorName = await (async () => {
+    if (authorType === "user") {
+      const profile = await client.getProfile(authorValue)
+      if (!profile || "errcode" in profile) return ""
+      return profile.displayname
+    } else if (authorType === "id") {
+      const room = await client.getRoom(authorValue).getName()
+      if ("errcode" in room) return ""
+      return room.name
+    }
+  })()
+
   // const stateObject = new State(state)
 
   return (
     <div>
-      <Post post={post} id={idLocalPart} />
-      <h2>Add tag:</h2>
+      {post.title && <h2>{post.title}</h2>}
+      {authorName && <h3 className="text-base font-black">{authorName}</h3>}
+      {post.timestamp && (
+        <time className="">{getContextualDate(post.timestamp)}</time>
+      )}
+      {post.body && <p className="my-4">{post.body}</p>}
+      {/* <Post post={post} id={idLocalPart} /> */}
       <Form postId={roomId} />
     </div>
   )

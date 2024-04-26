@@ -18,11 +18,11 @@ import { FollowButton } from "@/components/ui/FollowButton"
 import { is, object, string } from "valibot"
 import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 import { IfRoomMember } from "@/components/IfRoomMember"
-import { client } from "@/lib/client"
+import { noCacheClient as client } from "@/lib/client"
 import { Events } from "@/components/ui/Events"
 import { AvatarFull } from "./AvatarFull"
-import { getChild } from "@/app/tag/[tag]/page"
-import { Child } from "@/components/ui/ChildrenCarousel"
+import { getChild } from "@/lib/getChild"
+import { Child } from "@/lib/getChild"
 
 export default async function OrgSlugPage({
   params,
@@ -94,45 +94,49 @@ export default async function OrgSlugPage({
 
   return (
     <>
-      <div className="my-2 mb-4 flex w-full flex-col gap-4">
-        <div className={`flex w-full ${avatarUrl ? "gap-4" : ""}`}>
-          <Suspense fallback={<div>loading...</div>}>
-            {avatarUrl && <AvatarFull url={avatarUrl} />}
-          </Suspense>
-          {/* <div className="flex items-end justify-between gap-2 sm:grow"> */}
-          <h2 className="text-3xl font-bold lg:text-4xl">{name}</h2>
-          {/* </div> */}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
+      <div
+        className={`flex w-4/5 py-6 -top-4 mb-4 z-10 bg-white sm:fixed ${
+          avatarUrl ? "gap-4" : ""
+        }`}>
+        <Suspense fallback={<div>loading...</div>}>
+          {avatarUrl && <AvatarFull url={avatarUrl} />}
+        </Suspense>
+        <h2 className="my-0 text-3xl font-bold lg:text-4xl ">{name}</h2>
+      </div>
+
+      <main className="flex flex-col sm:flex-row gap-4 lg:gap-6 sm:mt-14 z-0">
+        <section className="my-2 mb-4 flex flex-col gap-4 shrink sm:fixed">
           <IfRoomMember slug={getIdLocalPart(roomId)}>
-            <Dropdown>
-              <DropdownItem href={`/id/${slug}/notifications`}>
-                Notification Settings
-              </DropdownItem>
-              <IfModerator slug={getIdLocalPart(roomId)}>
-                <DropdownItem href={`/id/${slug}/edit`}>
-                  Page Settings
+            <div className="flex flex-wrap items-center gap-2">
+              <Dropdown>
+                <DropdownItem href={`/id/${slug}/notifications`}>
+                  Notification Settings
                 </DropdownItem>
-              </IfModerator>
-            </Dropdown>
+                <IfModerator slug={getIdLocalPart(roomId)}>
+                  <DropdownItem href={`/id/${slug}/edit`}>
+                    Page Settings
+                  </DropdownItem>
+                </IfModerator>
+              </Dropdown>
+            </div>
           </IfRoomMember>
           {/* <FollowButton slug={getIdLocalPart(roomId)} />
           <span className="text-xs uppercase opacity-60">
             <strong>{memberCount - 1}</strong> followers
           </span> */}
-        </div>
-      </div>
 
-      <main className="flex w-full flex-col gap-4 xl:gap-6 ">
-        <section className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-xl">
-          <p className="whitespace-pre-line text-sm italic lg:opacity-80">
-            {is(object({ topic: string() }), topic?.content) &&
-              topic.content.topic}
-          </p>
-          <Contact contactKVs={contactKVs} />
+          <div className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-sm">
+            <p className="whitespace-pre-line text-sm italic lg:opacity-80 pr-4">
+              {is(object({ topic: string() }), topic?.content) &&
+                topic.content.topic}
+            </p>
+            <Contact contactKVs={contactKVs} />
+          </div>
+
+          <Events postIds={postIds || []} />
         </section>
 
-        <section className="flex w-full flex-col gap-4">
+        <section className="flex w-full flex-col gap-4 xl:gap-6 grow pt-1 sm:pl-96">
           {/* <EmailSubscribe slug={slug} dismissable /> */}
 
           <Suspense fallback={<div>loading...</div>}>
@@ -141,10 +145,6 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <h2>Events</h2>
-          <Events postIds={postIds || []} />
-
-          <h2>Posts</h2>
           <Posts posts={posts || []} />
         </section>
       </main>

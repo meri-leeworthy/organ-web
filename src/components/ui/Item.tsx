@@ -13,7 +13,7 @@ import Link from "next/link"
 // import { Event } from "@/components/ui/Events"
 import { Card } from "./card"
 import { organPageEventMeta } from "@/types/event"
-import { Child } from "@/components/ui/ChildrenCarousel"
+import { Child } from "@/lib/getChild"
 
 export function Item({ id }: { id: Child }) {
   return (

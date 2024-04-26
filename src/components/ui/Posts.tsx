@@ -18,7 +18,7 @@ import {
 } from "./FlexGridList"
 import Link from "next/link"
 import { organPostMeta } from "@/types/post"
-import { Child } from "./ChildrenCarousel"
+import { Child } from "@/lib/getChild"
 
 export function Posts({ posts }: { posts: Child[] }) {
   console.log("postIds", posts)

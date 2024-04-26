@@ -1,5 +1,6 @@
 "use client"
 
+import { Child } from "@/lib/getChild"
 import { FlexGridListItem } from "@/components/ui/FlexGridList"
 import {
   Carousel,
@@ -10,17 +11,6 @@ import {
 } from "@/components/ui/carousel"
 import { getContextualDate, getIdLocalPart } from "@/lib/utils"
 import Link from "next/link"
-
-export type Child = {
-  roomId: string
-  name: string
-  topic: string
-  roomType: string
-  pageType: string
-  alias?: string
-  eventMeta?: any
-  timestamp?: number
-}
 
 export function ChildrenCarousel({
   spaceChildren,
@@ -50,7 +40,7 @@ export function ChildrenCarousel({
 
 function CarouselChild({ child }: { child: Child }) {
   const date =
-    "eventMeta" in child && getContextualDate(parseInt(child.eventMeta?.start))
+    "eventMeta" in child && getContextualDate(parseInt(child.eventMeta!.start))
   const link =
     "eventMeta" in child
       ? `/event/${getIdLocalPart(child.roomId)}`
@@ -59,8 +49,8 @@ function CarouselChild({ child }: { child: Child }) {
     <Link href={link} key={child.roomId}>
       <FlexGridListItem>
         {date && <time className="text-xs uppercase">{date}</time>}
-        <h3 className="font-medium py-1">{child.name}</h3>
-        <p>{child.topic}</p>
+        <h3 className="font-black text-base">{child.name}</h3>
+        <p className="text-sm">{child.topic}</p>
       </FlexGridListItem>
     </Link>
   )

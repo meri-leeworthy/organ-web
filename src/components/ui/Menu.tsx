@@ -16,23 +16,29 @@ export function Menu() {
   const client = useClient()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="focus-visible:outline-green-300 focus-visible:outline-dashed focus-visible:outline-4 p-1">
+      <DropdownMenuTrigger className="focus-visible:outline-green-300 focus-visible:outline-dashed  p-1">
         <IconMenu />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="rounded-none shadow-none drop-shadow-hard border-black">
-        <DropdownMenuItem onSelect={() => router.push("/")}>
+        className="rounded-none shadow-none drop-shadow-hard border-black min-w-[5rem]">
+        <DropdownMenuItem
+          onSelect={() => router.push("/")}
+          className="justify-end">
           Home
         </DropdownMenuItem>
         <DropdownMenuGroup>
           {client ? (
             <>
-              <DropdownMenuItem>My Account</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem className="justify-end">
+                My Account
+              </DropdownMenuItem>
+              <DropdownMenuItem className="justify-end">
+                Logout
+              </DropdownMenuItem>
             </>
           ) : (
-            <DropdownMenuItem>Login</DropdownMenuItem>
+            <DropdownMenuItem className="justify-end">Login</DropdownMenuItem>
           )}
         </DropdownMenuGroup>
       </DropdownMenuContent>
