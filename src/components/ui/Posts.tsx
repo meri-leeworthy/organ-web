@@ -102,7 +102,7 @@ async function TextPost({ post }: { post: Child }) {
       <FlexListItem>
         {post.timestamp && (
           <time className="text-xs uppercase">
-            {getContextualDate(post.timestamp)}
+            {getContextualDate(post.postMeta!.timestamp)}
           </time>
         )}
         <p>{post.topic}</p>
