@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { State } from "simple-matrix-sdk"
 import { twMerge } from "tailwind-merge"
-import { SubTypes } from "@/types/utilities"
+import { SubTypes } from "@/types/utils"
 import { RoomTypes } from "@/types/schema"
 
 const { MATRIX_BASE_URL } = process.env
