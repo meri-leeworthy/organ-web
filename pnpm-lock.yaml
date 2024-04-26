@@ -43,7 +43,7 @@ dependencies:
     version: 18.3.0(react@18.3.0)
   simple-matrix-sdk:
     specifier: ^0.4.3
-    version: 0.4.7
+    version: link:../simple-matrix-sdk
   tailwind-merge:
     specifier: ^2.2.1
     version: 2.3.0
@@ -3112,12 +3112,6 @@ packages:
   /signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
-
-  /simple-matrix-sdk@0.4.7:
-    resolution: {integrity: sha512-nAmzbfxNC5kiu3BWXROi0NaT/cwn7aSDRFppoNTHGCRIyOQJKzusFfUtZ7uv+DFT8Eu9ltKkiMF5mRlaI4irKQ==}
-    dependencies:
-      valibot: 0.25.0
-    dev: false
 
   /slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}

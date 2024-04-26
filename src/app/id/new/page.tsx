@@ -19,6 +19,7 @@ import {
   organSpaceType,
   organSpaceTypeValue,
 } from "@/types/schema"
+import { normalizeName } from "@/app/as/utils"
 
 const NewRoomPage = () => {
   const client = useClient()
@@ -60,6 +61,7 @@ const NewRoomPage = () => {
         creation_content: {
           type: "m.space",
         },
+        room_alias_name: `relay_id_${normalizeName(name)}`,
         initial_state: [
           {
             type: "m.room.power_levels",
@@ -107,7 +109,7 @@ const NewRoomPage = () => {
       const join = await joinRoom(room.roomId, "bot")
       console.log("join", join)
 
-      router.push(`/id/${slug(room?.roomId)}`)
+      router.push(`/id/${normalizeName(name)}`)
     } catch (error) {
       console.error(error)
       const strErr =

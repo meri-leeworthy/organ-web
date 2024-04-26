@@ -111,7 +111,7 @@ export const NewPost = ({ slug }: { slug: string }) => {
     //         location: place
     //       }
 
-    const newPostRoomResult = client?.createRoom({
+    const newPostRoomResult = await client?.createRoom({
       name: title,
       topic: content,
       creation_content: {
@@ -158,6 +158,18 @@ export const NewPost = ({ slug }: { slug: string }) => {
         },
         {
           type: organPostMeta,
+          content: {
+            title,
+            content,
+            timestamp: new Date().valueOf(),
+            author: {
+              type: "id",
+              value: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
+            },
+          },
+        },
+        {
+          type: organPostMeta,
           state_key: "",
           content: {
             title,
@@ -169,9 +181,30 @@ export const NewPost = ({ slug }: { slug: string }) => {
             timestamp: new Date().valueOf(),
           },
         },
+        {
+          type: "m.space.parent",
+          state_key: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
+          content: {
+            via: [process.env.NEXT_PUBLIC_SERVER_NAME],
+          },
+        },
       ],
       invite: ["@_relay_bot:" + process.env.NEXT_PUBLIC_SERVER_NAME],
     })
+
+    if (
+      !newPostRoomResult ||
+      (typeof newPostRoomResult === "object" && "errcode" in newPostRoomResult)
+    )
+      return newPostRoomResult
+
+    const adoptionResult = await room?.sendStateEvent(
+      "m.space.child",
+      { via: [process.env.NEXT_PUBLIC_SERVER_NAME] },
+      `${newPostRoomResult.roomId}`
+    )
+
+    console.log("adoptionResult", adoptionResult)
 
     // const result = await room?.sendMessage(postEvent)
 
@@ -186,12 +219,12 @@ export const NewPost = ({ slug }: { slug: string }) => {
     //   })
     // })
 
-    location.reload()
+    // location.reload()
     // redirect(`/orgs/${params.slug}`)
   }
 
   return (
-    <div className="border-primary mb-6 flex flex-col gap-2 rounded-lg border bg-white p-3 drop-shadow-sm">
+    <div className="border-primary mb-6 flex flex-col gap-2 max-w-xl p-3 drop-shadow-sm">
       {imageSrcs[0] && (
         <div className="flex grow items-center justify-center">
           <img

@@ -25,6 +25,8 @@ export async function getChild(
     return null
   }
 
+  console.log("state", state)
+
   const child: Record<string, any> = { roomId }
 
   alias && (child["alias"] = alias)

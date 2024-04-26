@@ -10,6 +10,7 @@ import {
 import { useClient } from "@/hooks/useClient"
 import { IconMenu } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
+import { handleLogout } from "./LoginLogout"
 
 export function Menu() {
   const router = useRouter()
@@ -30,15 +31,23 @@ export function Menu() {
         <DropdownMenuGroup>
           {client ? (
             <>
-              <DropdownMenuItem className="justify-end">
+              <DropdownMenuItem
+                className="justify-end"
+                onSelect={() => router.push("/account")}>
                 My Account
               </DropdownMenuItem>
-              <DropdownMenuItem className="justify-end">
+              <DropdownMenuItem
+                className="justify-end"
+                onSelect={() => handleLogout()}>
                 Logout
               </DropdownMenuItem>
             </>
           ) : (
-            <DropdownMenuItem className="justify-end">Login</DropdownMenuItem>
+            <DropdownMenuItem
+              className="justify-end"
+              onSelect={() => router.push("/login")}>
+              Login
+            </DropdownMenuItem>
           )}
         </DropdownMenuGroup>
       </DropdownMenuContent>

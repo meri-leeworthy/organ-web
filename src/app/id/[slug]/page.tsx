@@ -56,6 +56,7 @@ export default async function OrgSlugPage({
 
   const spaceChildren = await room.getHierarchy({ max_depth: 1 })
   console.log("spaceChildren", spaceChildren)
+  // console.log("sc", spaceChildren?[0].children_state)
 
   spaceChildren?.shift()
 
@@ -71,9 +72,9 @@ export default async function OrgSlugPage({
       : []
   ).filter(Boolean) as Child[]
 
-  const posts = allChildren.filter(
-    child => "roomType" in child && child["roomType"] === "post"
-  )
+  // const posts = allChildren.filter(
+  //   child => "roomType" in child && child["roomType"] === "post"
+  // )
 
   const imageUri = is(object({ url: string() }), avatar?.content)
     ? avatar.content.url
@@ -84,13 +85,13 @@ export default async function OrgSlugPage({
     serverName && mediaId
       ? `${MATRIX_BASE_URL}/_matrix/media/r0/download/${serverName}/${mediaId}`
       : undefined
-  const contactKVs = await fetchContactKVs(room)
+  // const contactKVs = await fetchContactKVs(room)
 
-  const members = await room.getMembers()
-  // console.log("members", members)
+  // const members = await room.getMembers()
+  // // console.log("members", members)
 
-  // note that email subscribers should be counted too
-  const memberCount = ("chunk" in members && members.chunk.length) || 0
+  // // note that email subscribers should be counted too
+  // const memberCount = ("chunk" in members && members.chunk.length) || 0
 
   return (
     <>
@@ -106,7 +107,7 @@ export default async function OrgSlugPage({
 
       <main className="flex flex-col sm:flex-row gap-4 lg:gap-6 sm:mt-14 z-0">
         <section className="my-2 mb-4 flex flex-col gap-4 shrink sm:fixed">
-          <IfRoomMember slug={getIdLocalPart(roomId)}>
+          {/* <IfRoomMember slug={getIdLocalPart(roomId)}>
             <div className="flex flex-wrap items-center gap-2">
               <Dropdown>
                 <DropdownItem href={`/id/${slug}/notifications`}>
@@ -119,21 +120,21 @@ export default async function OrgSlugPage({
                 </IfModerator>
               </Dropdown>
             </div>
-          </IfRoomMember>
+          </IfRoomMember> */}
           {/* <FollowButton slug={getIdLocalPart(roomId)} />
           <span className="text-xs uppercase opacity-60">
             <strong>{memberCount - 1}</strong> followers
           </span> */}
 
-          <div className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-sm">
+          {/* <div className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-sm">
             <p className="whitespace-pre-line text-sm italic lg:opacity-80 pr-4">
               {is(object({ topic: string() }), topic?.content) &&
                 topic.content.topic}
             </p>
             <Contact contactKVs={contactKVs} />
-          </div>
+          </div> */}
 
-          <Events postIds={postIds || []} />
+          {/* <Events postIds={postIds || []} /> */}
         </section>
 
         <section className="flex w-full flex-col gap-4 xl:gap-6 grow pt-1 sm:pl-96">
@@ -145,7 +146,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          <Posts posts={posts || []} />
+          {/* <Posts posts={posts || []} /> */}
         </section>
       </main>
     </>

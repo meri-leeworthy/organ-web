@@ -31,14 +31,14 @@ const Login = () => {
 }
 
 const Logout = () => {
-  const handleLogout = () => {
-    if (typeof window === "undefined") return null
-    localStorage.removeItem(ACCESSTOKEN_STORAGE_KEY)
-    localStorage.removeItem(USERID_STORAGE_KEY)
-    location.reload()
-  }
-
   return <Button onClick={handleLogout}>logout</Button>
 }
 
 export default LoginLogout
+
+export const handleLogout = () => {
+  if (typeof window === "undefined") return null
+  localStorage.removeItem(ACCESSTOKEN_STORAGE_KEY)
+  localStorage.removeItem(USERID_STORAGE_KEY)
+  location.reload()
+}

@@ -39,9 +39,9 @@ export default async function Home() {
 
   const postBusEvents = await postsBus.getMessages({ limit: 30, dir: "b" })
   if ("errcode" in postBusEvents) return postBusEvents
-  const postIds = postBusEvents.chunk.map(event =>
-    props(event, "content", "id")
-  )
+  const postIds = postBusEvents.chunk
+    .map(event => props(event, "content", "id"))
+    .filter(Boolean)
 
   const posts = (
     await Promise.all(postIds.map(async id => await getChild(id as string)))
