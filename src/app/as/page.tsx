@@ -20,6 +20,7 @@ import {
   SeedEvents,
   SeedPosts,
   SeedAll,
+  CreatePostsBus,
 } from "./Forms"
 const { NODE_ENV, HOME_SPACE, TAG_INDEX } = process.env
 
@@ -56,6 +57,9 @@ export default async function ApplicationServiceTest() {
           <SeedEvents />
           <p>Seed posts</p>
           <SeedPosts />
+
+          <p>Create posts bus</p>
+          <CreatePostsBus />
           <p>
             Create 1000 users <br />
             Join each user to: <br />
