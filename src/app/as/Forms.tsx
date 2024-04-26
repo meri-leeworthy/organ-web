@@ -14,12 +14,13 @@ import {
   setAlias,
   createRoom,
   createTagIndexSpace,
-  seedTags,
-  seedIDPages,
-  seedEvents,
   unsetTagIndexSpace,
-  seedPosts,
+  createPostsBus,
 } from "./actions"
+import { seedTags } from "./seedTags"
+import { seedIDPages } from "./seedIDPages"
+import { seedEvents } from "./seedEvents"
+import { seedPosts } from "./seedPosts"
 import React, { Suspense, useState, useTransition } from "react"
 import { getOrCreateMailboxId } from "@/lib/sendEmail"
 import { getSecretFromRoom, storeSecretInRoom } from "@/lib/roomSecretStore"
@@ -573,6 +574,12 @@ export function SeedAll() {
       setResult(tempResult)
     })
 
+    const postsBusResult = await createPostsBus()
+    tempResult.push(postsBusResult)
+    startTransition(() => {
+      setResult(tempResult)
+    })
+
     const seedTagsResult = await seedTags()
     tempResult.push(seedTagsResult)
     startTransition(() => {
@@ -606,10 +613,26 @@ export function SeedAll() {
       <Button type="submit">seed all</Button>
       {isPending && <p>loading...</p>}
       <Progress
-        value={Math.round(100 * (result.length / 6))}
+        value={Math.round(100 * (result.length / 7))}
         max={6}
         className="my-2"
       />
+      <Pre> {JSON.stringify(result, null, 3)}</Pre>
+    </form>
+  )
+}
+
+export function CreatePostsBus() {
+  const [result, setResult] = useState({})
+
+  return (
+    <form
+      action={async () => {
+        const result = await createPostsBus()
+        console.log("result", result)
+        setResult(result)
+      }}>
+      <Button type="submit">create posts bus</Button>
       <Pre> {JSON.stringify(result, null, 3)}</Pre>
     </form>
   )

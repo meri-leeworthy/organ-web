@@ -4,7 +4,12 @@ import { Client, CreateRoomOpts, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
-import { organSpaceType, organSpaceTypeValue } from "@/types/schema"
+import {
+  organRoomType,
+  organRoomTypeTree,
+  organSpaceType,
+  organSpaceTypeValue,
+} from "@/types/schema"
 import { noCacheClient as client } from "@/lib/client"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
@@ -179,4 +184,28 @@ export async function unsetTagIndexSpace() {
   return await client
     .getRoom(roomId)
     .deleteAlias("#relay_tagindex:" + SERVER_NAME)
+}
+
+export async function createPostsBus() {
+  const room = await client.createRoom({
+    name: "Posts",
+    room_alias_name: "relay_bus_posts",
+    initial_state: [
+      {
+        type: organRoomType,
+        content: {
+          value: organRoomTypeTree.bus,
+        },
+      },
+    ],
+  })
+  console.log("room", room)
+  if ("errcode" in room) {
+    const roomId = await client.getRoomIdFromAlias(
+      "#relay_bus_posts:" + SERVER_NAME
+    )
+    console.log("roomId", roomId)
+    return { message: "Posts Bus already created", roomId }
+  }
+  return { message: "Posts bus created", roomId: room.roomId }
 }

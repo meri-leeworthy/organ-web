@@ -1,18 +1,15 @@
 "use server"
+
 import { ClientEventOutput } from "simple-matrix-sdk"
-import { noCacheClient as client } from "@/lib/client"
+import { noCacheClient as client, getTagIndex } from "@/lib/client"
 import { props } from "@/lib/utils"
 import { organRoomTypeTree } from "@/types/schema"
 
 const { SERVER_NAME } = process.env
 
 export async function getTagIndexChildren() {
-  const tagIndexRoomId = await client.getRoomIdFromAlias(
-    "#relay_tagindex:" + SERVER_NAME
-  )
-  if (typeof tagIndexRoomId === "object" && "errcode" in tagIndexRoomId)
-    return tagIndexRoomId
-  const tagIndex = client.getRoom(tagIndexRoomId)
+  const tagIndex = await getTagIndex(client)
+  if ("errcode" in tagIndex) return tagIndex
 
   // get a list of all the tag rooms from tag index
   const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
@@ -72,7 +69,10 @@ export async function getIdsMap() {
 export async function getEventsMap() {
   const tagIndexChildren = await getTagIndexChildren()
   if ("errcode" in tagIndexChildren) return tagIndexChildren
+
   const tagIds = tagIndexChildren.map(tag => tag.room_id)
+
+  console.log("tagIds", tagIds)
 
   // create a set of event room IDs
   const tagChildrenSet = new Set<string>()
@@ -81,6 +81,8 @@ export async function getEventsMap() {
       const tagSpace = client.getRoom(tag)
 
       const tagChildren = await tagSpace.getHierarchy({ max_depth: 1 })
+
+      console.log("tagChildren lenght", tagChildren?.length)
       tagChildren?.shift()
 
       tagChildren?.forEach(tagChild => {
@@ -117,6 +119,8 @@ export async function getEventsMap() {
       console.error(e)
     }
   }
+
+  console.log("eventsMap", eventsMap)
 
   return eventsMap
 }

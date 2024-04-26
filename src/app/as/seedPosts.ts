@@ -4,13 +4,14 @@ import {
   organRoomTypeTree,
   organRoomType,
   organRoomTypeValue,
+  organBusPost,
 } from "@/types/schema"
 import { organPostMeta } from "@/types/post"
 import posts from "./seed/posts.json"
 import eventposts from "./seed/event-posts.json"
 import { noCacheClient as client } from "@/lib/client"
 import { getEventsMap, getTagsMap, getIdsMap } from "./getMaps"
-import { getTimestampWithinSixMonths, getRandomTag } from "./utils"
+import { getTimestampWithinLastYear, getRandomTag } from "./utils"
 
 const { SERVER_NAME } = process.env
 
@@ -22,6 +23,13 @@ export async function seedPosts() {
   const idsMap = await getIdsMap()
   if ("errcode" in idsMap) return idsMap
 
+  const postsBusId = await client.getRoomIdFromAlias(
+    "#relay_bus_posts:" + SERVER_NAME
+  )
+  if (typeof postsBusId === "object" && "errcode" in postsBusId)
+    return postsBusId
+  const postsBus = client.getRoom(postsBusId)
+
   const eventsMap = await getEventsMap()
   console.log("continuing eventsMap", eventsMap)
   if (!eventsMap || "errcode" in eventsMap) return eventsMap
@@ -32,7 +40,7 @@ export async function seedPosts() {
       const id = eventsMap.get(post.event)
       if (!id) return { errcode: "ID not found" }
 
-      const timestamp = getTimestampWithinSixMonths()
+      const timestamp = getTimestampWithinLastYear()
 
       const postRoom = await client.createRoom({
         topic: post.text,
@@ -94,6 +102,8 @@ export async function seedPosts() {
 
       if ("errcode" in postRoom) return postRoom
 
+      await postsBus.sendEvent(organBusPost, { id: postRoom.roomId })
+
       // add the post as child to the id space
       const idSpace = client.getRoom(id)
       await idSpace.sendStateEvent(
@@ -110,13 +120,13 @@ export async function seedPosts() {
     result => typeof result === "string"
   ).length
 
-  const createPostsResults = await Promise.all(
+  const createPostsResults: any[] = await Promise.all(
     posts.map(async post => {
       // console.log(post)
       const id = idsMap.get(post.id)
       if (!id) return { errcode: "ID not found" }
 
-      const timestamp = getTimestampWithinSixMonths()
+      const timestamp = getTimestampWithinLastYear()
 
       const postRoom = await client.createRoom({
         topic: post.text,
@@ -178,6 +188,8 @@ export async function seedPosts() {
 
       if ("errcode" in postRoom) return postRoom
 
+      await postsBus.sendEvent(organBusPost, { id: postRoom.roomId })
+
       // add the post as child to the id space
       const idSpace = client.getRoom(id)
       await idSpace.sendStateEvent(
@@ -189,6 +201,8 @@ export async function seedPosts() {
       return postRoom.roomId
     })
   )
+
+  console.log("createEventsPostsResults", createEventsPostsResults)
 
   const createPostsSuccessCount = createPostsResults.filter(
     result => typeof result === "string"
