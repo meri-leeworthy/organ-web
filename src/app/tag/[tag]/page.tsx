@@ -2,14 +2,14 @@ import { getTagRoomId } from "@/app/tag/actions"
 import { client } from "@/lib/client"
 import { IconTag } from "@tabler/icons-react"
 import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
-import { Child } from "../../../lib/getChild"
-import { FlexGridList } from "@/components/ui/FlexGridList"
-import { Item } from "@/components/ui/Item"
+// import { FlexGridList } from "@/components/ui/FlexGridList"
+// import { Item } from "@/components/ui/Item"
 import { Posts } from "@/components/ui/Posts"
-import { getChild } from "../../../lib/getChild"
+import { Child, getChild } from "@/lib/getChild"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
+  if (!tag) return null
 
   const tagRoomId = await getTagRoomId(tag)
   if (typeof tagRoomId === "object" && "errcode" in tagRoomId)
