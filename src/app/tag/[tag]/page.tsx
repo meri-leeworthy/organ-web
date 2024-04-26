@@ -35,7 +35,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
           )
         )
       : []
-  ).filter(Boolean) as Child[]
+  ).filter(child => child !== null) as Child[]
 
   const events = allChildren.filter(
     child =>
