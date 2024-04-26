@@ -1,6 +1,6 @@
 import * as v from "valibot"
 import { OrganLocationSchema } from "./properties"
-import { StateEvent } from "./utilities"
+import { StateEvent } from "./utils"
 
 // Event
 

@@ -67,6 +67,7 @@ export const organRoomTypeTree = {
     image: "image",
     event: "event",
   },
+  bus: "bus",
 } as const
 
 export type RoomTypes = keyof typeof organRoomTypeTree
@@ -75,3 +76,5 @@ export type RoomTypes = keyof typeof organRoomTypeTree
 
 export const organRoomUserNotifications = "organ.room.user.notifications"
 export const organRoomSecretEmail = "organ.room.secret.email"
+export const organBusPost = "organ.bus.post"
+export type OrganBusPostContent = { id: string }

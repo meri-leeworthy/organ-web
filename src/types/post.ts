@@ -2,8 +2,8 @@ import * as v from "valibot"
 
 // Post
 
-import { OrganAuthor, OrganAuthorSchema } from "./properties"
-import { StateEvent } from "./utilities"
+import { OrganAuthorSchema } from "./properties"
+import { StateEvent } from "./utils"
 
 export const organPostMeta = "organ.post.meta"
 
