@@ -1,4 +1,4 @@
-import { Chunk } from "@/types/utilities"
+import { Chunk } from "@/types/utils"
 
 export function getReactions(chunk: Chunk) {
   return chunk

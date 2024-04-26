@@ -8,7 +8,7 @@ import {
   organSpaceType,
   organSpaceTypeValue,
 } from "@/types/schema"
-import { StateEvent } from "@/types/utilities"
+import { StateEvent } from "@/types/utils"
 import { Client, Room } from "simple-matrix-sdk"
 
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
