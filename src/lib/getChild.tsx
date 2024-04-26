@@ -1,5 +1,4 @@
 import { client } from "@/lib/client"
-import { Child } from "./getChild"
 import { props } from "@/lib/utils"
 import { OrganPageEventMeta, organPageEventMeta } from "@/types/event"
 import {
