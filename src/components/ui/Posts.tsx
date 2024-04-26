@@ -97,14 +97,35 @@ async function TextPost({ post }: { post: Child }) {
   // if (typeof body !== "string" || typeof timestamp !== "number")
   //   return "no content"
 
+  const authorType = post.postMeta!.author.type
+  const authorValue = post.postMeta!.author.value
+
+  const authorName = await (async () => {
+    if (authorType === "user") {
+      const profile = await client.getProfile(authorValue)
+      if (!profile || "errcode" in profile) return ""
+      return profile.displayname
+    } else if (authorType === "id") {
+      const room = await client.getRoom(authorValue).getName()
+      if ("errcode" in room) return ""
+      return room.name
+    }
+  })()
+
   return (
     <Link href={`/post/${getIdLocalPart(post.roomId)}`}>
       <FlexListItem>
-        {post.timestamp && (
-          <time className="text-xs uppercase">
-            {getContextualDate(post.postMeta!.timestamp)}
-          </time>
+        {post.postMeta!.title && (
+          <h2 className="font-serif">{post.postMeta!.title}</h2>
         )}
+        <div className="flex items-baseline gap-2">
+          {authorName && <h3 className="font-medium text-sm">{authorName}</h3>}
+          {post.timestamp && (
+            <time className="text-xs uppercase">
+              {getContextualDate(post.postMeta!.timestamp)}
+            </time>
+          )}
+        </div>
         <p>{post.topic}</p>
       </FlexListItem>
     </Link>

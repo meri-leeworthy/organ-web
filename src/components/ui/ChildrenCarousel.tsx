@@ -49,7 +49,7 @@ function CarouselChild({ child }: { child: Child }) {
     <Link href={link} key={child.roomId}>
       <FlexGridListItem>
         {date && <time className="text-xs uppercase">{date}</time>}
-        <h3 className="font-black text-base">{child.name}</h3>
+        <h3 className="font-special font-bold text-base">{child.name}</h3>
         <p className="text-sm">{child.topic}</p>
       </FlexGridListItem>
     </Link>

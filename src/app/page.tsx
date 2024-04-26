@@ -11,6 +11,7 @@ import { Child } from "../lib/getChild"
 import { getEventsMap, getIdsMap } from "./as/getMaps"
 import { getChild } from "../lib/getChild"
 import { props } from "@/lib/utils"
+import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 
 const { SERVER_NAME } = process.env
 
@@ -87,10 +88,11 @@ export default async function Home() {
   return (
     <main className="flex w-full flex-col gap-4">
       {/* <WelcomeEmailSignup /> */}
-      <h3 className="mt-2 text-lg font-medium">Recent posts</h3>
+      <h1 className="font-black mb-2">organ</h1>
+      <ChildrenCarousel spaceChildren={sortedChildren as Child[]} />
+      <h3 className="text-xl font-bold">recent..</h3>
       <Posts posts={posts as Child[]} />
-      <h3 className="mt-6 text-lg font-medium">Tags</h3>
-      <FlexGridList>
+      {/* <FlexGridList>
         {sortedChildren?.map((child, i) => (
           <FlexGridListItem key={i}>
             <Link
@@ -107,7 +109,7 @@ export default async function Home() {
             </Link>
           </FlexGridListItem>
         ))}
-      </FlexGridList>
+      </FlexGridList> */}
     </main>
   )
 }

@@ -12,7 +12,7 @@ export function FlexGridListItem({ children }: { children: React.ReactNode }) {
 }
 
 export function FlexList({ children }: { children: React.ReactNode }) {
-  return <ul className="flex flex-col items-start gap-4">{children}</ul>
+  return <ul className="flex flex-col items-start gap-6">{children}</ul>
 }
 
 export function FlexListItem({ children }: { children: React.ReactNode }) {

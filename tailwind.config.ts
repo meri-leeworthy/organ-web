@@ -20,6 +20,8 @@ const config = {
     fontFamily: {
       sans: ["WorkSans", "sans-serif"],
       body: ["Fluxisch", "sans-serif"],
+      special: ["Director", "sans-serif"],
+      serif: ["Latitude", "serif"],
     },
     extend: {
       dropShadow: {

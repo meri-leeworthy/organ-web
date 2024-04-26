@@ -114,6 +114,30 @@
     font-style: normal;
     font-display: swap;
   }
+
+  @font-face {
+    font-family: "Director";
+    src: url("../fonts/degheest/Director-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Director";
+    src: url("../fonts/degheest/Director-Bold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Latitude";
+    src: url("../fonts/degheest/Latitude-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 }
 
 @layer components {
