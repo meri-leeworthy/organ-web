@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation"
 import { is } from "valibot"
 import { ErrorSchema } from "simple-matrix-sdk"
 import { ErrorBox } from "@/components/ui/ErrorBox"
-import { slug } from "@/lib/utils"
 import { IconNorthStar } from "@tabler/icons-react"
 import { joinRoom } from "@/app/api/join/action"
 import {
@@ -106,7 +105,10 @@ const NewRoomPage = () => {
       console.log("Room creation result:", room)
       if (is(ErrorSchema, room)) throw new Error(room.error)
 
-      const join = await joinRoom(room.roomId, "bot")
+      const join = await fetch(`/api/join?roomId=${room.roomId}`)
+        .then(res => res.json())
+        .then(console.log)
+        .catch(console.error)
       console.log("join", join)
 
       router.push(`/id/${normalizeName(name)}`)
