@@ -1,18 +1,14 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
+const { TAG_INDEX, SERVER_NAME } = process.env
 
-import { noCacheFetch, normaliseTagString } from "@/lib/utils"
+import { normaliseTagString } from "@/lib/utils"
 import { organSpaceType, organSpaceTypeValue } from "@/types/schema"
-import { Client, ErrorSchema, Room } from "simple-matrix-sdk"
+import { ErrorSchema } from "simple-matrix-sdk"
 import { is } from "valibot"
+import { noCacheClient as client } from "@/lib/client"
 
-const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-  fetch: noCacheFetch,
-  params: { user_id: `@_relay_bot:${SERVER_NAME}` },
-})
-
-const index = new Room(TAG_INDEX!, client)
+const index = client.getRoom(TAG_INDEX!)
 
 export async function createTag(opts: {
   name: string
@@ -65,12 +61,15 @@ export async function createTag(opts: {
 
 export async function addTag(formData: FormData) {
   const unNormalisedTag = (formData.get("tag") as string) || ""
+  if (!unNormalisedTag) return new Error("No tag provided")
   const tag = normaliseTagString(unNormalisedTag)
 
   // a few considerations
   // 1. tags have some kind of 1-1 mapping with aliases, e.g. `climate change` <-> 'climate_change'
   // 2. only some tag strings are valid, e.g. alphanumeric only
   // 3. some tags should be 'aliases' for other tags, e.g. 'climate' and 'climate change'
+
+  console.log("tag", tag)
 
   const tagRoom = await client.createRoom({
     name: tag,
@@ -88,6 +87,8 @@ export async function addTag(formData: FormData) {
     room_alias_name: `relay_tag_${tag}`,
   })
 
+  console.log("tagRoom", tagRoom)
+
   if ("errcode" in tagRoom) return tagRoom
 
   const add = await bilateralAdoptTag(tagRoom.roomId)
@@ -101,10 +102,10 @@ export async function removeTag(tagEventId: string) {
   return await index.redactEvent(tagEventId)
 }
 
-const tagIndex = new Room(TAG_INDEX!, client)
+const tagIndex = client.getRoom(TAG_INDEX!)
 
 export async function bilateralAdoptTag(tagRoomId: string) {
-  const tagRoom = new Room(tagRoomId, client)
+  const tagRoom = client.getRoom(tagRoomId)
   const tagName = await tagRoom.getName()
 
   const tagNameString =
@@ -139,9 +140,8 @@ export async function bilateralTagAdoptPost(
   postRoomId: string,
   tagRoomId: string
 ) {
-  const tagRoom = new Room(tagRoomId, client)
-
-  const postRoom = new Room(postRoomId, client)
+  const tagRoom = client.getRoom(tagRoomId)
+  const postRoom = client.getRoom(postRoomId)
 
   // add post as child to tag space
   const tagRoomAddChild = await tagRoom.sendStateEvent(
