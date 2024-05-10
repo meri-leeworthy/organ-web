@@ -4,6 +4,7 @@ import { Form } from "./Form"
 import { Post } from "@/components/ui/Post"
 import * as v from "valibot"
 import { OrganPostMetaSchema } from "@/types/post"
+import { TextPost } from "@/components/ui/Posts"
 
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
 
@@ -19,16 +20,16 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   const postRoom = client.getRoom(roomId)
   const state = await postRoom.getState()
 
-  console.log("state", state)
+  // console.log("state", state)
 
   if ("errcode" in state) return "no state found"
 
   const roomType = state.get("organ.room.type")
   const postType = state.get("organ.post.type")
   const postText = state.get("organ.post.text")
-  console.log("roomType", roomType, "postType", postType, "postText", postText)
+  // console.log("roomType", roomType, "postType", postType, "postText", postText)
   const post = state.get("organ.post.meta")?.content
-  console.log("post", post)
+  // console.log("post", post)
   if (!v.is(OrganPostMetaSchema, post)) return "invalid post"
 
   const authorType = post.author.type
@@ -50,12 +51,16 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      {post.title && <h2>{post.title}</h2>}
-      {authorName && <h3 className="text-base font-black">{authorName}</h3>}
-      {post.timestamp && (
-        <time className="">{getContextualDate(post.timestamp)}</time>
-      )}
-      {post.body && <p className="my-4">{post.body}</p>}
+      <TextPost
+        post={{
+          roomId,
+          postMeta: post,
+          topic: post.body,
+          name: post.title || "",
+          roomType: "post",
+          timestamp: post.timestamp || 0,
+        }}
+      />
       {/* <Post post={post} id={idLocalPart} /> */}
       <Form postId={roomId} />
     </div>
