@@ -5,6 +5,8 @@ import { Suspense } from "react"
 import { Button } from "../styled"
 import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { IfLoggedIn } from "../IfLoggedIn"
+import { Dialog, DialogContent, DialogTrigger } from "./dialog"
+import { LoginForm } from "./LoginForm"
 
 const LoginLogout = () => {
   return (
@@ -20,13 +22,20 @@ const Login = () => {
   const router = useRouter()
 
   const handleLogin = () => {
-    router.push("/login")
+    // router.push("/login")
   }
 
   return (
-    <Button onClick={handleLogin} className="text-sm">
-      login
-    </Button>
+    <Dialog>
+      <DialogTrigger>
+        <Button onClick={handleLogin} className="text-sm">
+          login
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <LoginForm />
+      </DialogContent>
+    </Dialog>
   )
 }
 
