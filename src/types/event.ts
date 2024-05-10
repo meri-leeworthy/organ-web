@@ -4,19 +4,19 @@ import { StateEvent } from "./utils"
 
 // Event
 
-export const organPageEventMeta = "organ.page.event.meta"
+export const organCalEventMeta = "organ.page.event.meta"
 
-export type OrganPageEventMetaState = StateEvent<
-  typeof organPageEventMeta,
-  OrganPageEventMeta
+export type OrganCalEventMetaState = StateEvent<
+  typeof organCalEventMeta,
+  OrganCalEventMeta
 >
 
 export const OrganPageEventMetaSchema = v.object({
-  start: v.string(),
-  end: v.string(),
+  start: v.string(), // Millisecond timestamp
+  end: v.string(), // Millisecond timestamp
   allDay: v.optional(v.boolean()),
   location: v.optional(OrganLocationSchema),
   url: v.optional(v.string()),
 })
 
-export type OrganPageEventMeta = v.Output<typeof OrganPageEventMetaSchema>
+export type OrganCalEventMeta = v.Output<typeof OrganPageEventMetaSchema>

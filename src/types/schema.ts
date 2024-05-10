@@ -49,6 +49,7 @@ export const organSpaceTypeValue = {
   index: "index",
   tag: "tag",
   page: "page",
+  event: "event",
 } as const
 
 export const organRoomTypeTree = {
@@ -60,8 +61,8 @@ export const organRoomTypeTree = {
   page: {
     tag: "tag",
     id: "id",
-    event: "event",
   },
+  event: "event",
   post: {
     text: "text",
     image: "image",

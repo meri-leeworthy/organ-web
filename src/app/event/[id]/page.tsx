@@ -31,7 +31,7 @@ export default async function EventPage({
   console.log("state", state)
 
   if ("errcode" in state) return JSON.stringify(state)
-  if (!isOrganRoomType(state, "page", "event")) return "incorrect room type"
+  if (!isOrganRoomType(state, "event")) return "incorrect room type"
 
   const topicEvent = state.get("m.room.topic")
   const topic = props(topicEvent, "content", "topic")

@@ -1,9 +1,10 @@
 import { client } from "@/lib/client"
 import { props } from "@/lib/utils"
-import { OrganPageEventMeta, organPageEventMeta } from "@/types/event"
+import { OrganCalEventMeta, organCalEventMeta } from "@/types/event"
 import {
   RoomTypes,
   organPageType,
+  organRoomType,
   organRoomTypeTree,
   organSpaceType,
 } from "@/types/schema"
@@ -22,26 +23,35 @@ export async function getChild(
   const state = await client.getRoom(roomId).getState()
   if ("errcode" in state) {
     console.log("no state")
+    console.log("state", state)
     return null
   }
 
-  console.log("state", state)
+  // console.log("state", state)
+  // console.log("state.get(organSpaceType)", state.get(organSpaceType))
+  // console.log("state.get(organRoomType)", state.get(organRoomType))
 
   const child: Record<string, any> = { roomId }
+
+  if (!alias) {
+    const aliasEvent = state.get("m.room.canonical_alias")
+    const maybeAlias = props(aliasEvent, "content", "alias")
+    alias = typeof maybeAlias === "string" ? maybeAlias : undefined
+  }
 
   alias && (child["alias"] = alias)
   const nameEvent = state.get("m.room.name")
   child["name"] = props(nameEvent, "content", "name")
   const topicEvent = state.get("m.room.topic")
   child["topic"] = props(topicEvent, "content", "topic")
-  const roomTypeEvent =
-    state.get(organSpaceType) || state.get("organ.room.type")
+  const roomTypeEvent = state.get(organSpaceType) || state.get(organRoomType)
+  console.log("roomTypeEvent", roomTypeEvent)
   child["roomType"] = props(roomTypeEvent, "content", "value")
   if (child["roomType"] === "page") {
     const pageTypeEvent = state.get(organPageType)
     child["pageType"] = props(pageTypeEvent, "content", "value")
-    if (child["pageType"] === organRoomTypeTree.page.event) {
-      const eventMetaEvent = state.get(organPageEventMeta)
+    if (child["pageType"] === organRoomTypeTree.event) {
+      const eventMetaEvent = state.get(organCalEventMeta)
       child["eventMeta"] = props(eventMetaEvent, "content")
     }
   }
@@ -63,7 +73,7 @@ export type Child = {
   pageType?: SubTypes<"page">
   postType?: SubTypes<"post">
   alias?: string
-  eventMeta?: OrganPageEventMeta
+  eventMeta?: OrganCalEventMeta
   postMeta?: OrganPostMeta
   timestamp?: number
 }
