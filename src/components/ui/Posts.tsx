@@ -4,6 +4,7 @@ import {
   getContextualDate,
   getIdLocalPart,
   isOrganRoomType,
+  normaliseTagString,
   props,
   slug,
 } from "@/lib/utils"
@@ -19,9 +20,19 @@ import {
 import Link from "next/link"
 import { organPostMeta } from "@/types/post"
 import { Child } from "@/lib/getChild"
+import { IfModerator } from "../IfModerator"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu"
+import { IconDotsVertical } from "@tabler/icons-react"
+import { PostMenu } from "./PostMenu"
 
 export function Posts({ posts }: { posts: Child[] }) {
-  console.log("postIds", posts)
+  console.log("posts", posts)
 
   // get post state
 
@@ -33,7 +44,11 @@ export function Posts({ posts }: { posts: Child[] }) {
     <section className="">
       <FlexList>
         {posts.map((post, i) => {
-          return <TextPost key={i} post={post} />
+          return (
+            <Link href={`/post/${getIdLocalPart(post.roomId)}`} key={i}>
+              <TextPost post={post} />
+            </Link>
+          )
         })}
       </FlexList>
 
@@ -81,7 +96,7 @@ export function Posts({ posts }: { posts: Child[] }) {
   )
 }
 
-async function TextPost({ post }: { post: Child }) {
+export async function TextPost({ post }: { post: Child }) {
   // const room = client.getRoom(id)
   // const state = await room.getState()
   // if ("errcode" in state) return JSON.stringify(state)
@@ -113,21 +128,28 @@ async function TextPost({ post }: { post: Child }) {
   })()
 
   return (
-    <Link href={`/post/${getIdLocalPart(post.roomId)}`}>
-      <FlexListItem>
-        {post.postMeta!.title && (
-          <h2 className="font-serif">{post.postMeta!.title}</h2>
+    <FlexListItem>
+      {post.postMeta!.title && (
+        <h2 className="font-serif">{post.postMeta!.title}</h2>
+      )}
+      <div className="flex items-center gap-2">
+        {authorName && (
+          <Link href={`/id/${normaliseTagString(authorName)}`}>
+            <h3 className="font-medium text-sm">{authorName}</h3>
+          </Link>
         )}
-        <div className="flex items-baseline gap-2">
-          {authorName && <h3 className="font-medium text-sm">{authorName}</h3>}
-          {post.timestamp && (
-            <time className="text-xs uppercase">
-              {getContextualDate(post.postMeta!.timestamp)}
-            </time>
-          )}
+        {post.timestamp && (
+          <time className="text-xs uppercase">
+            {getContextualDate(post.postMeta!.timestamp)}
+          </time>
+        )}
+        <div className="ml-auto">
+          <PostMenu
+            authorSlug={getIdLocalPart(post.postMeta?.author.value || "")}
+          />
         </div>
-        <p>{post.topic}</p>
-      </FlexListItem>
-    </Link>
+      </div>
+      <p className="whitespace-pre-line">{post.topic}</p>
+    </FlexListItem>
   )
 }
