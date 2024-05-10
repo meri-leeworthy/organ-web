@@ -30,6 +30,12 @@ export default async function Home() {
     return b.children_state.length - a.children_state.length
   })
 
+  const tags = (
+    await Promise.all(
+      sortedChildren!.map(async child => await getChild(child.room_id))
+    )
+  ).filter(Boolean) as Child[]
+
   const postsBusId = await client.getRoomIdFromAlias(
     "#relay_bus_posts:" + SERVER_NAME
   )
@@ -39,12 +45,14 @@ export default async function Home() {
 
   const postBusEvents = await postsBus.getMessages({ limit: 30, dir: "b" })
   if ("errcode" in postBusEvents) return postBusEvents
-  const postIds = postBusEvents.chunk
+  const postIdsAndAliases = postBusEvents.chunk
     .map(event => props(event, "content", "id"))
     .filter(Boolean)
 
   const posts = (
-    await Promise.all(postIds.map(async id => await getChild(id as string)))
+    await Promise.all(
+      postIdsAndAliases.map(async id => await getChild(id as string))
+    )
   )
     .filter(Boolean)
     .sort((a, b) => b?.postMeta?.timestamp! - a?.postMeta?.timestamp!)
@@ -89,7 +97,7 @@ export default async function Home() {
     <main className="flex w-full flex-col gap-4">
       {/* <WelcomeEmailSignup /> */}
       <h1 className="font-black mb-2">organ</h1>
-      <ChildrenCarousel spaceChildren={sortedChildren as Child[]} />
+      <ChildrenCarousel spaceChildren={tags} />
       <h3 className="text-xl font-bold">recent..</h3>
       <Posts posts={posts as Child[]} />
       {/* <FlexGridList>
