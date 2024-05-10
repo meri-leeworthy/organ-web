@@ -1,8 +1,9 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
+const { SERVER_NAME } = process.env
 
 import { bilateralTagAdoptPost } from "@/app/tag/actions"
+import { client } from "@/lib/client"
 import { normaliseTagString } from "@/lib/utils"
 import { organPostMeta } from "@/types/post"
 import {
@@ -11,12 +12,6 @@ import {
   organRoomTypeTree,
   organRoomTypeValue,
 } from "@/types/schema"
-import { Client, Room } from "simple-matrix-sdk"
-
-const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-  fetch,
-  params: { user_id: `@_relay_bot:${SERVER_NAME}` },
-})
 
 // const index = new Room(TAG_INDEX!, client)
 
@@ -64,8 +59,12 @@ export async function newPost(formData: FormData) {
 // }
 
 export async function addTagToPost(formData: FormData) {
-  const tag = normaliseTagString(formData.get("tag") as string)
+  const tag = normaliseTagString((formData.get("tag") as string) || "")
+  if (!tag) return { errcode: "M_INVALID_TAG" }
   const postRoomId = formData.get("postId") as string
+  if (!postRoomId) return { errcode: "M_INVALID_POST" }
+
+  console.log("tag", tag, "postRoomId", postRoomId)
 
   // check if tag space already exists
 
@@ -74,11 +73,15 @@ export async function addTagToPost(formData: FormData) {
   console.log(`alias "${alias}"`)
 
   const tagRoomId = await client.getRoomIdFromAlias(alias)
+  console.log("tagRoomId", tagRoomId)
   if (typeof tagRoomId === "object" && "errcode" in tagRoomId) return tagRoomId
 
-  const adoptionResult = await bilateralTagAdoptPost(postRoomId, tagRoomId)
-
-  return adoptionResult
+  // try {
+  //   const adoptionResult = await bilateralTagAdoptPost(postRoomId, tagRoomId)
+  //   return adoptionResult
+  // } catch (e) {
+  //   return e
+  // }
 }
 
 export async function createPost(opts: {
