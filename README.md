@@ -50,7 +50,10 @@ For development purposes, you can seed the database with some test data. This ca
 
 ## TODO
 
-- [ ] Homepage hits error when run against prod server
+- [ ] Some forms should be modal
+  - [ ] Create a new post
+  - [ ] Create a new event
+  - [ ] Create a new page
 - [ ] Event pages don't show good UI when there are no posts
 - [ ] Post pages need building out
   - [ ] Nice typography thinking about how to display long posts - narrow columns
@@ -59,7 +62,6 @@ For development purposes, you can seed the database with some test data. This ca
 - [ ] Posts should be able to support rich text
 - [ ] Posts should be able to support images
 - [ ] Posts should be able to support INTERNAL links (to other posts, pages, events)
-- [ ] Better UI for tag pages and ID pages
 - [ ] Implement canonical ID pages for tags
   - [ ] tags linked to specific IDs etc
 - [ ] Seed data for users

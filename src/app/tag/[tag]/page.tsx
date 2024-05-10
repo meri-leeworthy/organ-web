@@ -39,8 +39,8 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
 
   const events = allChildren.filter(
     child =>
-      "pageType" in child &&
-      child["pageType"] === "event" &&
+      "roomType" in child &&
+      child["roomType"] === "event" &&
       parseInt(child["eventMeta"]!.start) > Date.now()
   )
 
@@ -55,20 +55,20 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
   console.log("posts", posts)
 
   return (
-    <div>
-      <h1 className="inline-flex px-3 py-1 rounded-full items-center gap-2 border border-green-400">
+    <div className="z-10">
+      <h1 className="inline-flex px-3 py-1 mb-4 rounded-full items-center gap-2 border border-green-400">
         <IconTag />
         {name.name}
       </h1>
 
-      {events && (
+      {events.length > 0 && (
         <>
           <h2 className="mt-6">Upcoming Events</h2>
           <ChildrenCarousel spaceChildren={events as Child[]} />
         </>
       )}
 
-      {ids && (
+      {ids.length > 0 && (
         <>
           <h2>Groups</h2>
           <ChildrenCarousel spaceChildren={ids as Child[]} />

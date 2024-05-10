@@ -8,7 +8,14 @@ import { ErrorSchema } from "simple-matrix-sdk"
 import { is } from "valibot"
 import { noCacheClient as client } from "@/lib/client"
 
-const index = client.getRoom(TAG_INDEX!)
+async function getTagIndex() {
+  const tagIndexId = await client.getRoomIdFromAlias(
+    "#relay_tag_index:" + SERVER_NAME
+  )
+  if (typeof tagIndexId === "object" && "errcode" in tagIndexId)
+    return tagIndexId
+  return client.getRoom(tagIndexId)
+}
 
 export async function createTag(opts: {
   name: string
@@ -48,6 +55,8 @@ export async function createTag(opts: {
 
   if (is(ErrorSchema, tagSpace)) return tagSpace
 
+  const tagIndex = await getTagIndex()
+  if (is(ErrorSchema, tagIndex)) return tagIndex
   await tagIndex.sendStateEvent(
     "m.space.child",
     {
@@ -99,12 +108,14 @@ export async function addTag(formData: FormData) {
 }
 
 export async function removeTag(tagEventId: string) {
-  return await index.redactEvent(tagEventId)
+  const tagIndex = await getTagIndex()
+  if (is(ErrorSchema, tagIndex)) return tagIndex
+  return await tagIndex.redactEvent(tagEventId)
 }
 
-const tagIndex = client.getRoom(TAG_INDEX!)
-
 export async function bilateralAdoptTag(tagRoomId: string) {
+  const tagIndex = await getTagIndex()
+  if (is(ErrorSchema, tagIndex)) return tagIndex
   const tagRoom = client.getRoom(tagRoomId)
   const tagName = await tagRoom.getName()
 

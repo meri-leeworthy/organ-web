@@ -98,7 +98,7 @@ export default async function OrgSlugPage({
   return (
     <>
       <div
-        className={`flex w-4/5 py-6 -top-4 mb-4 z-10 bg-white sm:fixed ${
+        className={`flex w-4/5 py-6 -top-4 mb-4 z-10 sm:fixed ${
           avatarUrl ? "gap-4" : ""
         }`}>
         <Suspense fallback={<div>loading...</div>}>

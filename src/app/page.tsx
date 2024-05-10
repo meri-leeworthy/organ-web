@@ -96,7 +96,7 @@ export default async function Home() {
   return (
     <main className="flex w-full flex-col gap-4">
       {/* <WelcomeEmailSignup /> */}
-      <h1 className="font-black mb-2">organ</h1>
+      <h1 className="font-black mb-2 z-10 self-start">organ</h1>
       <ChildrenCarousel spaceChildren={tags} />
       <h3 className="text-xl font-bold">recent..</h3>
       <Posts posts={posts as Child[]} />

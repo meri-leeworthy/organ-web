@@ -23,7 +23,7 @@ export default function RootLayout({
           <Script src="http://localhost:8097" />
         )}
         {/* i have forgotten what this is :/ ^^ */}
-        <header className="flex top-0 justify-end w-full p-4 mb-4 fixed">
+        <header className="flex top-0 bg-white z-10 justify-end w-full p-4 mb-4 fixed">
           {/* <Link href="/">
               <h1 className="py-1 text-xl font-black leading-4">organ</h1>
             </Link> */}
