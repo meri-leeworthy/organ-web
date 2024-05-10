@@ -70,11 +70,13 @@ export default async function OrgSlugPage({
           )
         )
       : []
-  ).filter(Boolean) as Child[]
+  ).filter(child => child !== null) as Child[]
 
-  // const posts = allChildren.filter(
-  //   child => "roomType" in child && child["roomType"] === "post"
-  // )
+  const posts = allChildren
+    .filter(child => "roomType" in child && child["roomType"] === "post")
+    .sort((a, b) => b?.postMeta?.timestamp! - a?.postMeta?.timestamp!)
+
+  console.log("allChildren", allChildren)
 
   const imageUri = is(object({ url: string() }), avatar?.content)
     ? avatar.content.url
@@ -126,18 +128,18 @@ export default async function OrgSlugPage({
             <strong>{memberCount - 1}</strong> followers
           </span> */}
 
-          {/* <div className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-sm">
-            <p className="whitespace-pre-line text-sm italic lg:opacity-80 pr-4">
+          <div className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-xs xl:max-w-sm">
+            <p className="whitespace-pre-line text-sm lg:opacity-80 pr-4">
               {is(object({ topic: string() }), topic?.content) &&
                 topic.content.topic}
             </p>
-            <Contact contactKVs={contactKVs} />
-          </div> */}
+            {/* <Contact contactKVs={contactKVs} /> */}
+          </div>
 
           {/* <Events postIds={postIds || []} /> */}
         </section>
 
-        <section className="flex w-full flex-col gap-4 xl:gap-6 grow pt-1 sm:pl-96">
+        <section className="flex w-full flex-col gap-4 xl:gap-6 grow pt-1 sm:pl-80 lg:pl-96">
           {/* <EmailSubscribe slug={slug} dismissable /> */}
 
           <Suspense fallback={<div>loading...</div>}>
@@ -146,7 +148,7 @@ export default async function OrgSlugPage({
             </IfModerator>
           </Suspense>
 
-          {/* <Posts posts={posts || []} /> */}
+          <Posts posts={posts || []} />
         </section>
       </main>
     </>
