@@ -171,3 +171,19 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.my-time-picker .ant-picker-dropdown {
+  box-shadow: none;
+  border: 1px solid rgb(221, 210, 255);
+  border-radius: 0;
+  background-color: white;
+}
+
+.my-time-picker .ant-picker-panel-container {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.1));
+}
