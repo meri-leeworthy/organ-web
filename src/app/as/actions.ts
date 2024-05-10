@@ -48,7 +48,7 @@ export async function createRoom(formData: FormData) {
   return { roomId: room.roomId }
 }
 
-export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
+export async function getRooms(formData: FormData): Promise<string[]> {
   const user = formData.get("user") as string
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
@@ -65,15 +65,15 @@ export async function getRooms(formData: FormData): Promise<RoomDebug[]> {
     return room
   })
   console.log("rooms", rooms, "user", user)
-  const roomsWithData: RoomDebug[] = await Promise.all(
-    rooms?.map(async (room: Room) => {
-      const roomData = await room.getHierarchy()
-      // console.log("roomData", roomData)
-      return roomData
-    })
-  )
-  console.log("roomsWithData", roomsWithData)
-  return roomsWithData
+  // const roomsWithData: RoomDebug[] = await Promise.all(
+  //   rooms?.map(async (room: Room) => {
+  //     const roomData = await room.getHierarchy()
+  //     // console.log("roomData", roomData)
+  //     return roomData
+  //   })
+  // )
+  // console.log("roomsWithData", roomsWithData)
+  return rooms.map((room: Room) => room.roomId) // roomsWithData
 }
 
 export async function getSpaceChildren(formData: FormData) {
