@@ -42,7 +42,7 @@ export type RoomDebug = {
 }[]
 
 export function GetRooms() {
-  const [rooms, setRooms] = useState<RoomDebug[]>([])
+  const [rooms, setRooms] = useState<string[]>([])
 
   return (
     <form
@@ -60,15 +60,16 @@ export function GetRooms() {
       <Button type="submit">get rooms</Button>
       <p>Rooms: </p>
       <ul>
-        {rooms.map(room => {
+        {rooms.map(roomId => {
           return (
-            <li key={room[0].room_id} className="py-2">
-              <ul className="">
+            <li key={roomId} className="py-2">
+              {roomId}
+              {/* <ul className="">
                 {room.map((r, i) => (
                   <li key={i} className="my-4">
                     <span>{r.name}</span>
                     <span className="ml-2 text-xs uppercase">{r.room_id}</span>
-                    {/* {JSON.stringify(r)} */}
+                    {/* {JSON.stringify(r)} *
                     <ul>
                       {r["children_state"]?.map((roomChild: any, i: number) => (
                         <li key={i}>
@@ -80,7 +81,7 @@ export function GetRooms() {
                     </ul>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </li>
           )
         })}
