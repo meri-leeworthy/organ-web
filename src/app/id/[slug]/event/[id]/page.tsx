@@ -9,7 +9,7 @@ import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { EditMenu } from "@/components/ui"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
 import { is } from "valibot"
-import { OrganPageEventMetaSchema } from "@/types/event"
+import { OrganCalEventMetaSchema } from "@/types/event"
 
 export default async function EventPage({
   params,
@@ -32,7 +32,7 @@ export default async function EventPage({
   const post = await room.getEvent(`$${id}`)
   // const avatarUrl = await room.getAvatarMxc()
 
-  if ("errcode" in post || !is(OrganPageEventMetaSchema, post.content))
+  if ("errcode" in post || !is(OrganCalEventMetaSchema, post.content))
     return "Event not valid :("
 
   const { content } = post

@@ -11,7 +11,7 @@ export type OrganCalEventMetaState = StateEvent<
   OrganCalEventMeta
 >
 
-export const OrganPageEventMetaSchema = v.object({
+export const OrganCalEventMetaSchema = v.object({
   start: v.string(), // Millisecond timestamp
   end: v.string(), // Millisecond timestamp
   allDay: v.optional(v.boolean()),
@@ -19,4 +19,4 @@ export const OrganPageEventMetaSchema = v.object({
   url: v.optional(v.string()),
 })
 
-export type OrganCalEventMeta = v.Output<typeof OrganPageEventMetaSchema>
+export type OrganCalEventMeta = v.Output<typeof OrganCalEventMetaSchema>

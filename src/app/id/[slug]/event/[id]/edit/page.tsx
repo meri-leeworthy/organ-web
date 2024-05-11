@@ -8,16 +8,16 @@ import { useRouter } from "next/navigation"
 import { is } from "valibot"
 import {
   Description,
-  PostTypeButton,
+  // PostTypeButton,
   UploadAvatar,
-  UploadImageButton,
+  // UploadImageButton,
 } from "@/components/ui"
 import { Button, Input } from "@/components/styled"
 import { getMxcUrl, toValidDateString } from "@/lib/utils"
 import { useRoom } from "@/hooks/useRoom"
 import { IfModerator } from "@/components/IfModerator"
 import Redirect from "@/components/Redirect"
-import { OrganPageEventMetaSchema } from "@/types/event"
+import { OrganCalEventMetaSchema } from "@/types/event"
 
 export default function EditEventPage({
   params,
@@ -142,9 +142,9 @@ export default function EditEventPage({
           )}
 
           <div className="flex gap-1">
-            <PostTypeButton type="event" thisType="event" setType={() => {}}>
-              <IconCalendarEvent size={16} /> Event
-            </PostTypeButton>
+            {/* <PostTypeButton type="event" thisType="event" setType={() => {}}> */}
+            <IconCalendarEvent size={16} /> Event
+            {/* </PostTypeButton> */}
             <Input
               type="text"
               id="title"
@@ -218,10 +218,11 @@ export default function EditEventPage({
               </label>
               <div className="flex items-center justify-end gap-2 ml-auto">
                 {!avatar && (
-                  <UploadImageButton
-                    imageSrcs={avatar}
-                    setImageSrcs={setAvatar}
-                  />
+                  <></>
+                  // <UploadImageButton
+                  //   imageSrcs={avatar}
+                  //   setImageSrcs={setAvatar}
+                  // />
                 )}
                 <Button
                   type="submit"

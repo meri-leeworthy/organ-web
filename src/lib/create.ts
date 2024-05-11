@@ -1,6 +1,6 @@
 "use server"
 
-import { OrganPageEventMeta, organPageEventMeta } from "@/types/event"
+import { OrganCalEventMeta, organCalEventMeta } from "@/types/event"
 import { OrganLocation } from "@/types/properties"
 import {
   organPageType,
@@ -22,7 +22,7 @@ export async function createEvent(opts: {
   owner: string
   title: string
   description: string
-  meta: StateEvent<typeof organPageEventMeta, OrganPageEventMeta>
+  meta: StateEvent<typeof organCalEventMeta, OrganCalEventMeta>
   // events?: string[] //linked events
   // pages?: string[] //parents
   // tags?: string[] //parents
@@ -49,7 +49,7 @@ export async function createEvent(opts: {
       {
         type: organPageType,
         content: {
-          type: organRoomTypeTree.page.event,
+          type: organRoomTypeTree.event,
         },
       },
       opts.meta,

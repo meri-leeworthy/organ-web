@@ -51,14 +51,19 @@ For development purposes, you can seed the database with some test data. This ca
 ## TODO
 
 - [ ] Some forms should be modal
-  - [ ] Create a new post
-  - [ ] Create a new event
+  - [x] Create a new post
+  - [x] Create a new event
   - [ ] Create a new page
+- [ ] Post menu functionality
+  - [ ] Edit post
+  - [ ] Delete post
+  - [ ] Share post
+  - [ ] Report post
 - [ ] Event pages don't show good UI when there are no posts
 - [ ] Post pages need building out
   - [ ] Nice typography thinking about how to display long posts - narrow columns
   - [ ] Author avatar, link working
-  - [ ] Posts can have titles (room name)
+  - [x] Posts can have titles (room name)
 - [ ] Posts should be able to support rich text
 - [ ] Posts should be able to support images
 - [ ] Posts should be able to support INTERNAL links (to other posts, pages, events)

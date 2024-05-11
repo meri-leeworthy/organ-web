@@ -3,14 +3,24 @@ const { MATRIX_BASE_URL, SERVER_NAME } = process.env
 
 export const dynamic = "force-dynamic"
 
-import { Room, Client, ClientEventOutput, Timeline } from "simple-matrix-sdk"
 import { getIdLocalPart, getMessagesChunk, noCacheFetch } from "@/lib/utils"
 import { Contact } from "@/components/ui/Contact"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
-import { IconDotsVertical, IconSettings } from "@tabler/icons-react"
+import {
+  IconCalendarEvent,
+  IconDotsVertical,
+  IconNorthStar,
+  IconSettings,
+} from "@tabler/icons-react"
 import Link from "next/link"
 import { IfModerator } from "@/components/IfModerator"
-import { Dropdown, DropdownItem, NewPost } from "@/components/ui"
+import {
+  Dropdown,
+  DropdownItem,
+  NewEventForm,
+  NewPost,
+  NewPostForm,
+} from "@/components/ui"
 
 import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
@@ -23,6 +33,8 @@ import { Events } from "@/components/ui/Events"
 import { AvatarFull } from "./AvatarFull"
 import { getChild } from "@/lib/getChild"
 import { Child } from "@/lib/getChild"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "@/components/styled"
 
 export default async function OrgSlugPage({
   params,
@@ -136,7 +148,23 @@ export default async function OrgSlugPage({
             {/* <Contact contactKVs={contactKVs} /> */}
           </div>
 
-          {/* <Events postIds={postIds || []} /> */}
+          <Events postIds={postIds || []} />
+          <Suspense fallback={<div>loading...</div>}>
+            <IfModerator slug={getIdLocalPart(roomId)}>
+              <div className="flex gap-2">
+                <Dialog>
+                  <DialogTrigger>
+                    <Button className="flex items-center font-medium px-3 gap-1 bg-white text-sm hover:border-dashed">
+                      <IconCalendarEvent size={16} /> New Event
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <NewEventForm slug={getIdLocalPart(roomId)} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </IfModerator>
+          </Suspense>
         </section>
 
         <section className="flex w-full flex-col gap-4 xl:gap-6 grow pt-1 sm:pl-80 lg:pl-96">
@@ -144,7 +172,18 @@ export default async function OrgSlugPage({
 
           <Suspense fallback={<div>loading...</div>}>
             <IfModerator slug={getIdLocalPart(roomId)}>
-              <NewPost slug={getIdLocalPart(roomId)} />
+              <div className="flex gap-2">
+                <Dialog>
+                  <DialogTrigger>
+                    <Button className="flex items-center font-medium gap-1 bg-white text-sm px-3 hover:border-dashed">
+                      <IconNorthStar size={16} /> New Post
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <NewPostForm slug={getIdLocalPart(roomId)} />
+                  </DialogContent>
+                </Dialog>
+              </div>
             </IfModerator>
           </Suspense>
 

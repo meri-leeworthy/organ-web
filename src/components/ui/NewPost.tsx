@@ -53,26 +53,15 @@ import { Dialog, DialogContent, DialogTrigger } from "./dialog"
 
 export const NewPost = ({ slug }: { slug: string }) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex justify-center gap-2">
       <Dialog>
         <DialogTrigger>
-          <Button className="border-primary flex items-center gap-1 border bg-white text-sm text-[#9572ff]">
-            <IconNorthStar size={16} /> Post
+          <Button className="flex items-center gap-1 border-transparent bg-white text-sm hover:border-primary">
+            <IconNorthStar size={16} /> Create New Post
           </Button>
         </DialogTrigger>
         <DialogContent>
           <NewPostForm slug={slug} />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog>
-        <DialogTrigger>
-          <Button className="border-primary flex items-center gap-1 border bg-white text-sm text-[#9572ff]">
-            <IconCalendarEvent size={16} /> Event
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <NewEventForm slug={slug} />
         </DialogContent>
       </Dialog>
     </div>
@@ -82,14 +71,8 @@ export const NewPost = ({ slug }: { slug: string }) => {
 export const NewPostForm = ({ slug }: { slug: string }) => {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [startDate, setStartDate] = useState<Date>()
-  // const [startTime, setStartTime] = useState("00:00")
-  const [endDate, setEndDate] = useState(toValidDateString(new Date()))
-  const [endTime, setEndTime] = useState("00:00")
-  const [place, setPlace] = useState("")
   const [imageSrcs, setImageSrcs] = useState<string[]>([])
   const [author, setAuthor] = useState<[Room, string]>()
-  const [allDay, setAllDay] = useState(false)
 
   // const [hours, minutes] = startTime.split(":").map(Number)
 
@@ -98,7 +81,7 @@ export const NewPostForm = ({ slug }: { slug: string }) => {
   const client = useClient()
   const room = useMemo(() => {
     if (!client) return
-    return new Room(`!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`, client)
+    return client.getRoom(`!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`)
   }, [client, slug])
 
   useEffect(() => {
@@ -152,24 +135,6 @@ export const NewPostForm = ({ slug }: { slug: string }) => {
             type: "id",
             value: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
           },
-        },
-      },
-    ]
-
-    const eventMetaState = [
-      {
-        type: organSpaceType,
-        content: {
-          value: organSpaceTypeValue.event,
-        },
-      },
-      {
-        type: organCalEventMeta,
-        content: {
-          start: startDate,
-          end: endDate,
-          location,
-          allDay,
         },
       },
     ]
@@ -358,36 +323,6 @@ export const NewEventForm = ({ slug }: { slug: string }) => {
     if (!author) return
     const [authorRoom, authorName] = author
     const roomId = authorRoom.roomId
-
-    const postMetaState: (
-      | OrganPostMetaState
-      | StateEvent<string, { value: string }>
-    )[] = [
-      {
-        type: organRoomType,
-        content: {
-          value: organRoomTypeValue.post,
-        },
-      },
-      {
-        type: organPostType,
-        content: {
-          value: organRoomTypeTree.post.text,
-        },
-      },
-      {
-        type: organPostMeta,
-        content: {
-          title,
-          body: content,
-          timestamp: new Date().valueOf(),
-          author: {
-            type: "id",
-            value: `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`,
-          },
-        },
-      },
-    ]
 
     const eventMetaState = [
       {

@@ -30,6 +30,7 @@ import {
 } from "./dropdown-menu"
 import { IconDotsVertical } from "@tabler/icons-react"
 import { PostMenu } from "./PostMenu"
+import { Avatar } from "./Avatar"
 
 export function Posts({ posts }: { posts: Child[] }) {
   console.log("posts", posts)
@@ -132,17 +133,24 @@ export async function TextPost({ post }: { post: Child }) {
       {post.postMeta!.title && (
         <h2 className="font-serif">{post.postMeta!.title}</h2>
       )}
-      <div className="flex items-center gap-2">
-        {authorName && (
-          <Link href={`/id/${normaliseTagString(authorName)}`}>
-            <h3 className="font-medium text-sm">{authorName}</h3>
-          </Link>
-        )}
-        {post.timestamp && (
-          <time className="text-xs uppercase">
-            {getContextualDate(post.postMeta!.timestamp)}
-          </time>
-        )}
+      <div className="flex mb-1">
+        <div className="flex gap-2">
+          {authorName && (
+            <>
+              <Avatar name={authorName} />
+              <div className="flex flex-wrap items-center gap-x-2">
+                <Link href={`/id/${normaliseTagString(authorName)}`}>
+                  <h3 className="font-medium text-sm">{authorName}</h3>
+                </Link>
+                {post.timestamp && (
+                  <time className="text-xs uppercase">
+                    {getContextualDate(post.postMeta!.timestamp)}
+                  </time>
+                )}
+              </div>
+            </>
+          )}
+        </div>
         <div className="ml-auto">
           <PostMenu
             authorSlug={getIdLocalPart(post.postMeta?.author.value || "")}

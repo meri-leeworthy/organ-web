@@ -12,7 +12,7 @@ import * as v from "valibot"
 import { FlexGridList, FlexGridListItem } from "./FlexGridList"
 import Link from "next/link"
 import { IconCalendarEvent, IconTag } from "@tabler/icons-react"
-import { organPageEventMeta } from "@/types/event"
+import { organCalEventMeta } from "@/types/event"
 
 export function Events({ postIds }: { postIds: string[] }) {
   console.log("postIds", postIds)
@@ -81,9 +81,9 @@ export async function Event({ id }: { id: string }) {
   if ("errcode" in state) return JSON.stringify(state)
   console.log(id, "state", state)
   console.log("roomtype", state.get("organ.room.type"))
-  const validPost = isOrganRoomType(state, "page", "event")
+  const validPost = isOrganRoomType(state, "event")
   if (!validPost) return null
-  const event = state.get(organPageEventMeta)
+  const event = state.get(organCalEventMeta)
   if (!event) return "no event"
 
   const nameEvent = state.get("m.room.name")

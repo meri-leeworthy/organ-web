@@ -5,7 +5,7 @@ import {
   organSpaceType,
   organSpaceTypeValue,
 } from "@/types/schema"
-import { organPageEventMeta } from "@/types/event"
+import { organCalEventMeta } from "@/types/event"
 import events from "./seed/events.json"
 import { getIdsMap } from "./getMaps"
 import { getTagsMap } from "./getMaps"
@@ -71,11 +71,11 @@ export async function seedEvents() {
           {
             type: organPageType,
             content: {
-              value: organRoomTypeTree.page.event,
+              value: organRoomTypeTree.event,
             },
           },
           {
-            type: organPageEventMeta,
+            type: organCalEventMeta,
             content: {
               start: `${eventTime.valueOf()}`,
               end: `${eventTime.valueOf() + 1000 * 60 * 60 * 2}`,
