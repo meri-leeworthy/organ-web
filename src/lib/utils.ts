@@ -3,8 +3,7 @@ import { State } from "simple-matrix-sdk"
 import { twMerge } from "tailwind-merge"
 import { SubTypes } from "@/types/utils"
 import { RoomTypes } from "@/types/schema"
-
-const { MATRIX_BASE_URL } = process.env
+import { BASE_URL } from "@/lib/constants"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -253,7 +252,7 @@ export function getMxcUrl(mxc: string) {
   const serverName = mxc.split("://")[1].split("/")[0]
   const mediaId = mxc.split("://")[1].split("/")[1]
 
-  return `${MATRIX_BASE_URL}/_matrix/media/r0/download/${serverName}/${mediaId}`
+  return `${BASE_URL}/_matrix/media/r0/download/${serverName}/${mediaId}`
 }
 
 export function xor(a: boolean, b: boolean) {
