@@ -10,7 +10,7 @@ import {
 import { useClient } from "@/hooks/useClient"
 import { IconMenu } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { handleLogout } from "./LoginLogout"
+import { handleLogout } from "../../lib/handleLogout"
 
 export function Menu() {
   const router = useRouter()

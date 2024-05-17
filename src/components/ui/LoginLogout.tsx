@@ -1,14 +1,11 @@
-"use client"
-
-import { useRouter } from "next/navigation"
 import { Suspense } from "react"
 import { Button } from "../styled"
-import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { IfLoggedIn } from "../IfLoggedIn"
 import { Dialog, DialogContent, DialogTrigger } from "./dialog"
 import { LoginForm } from "./LoginForm"
+import { handleLogout } from "@/lib/handleLogout"
 
-const LoginLogout = () => {
+export default function LoginLogout() {
   return (
     <Suspense fallback={<Login />}>
       <IfLoggedIn fallback={<Login />}>
@@ -18,20 +15,10 @@ const LoginLogout = () => {
   )
 }
 
-const Login = () => {
-  const router = useRouter()
-
-  const handleLogin = () => {
-    // router.push("/login")
-  }
-
+function Login() {
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button onClick={handleLogin} className="text-sm">
-          login
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger className="text-sm">login</DialogTrigger>
       <DialogContent>
         <LoginForm />
       </DialogContent>
@@ -39,15 +26,6 @@ const Login = () => {
   )
 }
 
-const Logout = () => {
+function Logout() {
   return <Button onClick={handleLogout}>logout</Button>
-}
-
-export default LoginLogout
-
-export const handleLogout = () => {
-  if (typeof window === "undefined") return null
-  localStorage.removeItem(ACCESSTOKEN_STORAGE_KEY)
-  localStorage.removeItem(USERID_STORAGE_KEY)
-  location.reload()
 }

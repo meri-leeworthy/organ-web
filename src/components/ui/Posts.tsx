@@ -31,6 +31,7 @@ import {
 import { IconDotsVertical } from "@tabler/icons-react"
 import { PostMenu } from "./PostMenu"
 import { Avatar } from "./Avatar"
+import { Suspense } from "react"
 
 export function Posts({ posts }: { posts: Child[] }) {
   console.log("posts", posts)
@@ -43,15 +44,17 @@ export function Posts({ posts }: { posts: Child[] }) {
 
   return (
     <section className="">
-      <FlexList>
-        {posts.map((post, i) => {
-          return (
-            <Link href={`/post/${getIdLocalPart(post.roomId)}`} key={i}>
-              <TextPost post={post} />
-            </Link>
-          )
-        })}
-      </FlexList>
+      <Suspense fallback={<div>Loading...</div>}>
+        <FlexList>
+          {posts.map((post, i) => {
+            return (
+              <Link href={`/post/${getIdLocalPart(post.roomId)}`} key={i}>
+                <TextPost post={post} />
+              </Link>
+            )
+          })}
+        </FlexList>
+      </Suspense>
 
       {/* {sortedPosts.map((post, i) => {
         const content = post.content
@@ -113,8 +116,8 @@ export async function TextPost({ post }: { post: Child }) {
   // if (typeof body !== "string" || typeof timestamp !== "number")
   //   return "no content"
 
-  const authorType = post.postMeta!.author.type
-  const authorValue = post.postMeta!.author.value
+  const authorType = post.postMeta?.author?.type || ""
+  const authorValue = post.postMeta?.author?.value || ""
 
   const authorName = await (async () => {
     if (authorType === "user") {
@@ -130,7 +133,7 @@ export async function TextPost({ post }: { post: Child }) {
 
   return (
     <FlexListItem>
-      {post.postMeta!.title && (
+      {post.postMeta?.title && (
         <h2 className="font-serif">{post.postMeta!.title}</h2>
       )}
       <div className="flex mb-1">
