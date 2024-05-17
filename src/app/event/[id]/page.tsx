@@ -1,5 +1,5 @@
 import { getChild } from "@/lib/getChild"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { Posts } from "@/components/ui/Posts"
 import { client } from "@/lib/client"
 import { getContextualDate, isOrganRoomType, props } from "@/lib/utils"
@@ -54,7 +54,7 @@ export default async function EventPage({
         // async childId => await client.getRoom(childId).getState()
       )
       .filter(Boolean)
-  )) as Child[]
+  )) as OrganEntity[]
 
   // const postsState = (
   //   childrenState.filter(childState => !("errcode" in childState)) as State[]

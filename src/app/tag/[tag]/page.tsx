@@ -5,7 +5,8 @@ import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 // import { FlexGridList } from "@/components/ui/FlexGridList"
 // import { Item } from "@/components/ui/Item"
 import { Posts } from "@/components/ui/Posts"
-import { Child, getChild } from "@/lib/getChild"
+import { getChild } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
@@ -35,7 +36,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
           )
         )
       : []
-  ).filter(child => child !== null) as Child[]
+  ).filter(child => child !== null) as OrganEntity[]
 
   const events = allChildren.filter(
     child =>
@@ -64,14 +65,14 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
       {events.length > 0 && (
         <>
           <h2 className="mt-6">Upcoming Events</h2>
-          <ChildrenCarousel spaceChildren={events as Child[]} />
+          <ChildrenCarousel spaceChildren={events as OrganEntity[]} />
         </>
       )}
 
       {ids.length > 0 && (
         <>
           <h2>Groups</h2>
-          <ChildrenCarousel spaceChildren={ids as Child[]} />
+          <ChildrenCarousel spaceChildren={ids as OrganEntity[]} />
         </>
       )}
 

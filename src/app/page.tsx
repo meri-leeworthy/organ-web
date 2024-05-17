@@ -7,11 +7,13 @@ import { WelcomeEmailSignup } from "./WelcomeEmailSignup"
 import { client, getTagIndex } from "@/lib/client"
 import { FlexGridList, FlexGridListItem } from "@/components/ui/FlexGridList"
 import { Tag } from "@/components/ui/Tag"
-import { Child } from "../lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { getEventsMap, getIdsMap } from "./as/getMaps"
 import { getChild } from "../lib/getChild"
 import { props } from "@/lib/utils"
 import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
+import * as v from "valibot"
+import { OrganPostMetaSchema } from "@/types/post"
 
 const { SERVER_NAME } = process.env
 
@@ -34,7 +36,7 @@ export default async function Home() {
     await Promise.all(
       sortedChildren!.map(async child => await getChild(child.room_id))
     )
-  ).filter(Boolean) as Child[]
+  ).filter(Boolean) as OrganEntity[]
 
   const postsBusId = await client.getRoomIdFromAlias(
     "#relay_bus_posts:" + SERVER_NAME
@@ -54,10 +56,14 @@ export default async function Home() {
       postIdsAndAliases.map(async id => await getChild(id as string))
     )
   )
-    .filter(Boolean)
+    .filter(post => {
+      console.log(v.safeParse(OrganPostMetaSchema, post))
+      console.log("post", post)
+      return true
+    })
     .sort((a, b) => b?.postMeta?.timestamp! - a?.postMeta?.timestamp!)
 
-  console.log("posts", posts)
+  // console.log("posts", posts)
   // const idsMap = await getIdsMap()
   // const eventsMap = await getEventsMap()
   // if ("errcode" in idsMap) return idsMap
@@ -99,7 +105,7 @@ export default async function Home() {
       <h1 className="font-black mb-2 z-10 self-start">organ</h1>
       <ChildrenCarousel spaceChildren={tags} />
       <h3 className="text-xl font-bold">recent..</h3>
-      <Posts posts={posts as Child[]} />
+      <Posts posts={posts as OrganEntity[]} />
       {/* <FlexGridList>
         {sortedChildren?.map((child, i) => (
           <FlexGridListItem key={i}>

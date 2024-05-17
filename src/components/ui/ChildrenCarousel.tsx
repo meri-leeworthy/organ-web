@@ -1,6 +1,6 @@
 "use client"
 
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { FlexGridListItem } from "@/components/ui/FlexGridList"
 import {
   Carousel,
@@ -16,7 +16,7 @@ import { Suspense } from "react"
 export function ChildrenCarousel({
   spaceChildren,
 }: {
-  spaceChildren: Child[]
+  spaceChildren: OrganEntity[]
 }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -41,7 +41,7 @@ export function ChildrenCarousel({
   )
 }
 
-function CarouselChild({ child }: { child: Child }) {
+function CarouselChild({ child }: { child: OrganEntity }) {
   const date =
     "eventMeta" in child && getContextualDate(parseInt(child.eventMeta!.start))
   const link =

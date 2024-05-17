@@ -1,5 +1,11 @@
 // Main Organ Rooms/Spaces Schema
 
+import { OrganCalEventMeta } from "./event"
+import { OrganPostMeta } from "./post"
+import { SubTypes } from "./utils"
+
+import * as v from "valibot"
+
 // SPACE/ROOM STATE MODEL
 //
 // POST
@@ -52,6 +58,27 @@ export const organSpaceTypeValue = {
   event: "event",
 } as const
 
+export const OrganRoomTypeTree = v.object({
+  index: v.object({
+    tag: v.literal("tag"),
+    user: v.literal("user"),
+  }),
+  tag: v.literal("tag"),
+  page: v.object({
+    tag: v.literal("tag"),
+    id: v.literal("id"),
+  }),
+  event: v.literal("event"),
+  post: v.object({
+    text: v.literal("text"),
+    image: v.literal("image"),
+    event: v.literal("event"),
+  }),
+  bus: v.literal("bus"),
+})
+
+const x = v.getDefault(v.keyof(OrganRoomTypeTree))
+
 export const organRoomTypeTree = {
   index: {
     tag: "tag",
@@ -73,9 +100,33 @@ export const organRoomTypeTree = {
 
 export type RoomTypes = keyof typeof organRoomTypeTree
 
+// export const RoomTypesSchema = v.union(
+//   ""
+// )
+
 // Other Event Types
 
 export const organRoomUserNotifications = "organ.room.user.notifications"
 export const organRoomSecretEmail = "organ.room.secret.email"
 export const organBusPost = "organ.bus.post"
 export type OrganBusPostContent = { id: string }
+
+export type OrganEntity = {
+  roomId: string
+  name: string
+  topic: string
+  roomType: RoomTypes
+  pageType?: SubTypes<"page">
+  postType?: SubTypes<"post">
+  alias?: string
+  eventMeta?: OrganCalEventMeta
+  postMeta?: OrganPostMeta
+  timestamp?: number
+}
+
+export const OrganEntitySchema = v.object({
+  roomId: v.string("roomId must be a string"),
+  name: v.string("name must be a string"),
+  topic: v.string("topic must be a string"),
+  roomType: v.string("roomType must be a string"),
+})

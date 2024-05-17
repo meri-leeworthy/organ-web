@@ -30,14 +30,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./alert-dialog"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 
 export function PostMenu({
   authorSlug,
   post,
 }: {
   authorSlug: string
-  post: Child
+  post: OrganEntity
 }) {
   // const router = useRouter()
   // const client = useClient()

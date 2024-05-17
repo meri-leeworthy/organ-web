@@ -2,9 +2,9 @@ import { client } from "@/lib/client"
 import { props } from "@/lib/utils"
 import { ClientEventSchema, Room } from "simple-matrix-sdk"
 import * as v from "valibot"
-import { Child } from "../../../lib/getChild"
+import { OrganEntity } from "@/types/schema"
 
-export async function Item({ id }: { id: Child }) {
+export async function Item({ id }: { id: OrganEntity }) {
   const postRoom = new Room(id.roomId, client)
 
   const state = await postRoom.getState()

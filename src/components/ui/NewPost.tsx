@@ -50,7 +50,7 @@ import {
 } from "./select"
 import { StateEvent } from "@/types/utils"
 import { Dialog, DialogContent, DialogTrigger } from "./dialog"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { useRoom } from "@/hooks/useRoom"
 
 export const NewPost = ({ slug }: { slug: string }) => {
@@ -71,7 +71,13 @@ export const NewPost = ({ slug }: { slug: string }) => {
   )
 }
 
-export const PostForm = ({ slug, post }: { slug: string; post?: Child }) => {
+export const PostForm = ({
+  slug,
+  post,
+}: {
+  slug: string
+  post?: OrganEntity
+}) => {
   const authorRoomId =
     post?.postMeta?.author && post.postMeta.author.type === "id"
       ? post.postMeta.author.value

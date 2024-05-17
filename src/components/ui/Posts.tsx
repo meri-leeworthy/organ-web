@@ -19,7 +19,7 @@ import {
 } from "./FlexGridList"
 import Link from "next/link"
 import { organPostMeta } from "@/types/post"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { IfModerator } from "../IfModerator"
 import {
   DropdownMenu,
@@ -33,8 +33,8 @@ import { PostMenu } from "./PostMenu"
 import { Avatar } from "./Avatar"
 import { Suspense } from "react"
 
-export function Posts({ posts }: { posts: Child[] }) {
-  console.log("posts", posts)
+export function Posts({ posts }: { posts: OrganEntity[] }) {
+  // console.log("posts", posts)
 
   // get post state
 
@@ -100,7 +100,7 @@ export function Posts({ posts }: { posts: Child[] }) {
   )
 }
 
-export async function TextPost({ post }: { post: Child }) {
+export async function TextPost({ post }: { post: OrganEntity }) {
   // const room = client.getRoom(id)
   // const state = await room.getState()
   // if ("errcode" in state) return JSON.stringify(state)

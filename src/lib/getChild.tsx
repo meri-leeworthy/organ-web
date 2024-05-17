@@ -1,15 +1,13 @@
 import { client } from "@/lib/client"
 import { props } from "@/lib/utils"
-import { OrganCalEventMeta, organCalEventMeta } from "@/types/event"
+import { organCalEventMeta } from "@/types/event"
 import {
-  RoomTypes,
   organPageType,
   organRoomType,
   organRoomTypeTree,
   organSpaceType,
 } from "@/types/schema"
-import { OrganPostMeta } from "@/types/post"
-import { SubTypes } from "@/types/utils"
+import { OrganEntity } from "@/types/schema"
 
 // Show descriptive content from 'tag page' room
 // fetch all children state here and pass it to the children
@@ -18,7 +16,7 @@ import { SubTypes } from "@/types/utils"
 export async function getChild(
   roomId: string,
   alias?: string
-): Promise<Child | null> {
+): Promise<OrganEntity | null> {
   console.log("roomId", roomId)
   const state = await client.getRoom(roomId).getState()
   if ("errcode" in state) {
@@ -63,17 +61,5 @@ export async function getChild(
   }
   child["timestamp"] = state.get("m.room.create")?.origin_server_ts
 
-  return child as Child
-}
-export type Child = {
-  roomId: string
-  name: string
-  topic: string
-  roomType: RoomTypes
-  pageType?: SubTypes<"page">
-  postType?: SubTypes<"post">
-  alias?: string
-  eventMeta?: OrganCalEventMeta
-  postMeta?: OrganPostMeta
-  timestamp?: number
+  return child as OrganEntity
 }

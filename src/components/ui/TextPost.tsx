@@ -3,13 +3,13 @@ import {
   getIdLocalPart,
   normaliseTagString,
 } from "@/lib/utils"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { client } from "@/lib/client"
 import { PostMenu } from "@/components/ui/PostMenu"
 import { Avatar } from "@/components/ui/Avatar"
 import Link from "next/link"
 
-export async function TextPost({ post }: { post: Child }) {
+export async function TextPost({ post }: { post: OrganEntity }) {
   const authorType = post.postMeta!.author.type
   const authorValue = post.postMeta!.author.value
 

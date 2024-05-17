@@ -13,9 +13,9 @@ import Link from "next/link"
 // import { Event } from "@/components/ui/Events"
 import { Card } from "./card"
 import { organCalEventMeta } from "@/types/event"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 
-export function Item({ id }: { id: Child }) {
+export function Item({ id }: { id: OrganEntity }) {
   return (
     <Link
       href={`/id/${id.alias?.split("#relay_id_")[1].split(":")[0]}`}

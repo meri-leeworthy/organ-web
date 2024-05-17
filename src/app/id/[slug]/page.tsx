@@ -32,7 +32,7 @@ import { noCacheClient as client } from "@/lib/client"
 import { Events } from "@/components/ui/Events"
 import { AvatarFull } from "./AvatarFull"
 import { getChild } from "@/lib/getChild"
-import { Child } from "@/lib/getChild"
+import { OrganEntity } from "@/types/schema"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/styled"
 
@@ -82,7 +82,7 @@ export default async function OrgSlugPage({
           )
         )
       : []
-  ).filter(child => child !== null) as Child[]
+  ).filter(child => child !== null) as OrganEntity[]
 
   const posts = allChildren
     .filter(child => "roomType" in child && child["roomType"] === "post")
