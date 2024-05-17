@@ -127,7 +127,7 @@ const NewRoomPage = () => {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md z-10">
       <h2 className="flex items-center gap-2 text-2xl font-medium">
         <IconNorthStar size={24} /> New Group
       </h2>

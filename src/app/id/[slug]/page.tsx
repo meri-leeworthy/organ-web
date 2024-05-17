@@ -159,6 +159,7 @@ export default async function OrgSlugPage({
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
+                    <h2>New Event</h2>
                     <NewEventForm slug={getIdLocalPart(roomId)} />
                   </DialogContent>
                 </Dialog>
@@ -180,6 +181,7 @@ export default async function OrgSlugPage({
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
+                    <h2>New Post</h2>
                     <NewPostForm slug={getIdLocalPart(roomId)} />
                   </DialogContent>
                 </Dialog>

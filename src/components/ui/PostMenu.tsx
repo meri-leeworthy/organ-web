@@ -11,31 +11,84 @@ import {
 } from "./dropdown-menu"
 import { useRouter } from "next/navigation"
 import { useClient } from "@/hooks/useClient"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog"
+import { PostForm } from "./NewPost"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./alert-dialog"
+import { Child } from "@/lib/getChild"
 
-export function PostMenu({ authorSlug }: { authorSlug: string }) {
-  const router = useRouter()
-  const client = useClient()
+export function PostMenu({
+  authorSlug,
+  post,
+}: {
+  authorSlug: string
+  post: Child
+}) {
+  // const router = useRouter()
+  // const client = useClient()
 
   return (
     <IfModerator slug={authorSlug}>
-      <DropdownMenu>
-        <DropdownMenuTrigger className="focus-visible:outline-green-300 focus-visible:outline-dashed  p-1">
-          <IconDotsVertical size={16} />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          className="rounded-none shadow-none drop-shadow-hard border-black min-w-[5rem]">
-          <DropdownMenuItem onSelect={() => {}} className="justify-end">
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => {}} className="justify-end">
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => {}} className="justify-end">
-            Copy Link
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Dialog>
+        <AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="focus-visible:outline-green-300 focus-visible:outline-dashed  p-1">
+              <IconDotsVertical size={16} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="rounded-none shadow-none drop-shadow-hard border-black min-w-[5rem]">
+              <DropdownMenuItem onSelect={() => {}} className="justify-end">
+                <DialogTrigger className="w-full text-right">
+                  Edit
+                </DialogTrigger>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => {}} className="justify-end">
+                <AlertDialogTrigger className="w-full text-right">
+                  Delete
+                </AlertDialogTrigger>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => {}} className="justify-end">
+                Copy Link
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Post</DialogTitle>
+            </DialogHeader>
+            <PostForm slug={authorSlug} />
+          </DialogContent>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this post? This cannot be
+                undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Dialog>
     </IfModerator>
   )
 }

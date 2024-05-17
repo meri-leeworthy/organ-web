@@ -154,6 +154,7 @@ export async function TextPost({ post }: { post: Child }) {
         <div className="ml-auto">
           <PostMenu
             authorSlug={getIdLocalPart(post.postMeta?.author.value || "")}
+            post={post}
           />
         </div>
       </div>

@@ -50,6 +50,8 @@ import {
 } from "./select"
 import { StateEvent } from "@/types/utils"
 import { Dialog, DialogContent, DialogTrigger } from "./dialog"
+import { Child } from "@/lib/getChild"
+import { useRoom } from "@/hooks/useRoom"
 
 export const NewPost = ({ slug }: { slug: string }) => {
   return (
@@ -61,22 +63,27 @@ export const NewPost = ({ slug }: { slug: string }) => {
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <NewPostForm slug={slug} />
+          <h2>New Post</h2>
+          <PostForm slug={slug} />
         </DialogContent>
       </Dialog>
     </div>
   )
 }
 
-export const NewPostForm = ({ slug }: { slug: string }) => {
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
+export const PostForm = ({ slug, post }: { slug: string; post?: Child }) => {
+  const authorRoomId =
+    post?.postMeta?.author && post.postMeta.author.type === "id"
+      ? post.postMeta.author.value
+      : null
+  const authorRoom = useRoom(authorRoomId || "")
+
+  const [title, setTitle] = useState(post?.postMeta?.title || "")
+  const [content, setContent] = useState(post?.postMeta?.body || "")
   const [imageSrcs, setImageSrcs] = useState<string[]>([])
-  const [author, setAuthor] = useState<[Room, string]>()
-
-  // const [hours, minutes] = startTime.split(":").map(Number)
-
-  // console.log("imageSrcs", imageSrcs)
+  const [author, setAuthor] = useState<[Room, string] | null>(
+    authorRoomId && authorRoom ? [authorRoom, authorRoomId] : null
+  )
 
   const client = useClient()
   const room = useMemo(() => {
@@ -243,7 +250,6 @@ export const NewPostForm = ({ slug }: { slug: string }) => {
         </div>
       )}
       <form onSubmit={handlePostSubmit} className="flex grow flex-col gap-2">
-        <h2>New Post</h2>
         <div className="flex flex-wrap gap-1 gap-y-2">
           <SCNInput
             type="text"
@@ -446,7 +452,6 @@ export const NewEventForm = ({ slug }: { slug: string }) => {
         </div>
       )}
       <form onSubmit={handlePostSubmit} className="flex grow flex-col gap-2">
-        <h2>New Event</h2>
         <div className="flex flex-wrap gap-1 gap-y-2">
           <SCNInput
             type="text"
