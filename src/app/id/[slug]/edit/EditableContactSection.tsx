@@ -6,8 +6,7 @@ import { useRoom } from "@/hooks/useRoom"
 import { fetchContactKVs } from "@/lib/fetchContactKVs"
 import { IconCheck, IconEdit, IconLink, IconPlus } from "@tabler/icons-react"
 import { Spinner } from "@/components/ui"
-import * as v from "valibot"
-import { ClientEventSchema } from "simple-matrix-sdk"
+import { ClientEventSchema, is } from "simple-matrix-sdk"
 import {
   OrganMetaContactUnstable,
   organMetaContactUnstable,
@@ -37,7 +36,7 @@ export function EditableContactSection({
           return
         }
         const links =
-          v.is(ClientEventSchema, event) &&
+          is(ClientEventSchema, event) &&
           typeof event.content === "object" &&
           event.content !== null &&
           "value" in event.content &&

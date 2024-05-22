@@ -2,10 +2,9 @@ const { AS_TOKEN, MATRIX_BASE_URL, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
-import { Client, Room } from "simple-matrix-sdk"
+import { Client, Room, is } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
-import { is } from "valibot"
 import { OrganPostMetaSchema } from "@/types/post"
 
 export default async function PostPage({

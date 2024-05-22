@@ -4,7 +4,7 @@ import { OrganCalEventMeta } from "./event"
 import { OrganPostMeta } from "./post"
 import { SubTypes } from "./utils"
 
-import * as v from "valibot"
+import * as z from "zod"
 
 // SPACE/ROOM STATE MODEL
 //
@@ -58,26 +58,24 @@ export const organSpaceTypeValue = {
   event: "event",
 } as const
 
-export const OrganRoomTypeTree = v.object({
-  index: v.object({
-    tag: v.literal("tag"),
-    user: v.literal("user"),
+export const OrganRoomTypeTree = z.object({
+  index: z.object({
+    tag: z.literal("tag"),
+    user: z.literal("user"),
   }),
-  tag: v.literal("tag"),
-  page: v.object({
-    tag: v.literal("tag"),
-    id: v.literal("id"),
+  tag: z.literal("tag"),
+  page: z.object({
+    tag: z.literal("tag"),
+    id: z.literal("id"),
   }),
-  event: v.literal("event"),
-  post: v.object({
-    text: v.literal("text"),
-    image: v.literal("image"),
-    event: v.literal("event"),
+  event: z.literal("event"),
+  post: z.object({
+    text: z.literal("text"),
+    image: z.literal("image"),
+    event: z.literal("event"),
   }),
-  bus: v.literal("bus"),
+  bus: z.literal("bus"),
 })
-
-const x = v.getDefault(v.keyof(OrganRoomTypeTree))
 
 export const organRoomTypeTree = {
   index: {
@@ -100,7 +98,7 @@ export const organRoomTypeTree = {
 
 export type RoomTypes = keyof typeof organRoomTypeTree
 
-// export const RoomTypesSchema = v.union(
+// export const RoomTypesSchema = z.union(
 //   ""
 // )
 
@@ -124,9 +122,9 @@ export type OrganEntity = {
   timestamp?: number
 }
 
-export const OrganEntitySchema = v.object({
-  roomId: v.string("roomId must be a string"),
-  name: v.string("name must be a string"),
-  topic: v.string("topic must be a string"),
-  roomType: v.string("roomType must be a string"),
+export const OrganEntitySchema = z.object({
+  roomId: z.string({ invalid_type_error: "roomId must be a string" }),
+  name: z.string({ invalid_type_error: "name must be a string" }),
+  topic: z.string({ invalid_type_error: "topic must be a string" }),
+  roomType: z.string({ invalid_type_error: "roomType must be a string" }),
 })

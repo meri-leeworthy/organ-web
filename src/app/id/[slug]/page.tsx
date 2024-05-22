@@ -19,13 +19,12 @@ import {
   DropdownItem,
   NewEventForm,
   NewPost,
-  NewPostForm,
+  PostForm,
 } from "@/components/ui"
 
 import { Posts } from "@/components/ui/Posts"
 import { Suspense } from "react"
 import { FollowButton } from "@/components/ui/FollowButton"
-import { is, object, string } from "valibot"
 import { EmailSubscribe } from "@/components/ui/EmailSubscribe"
 import { IfRoomMember } from "@/components/IfRoomMember"
 import { noCacheClient as client } from "@/lib/client"
@@ -35,6 +34,8 @@ import { getChild } from "@/lib/getChild"
 import { OrganEntity } from "@/types/schema"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/styled"
+import { is } from "simple-matrix-sdk"
+import * as z from "zod"
 
 export default async function OrgSlugPage({
   params,
@@ -90,7 +91,7 @@ export default async function OrgSlugPage({
 
   console.log("allChildren", allChildren)
 
-  const imageUri = is(object({ url: string() }), avatar?.content)
+  const imageUri = is(z.object({ url: z.string() }), avatar?.content)
     ? avatar.content.url
     : undefined
   const serverName = imageUri && imageUri.split("://")[1].split("/")[0]
@@ -142,7 +143,7 @@ export default async function OrgSlugPage({
 
           <div className="flex w-full flex-col justify-start lg:flex-col-reverse lg:justify-end max-w-xs xl:max-w-sm">
             <p className="whitespace-pre-line text-sm lg:opacity-80 pr-4">
-              {is(object({ topic: string() }), topic?.content) &&
+              {is(z.object({ topic: z.string() }), topic?.content) &&
                 topic.content.topic}
             </p>
             {/* <Contact contactKVs={contactKVs} /> */}
@@ -182,7 +183,7 @@ export default async function OrgSlugPage({
                   </DialogTrigger>
                   <DialogContent>
                     <h2>New Post</h2>
-                    <NewPostForm slug={getIdLocalPart(roomId)} />
+                    <PostForm slug={getIdLocalPart(roomId)} />
                   </DialogContent>
                 </Dialog>
               </div>

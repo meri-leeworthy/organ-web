@@ -2,8 +2,8 @@ import {
   ClientEventOutput,
   EventContentSchema,
   RoomMessageContentSchema,
+  is,
 } from "simple-matrix-sdk"
-import { is } from "valibot"
 
 export function deleteOldEdits(posts: ClientEventOutput[]) {
   const postsMap = new Map(posts.map(message => [message.event_id, message]))

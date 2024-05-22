@@ -10,7 +10,6 @@ import {
 } from "@/lib/utils"
 import { ClientEventSchema, Event } from "simple-matrix-sdk"
 import { client } from "@/lib/client"
-import * as v from "valibot"
 import {
   FlexGridList,
   FlexGridListItem,

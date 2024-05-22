@@ -2,13 +2,12 @@ const { AS_TOKEN, MATRIX_BASE_URL, SERVER_NAME } = process.env
 
 // export const dynamic = "force-dynamic"
 
-import { Client, Room } from "simple-matrix-sdk"
+import { Client, Room, is } from "simple-matrix-sdk"
 import Link from "next/link"
 import { getContextualDate } from "@/lib/utils"
 import { IfLoggedIn } from "@/components/IfLoggedIn"
 import { EditMenu } from "@/components/ui"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
-import { is } from "valibot"
 import { OrganCalEventMetaSchema } from "@/types/event"
 
 export default async function EventPage({

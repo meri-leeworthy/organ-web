@@ -30,10 +30,10 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-textarea-autosize": "^8.5.3",
-    "simple-matrix-sdk": "^0.4.8",
+    "simple-matrix-sdk": "^0.5.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "valibot": "^0.25.0"
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/node": "^20",

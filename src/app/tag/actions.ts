@@ -4,8 +4,7 @@ const { TAG_INDEX, SERVER_NAME } = process.env
 
 import { normaliseTagString } from "@/lib/utils"
 import { organSpaceType, organSpaceTypeValue } from "@/types/schema"
-import { ErrorSchema } from "simple-matrix-sdk"
-import { is } from "valibot"
+import { ErrorSchema, is } from "simple-matrix-sdk"
 import { noCacheClient as client } from "@/lib/client"
 
 async function getTagIndex() {

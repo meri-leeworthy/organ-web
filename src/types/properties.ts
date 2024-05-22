@@ -1,25 +1,25 @@
-import * as v from "valibot"
+import * as z from "zod"
 
 // General Property Types
 
-export const OrganAuthorSchema = v.object({
-  type: v.union([v.literal("user"), v.literal("id")]),
-  value: v.string(),
+export const OrganAuthorSchema = z.object({
+  type: z.union([z.literal("user"), z.literal("id")]),
+  value: z.string(),
 })
-export type OrganAuthor = v.Output<typeof OrganAuthorSchema>
+export type OrganAuthor = z.infer<typeof OrganAuthorSchema>
 
-export const OrganLocationSchema = v.union([
-  v.object({
-    type: v.literal("text"),
-    value: v.string(),
+export const OrganLocationSchema = z.union([
+  z.object({
+    type: z.literal("text"),
+    value: z.string(),
   }),
-  v.object({
-    type: v.literal("page"),
-    value: v.string(), // RoomID
+  z.object({
+    type: z.literal("page"),
+    value: z.string(), // RoomID
   }),
 ])
 
-export type OrganLocation = v.Output<typeof OrganLocationSchema>
+export type OrganLocation = z.infer<typeof OrganLocationSchema>
 
 export type OrganMetaContactUnstable = {
   type: ContactType

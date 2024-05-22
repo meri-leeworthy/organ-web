@@ -1,6 +1,6 @@
 "use server"
 
-import { Client, CreateRoomOpts, Room } from "simple-matrix-sdk"
+import { Client, CreateRoomOptsOutput, Room } from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
@@ -35,7 +35,7 @@ export async function createRoom(formData: FormData) {
 
   console.log("space", space)
 
-  const opts: CreateRoomOpts = {
+  const opts: CreateRoomOptsOutput = {
     name,
   }
 

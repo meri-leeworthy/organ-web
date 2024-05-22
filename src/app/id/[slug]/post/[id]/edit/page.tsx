@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react"
 import { IconNorthStar } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { is } from "valibot"
 import Redirect from "@/components/Redirect"
 import { useRoom } from "@/hooks/useRoom"
 import { IfModerator } from "@/components/IfModerator"
 import { OrganPostMetaSchema } from "@/types/post"
+import { is } from "simple-matrix-sdk"
 
 export default function EditPostPage({
   params,

@@ -8,7 +8,6 @@ import {
   slug,
 } from "@/lib/utils"
 import { client } from "@/lib/client"
-import * as v from "valibot"
 import { FlexGridList, FlexGridListItem } from "./FlexGridList"
 import Link from "next/link"
 import { IconCalendarEvent, IconTag } from "@tabler/icons-react"

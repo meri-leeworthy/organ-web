@@ -1,7 +1,6 @@
 import { client } from "@/lib/client"
 import { props } from "@/lib/utils"
-import { ClientEventSchema, Room } from "simple-matrix-sdk"
-import * as v from "valibot"
+import { ClientEventSchema, Room, is } from "simple-matrix-sdk"
 import { OrganEntity } from "@/types/schema"
 
 export async function Item({ id }: { id: OrganEntity }) {
@@ -13,7 +12,7 @@ export async function Item({ id }: { id: OrganEntity }) {
   const spaceTypeEvent = state.get("organ.space.type")
   // if (!spaceTypeEvent) return "not a space"
 
-  if (!v.is(ClientEventSchema, spaceTypeEvent)) return "incorrect event schema"
+  if (!is(ClientEventSchema, spaceTypeEvent)) return "incorrect event schema"
 
   const { content: spaceType } = spaceTypeEvent
 

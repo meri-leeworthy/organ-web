@@ -8,7 +8,6 @@ import {
 } from "@/lib/utils"
 import { client } from "@/lib/client"
 import { ClientEventSchema, Room } from "simple-matrix-sdk"
-import * as v from "valibot"
 import Link from "next/link"
 // import { Event } from "@/components/ui/Events"
 import { Card } from "./card"

@@ -12,7 +12,6 @@ import { getEventsMap, getIdsMap } from "./as/getMaps"
 import { getChild } from "../lib/getChild"
 import { props } from "@/lib/utils"
 import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
-import * as v from "valibot"
 import { OrganPostMetaSchema } from "@/types/post"
 
 const { SERVER_NAME } = process.env
@@ -57,7 +56,7 @@ export default async function Home() {
     )
   )
     .filter(post => {
-      console.log(v.safeParse(OrganPostMetaSchema, post))
+      console.log(OrganPostMetaSchema.safeParse(post))
       console.log("post", post)
       return true
     })

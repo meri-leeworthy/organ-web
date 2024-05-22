@@ -1,10 +1,9 @@
 import { noCacheFetch } from "@/lib/utils"
-import { Client } from "simple-matrix-sdk"
+import { Client, is } from "simple-matrix-sdk"
 import { Form } from "./Form"
 import { Post } from "@/components/ui/Post"
-import * as v from "valibot"
 import { OrganPostMetaSchema } from "@/types/post"
-import { TextPost } from "../../../components/ui/TextPost"
+import { TextPost } from "@/components/ui/TextPost"
 // import { TextPost } from "@/components/ui/Posts"
 
 const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
@@ -31,7 +30,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   // console.log("roomType", roomType, "postType", postType, "postText", postText)
   const post = state.get("organ.post.meta")?.content
   // console.log("post", post)
-  if (!v.is(OrganPostMetaSchema, post)) return "invalid post"
+  if (!is(OrganPostMetaSchema, post)) return "invalid post"
 
   return (
     <TextPost

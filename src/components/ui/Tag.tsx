@@ -1,6 +1,6 @@
-import * as v from "valibot"
 import { IconTag } from "@tabler/icons-react"
-import { Room } from "simple-matrix-sdk"
+import { Room, is } from "simple-matrix-sdk"
+import * as z from "zod"
 
 export async function Tag({
   room,
@@ -25,7 +25,7 @@ export async function Tag({
         </span>
       </h2>
       <p className="text-sm italic text-stone-600 line-clamp-3">
-        {v.is(v.object({ topic: v.string() }), topic?.content) &&
+        {is(z.object({ topic: z.string() }), topic?.content) &&
           topic.content.topic.slice(0, 300)}
       </p>
     </div>

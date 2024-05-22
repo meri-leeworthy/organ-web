@@ -8,8 +8,7 @@ import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
-import { Client, ErrorSchema } from "simple-matrix-sdk"
-import { is, set } from "valibot"
+import { Client, ErrorSchema, is } from "simple-matrix-sdk"
 
 const SignupForm = () => {
   const [email, setEmail] = useState("")

@@ -1,4 +1,4 @@
-import * as v from "valibot"
+import * as z from "zod"
 
 // Post
 
@@ -9,14 +9,16 @@ export const organPostMeta = "organ.post.meta"
 
 export type OrganPostMetaState = StateEvent<typeof organPostMeta, OrganPostMeta>
 
-export const OrganPostMetaSchema = v.object(
+export const OrganPostMetaSchema = z.object(
   {
-    title: v.optional(v.string("title must be a string")),
-    body: v.string("body must be a string"),
-    timestamp: v.number("timestamp must be a number"),
+    title: z.optional(
+      z.string({ invalid_type_error: "title must be a string" })
+    ),
+    body: z.string({ invalid_type_error: "body must be a string" }),
+    timestamp: z.number({ invalid_type_error: "timestamp must be a number" }),
     author: OrganAuthorSchema,
   },
-  "OrganPostMeta"
+  { invalid_type_error: "OrganPostMeta" }
 )
 
-export type OrganPostMeta = v.Output<typeof OrganPostMetaSchema>
+export type OrganPostMeta = z.infer<typeof OrganPostMetaSchema>

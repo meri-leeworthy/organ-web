@@ -14,8 +14,7 @@ import {
 import { IfModerator } from "@/components/IfModerator"
 import { useRouter } from "next/navigation"
 import { useRoom } from "@/hooks/useRoom"
-import { is } from "valibot"
-import { ClientEventOutput, ErrorSchema } from "simple-matrix-sdk"
+import { ClientEventOutput, ErrorSchema, is } from "simple-matrix-sdk"
 import { HOME_SPACE } from "@/lib/constants"
 
 export default function OrgSlugDashboardPage({
