@@ -7,6 +7,7 @@ import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 import { Posts } from "@/components/ui/Posts"
 import { getChild } from "@/lib/getChild"
 import { OrganEntity } from "@/types/schema"
+import { ErrorSchema, is } from "simple-matrix-sdk"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
@@ -23,6 +24,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
   if ("errcode" in name) return JSON.stringify(name)
 
   const tagChildren = await tagRoom.getHierarchy({ max_depth: 1 })
+  if (is(ErrorSchema, tagChildren)) return JSON.stringify(tagChildren)
 
   tagChildren?.shift()
 

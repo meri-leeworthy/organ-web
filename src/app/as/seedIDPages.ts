@@ -7,6 +7,7 @@ import {
 } from "@/types/schema"
 import ids from "./seed/ids.json"
 import { noCacheClient as client } from "@/lib/client"
+import { ErrorSchema, is } from "simple-matrix-sdk"
 
 const { SERVER_NAME } = process.env
 
@@ -22,7 +23,8 @@ export async function seedIDPages() {
   const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
 
   // console.log("tagIndexChildren", tagIndexChildren)
-  if (!tagIndexChildren) return { errcode: "No tag rooms found" }
+  if (!tagIndexChildren || is(ErrorSchema, tagIndexChildren))
+    return { errcode: "No tag rooms found" }
 
   // remove first item, which is the tag index room
   tagIndexChildren.shift()
