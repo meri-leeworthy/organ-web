@@ -14,7 +14,12 @@ import {
 import { IfModerator } from "@/components/IfModerator"
 import { useRouter } from "next/navigation"
 import { useRoom } from "@/hooks/useRoom"
-import { ClientEventOutput, ErrorSchema, is } from "simple-matrix-sdk"
+import {
+  ClientEventOutput,
+  ErrorOutput,
+  ErrorSchema,
+  is,
+} from "simple-matrix-sdk"
 import { HOME_SPACE } from "@/lib/constants"
 
 export default function OrgSlugDashboardPage({
@@ -76,12 +81,15 @@ function UserRoles(props: { slug: string }) {
   useEffect(() => {
     room
       ?.getPowerLevels()
-      .then((powerLevels: { users: Record<string, number> }) => {
+      .then((powerLevels: { users: Record<string, number> } | ErrorOutput) => {
+        if (is(ErrorSchema, powerLevels)) return
         console.log("powerLevels", Object.entries(powerLevels.users)[0])
         const roles = new Map(Object.entries(powerLevels.users))
         room?.getMembers().then(res => {
           if (is(ErrorSchema, res)) return
-          const members = res.chunk.map(event => event.state_key)
+          const members = res.chunk.map(
+            (event: ClientEventOutput) => event.state_key
+          )
           // console.log("members", members)
           for (const member of members) {
             // console.log("member", member)
@@ -159,9 +167,7 @@ function RequestPublication({ slug }: { slug: string }) {
   const room = useRoom(homeSpace)
   room?.getHierarchy().then(res => {
     if (!res || is(ErrorSchema, res)) return
-    const roomIds = res[0].children_state.map(
-      (event: ClientEventOutput) => event.state_key
-    )
+    const roomIds = res[0].children_state.map(event => event.state_key)
     console.log("rooms", roomIds)
     const isPublished = roomIds.some(
       (roomId: string) =>

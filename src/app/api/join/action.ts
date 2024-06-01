@@ -1,21 +1,14 @@
 "use server"
 
-const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
+import { client } from "@/lib/client"
+import { ErrorSchema, is } from "simple-matrix-sdk"
 
-import { Client } from "simple-matrix-sdk"
+const { SERVER_NAME } = process.env
 
 export async function joinRoom(room: string, user: string) {
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, { fetch })
-
-  const join = await client.post(
-    `join/${room}`,
-    {},
-    {
-      user_id: `@_relay_${user}:${SERVER_NAME}`,
-    }
-  )
-
-  console.log("join", join)
+  const join = await client.joinRoom(room, {
+    user_id: `@_relay_${user}:${SERVER_NAME}`,
+  })
 
   return join
 }

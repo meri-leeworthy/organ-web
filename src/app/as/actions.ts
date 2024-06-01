@@ -1,6 +1,14 @@
 "use server"
 
-import { Client, CreateRoomOptsOutput, Room } from "simple-matrix-sdk"
+import {
+  Client,
+  CreateRoomOptsOutput,
+  ErrorOutput,
+  ErrorSchema,
+  Room,
+  is,
+  schemaError,
+} from "simple-matrix-sdk"
 import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
@@ -11,6 +19,8 @@ import {
   organSpaceTypeValue,
 } from "@/types/schema"
 import { noCacheClient as client } from "@/lib/client"
+import { z } from "zod"
+import { access } from "fs"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
@@ -19,19 +29,24 @@ export async function register(user: string) {
     type: "m.login.application_service",
     username: `_relay_${user}`,
   })
-  console.log(register)
-  return register
+  const successSchema = z.object({
+    access_token: z.string(),
+    user_id: z.string(),
+  })
+  if (is(ErrorSchema, register)) return register
+  if (is(successSchema, register)) return register
+  return schemaError
 }
 
 export async function joinRoomAction(formData: FormData) {
-  const room = formData.get("room") as string
-  const user = (formData.get("user") as string) || "bot"
+  const room = z.string().parse(formData.get("room"))
+  const user = z.string().default("bot").parse(formData.get("user"))
   return joinRoom(room, user)
 }
 
 export async function createRoom(formData: FormData) {
-  const name = formData.get("name") as string
-  const space = formData.get("space") as string
+  const name = z.string().parse(formData.get("name"))
+  const space = z.string().parse(formData.get("space"))
 
   console.log("space", space)
 
@@ -48,15 +63,20 @@ export async function createRoom(formData: FormData) {
   return { roomId: room.roomId }
 }
 
-export async function getRooms(formData: FormData): Promise<string[]> {
-  const user = formData.get("user") as string
+export async function getRooms(
+  formData: FormData
+): Promise<string[] | ErrorOutput> {
+  const user = z.string().parse(formData.get("user"))
   const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
     fetch: noCacheFetch,
     params: { user_id: `@_relay_${user}:${SERVER_NAME}` },
   })
-  const { joined_rooms: roomIds } = await client.get("joined_rooms", {
-    user_id: `@_relay_${user}:${SERVER_NAME}`,
-  })
+  // const { joined_rooms: roomIds } = await client.get("joined_rooms", {
+  //   user_id: `@_relay_${user}:${SERVER_NAME}`,
+  // })
+  const res = await client.getJoinedRooms()
+  if (is(ErrorSchema, res)) return res
+  const { joined_rooms: roomIds } = res
 
   console.log("roomIds", roomIds)
 
@@ -77,14 +97,14 @@ export async function getRooms(formData: FormData): Promise<string[]> {
 }
 
 export async function getSpaceChildren(formData: FormData) {
-  const space = formData.get("space") as string
+  const space = z.string().parse(formData.get("space"))
   const children = await client.get(`rooms/${space}/children`)
   console.log("children", children)
   return children
 }
 
 export async function getStateAction(formData: FormData) {
-  const roomId = formData.get("room") as string
+  const roomId = z.string().parse(formData.get("room"))
   const room = new Room(roomId, client)
   const state = await room.getState()
   console.log("state", state)
@@ -98,8 +118,8 @@ export async function getStateAction(formData: FormData) {
 }
 
 export async function getStateTypeAction(formData: FormData) {
-  const roomId = formData.get("room") as string
-  const stateType = formData.get("stateType") as string
+  const roomId = z.string().parse(formData.get("room"))
+  const stateType = z.string().parse(formData.get("stateType"))
   console.log("stateType", stateType)
   const room = new Room(roomId, client)
   const state = await room.getStateEvent(stateType)
@@ -108,10 +128,10 @@ export async function getStateTypeAction(formData: FormData) {
 }
 
 export async function setStateAction(formData: FormData) {
-  const roomId = formData.get("room") as string
-  const stateType = formData.get("stateType") as string
-  const stateKey = formData.get("stateKey") as string
-  const content = formData.get("content") as string
+  const roomId = z.string().parse(formData.get("room"))
+  const stateType = z.string().parse(formData.get("stateType"))
+  const stateKey = z.string().parse(formData.get("stateKey"))
+  const content = z.string().parse(formData.get("content"))
   const room = new Room(roomId, client)
   const state = await room.sendStateEvent(
     stateType,
@@ -123,14 +143,14 @@ export async function setStateAction(formData: FormData) {
 }
 
 export async function sendMessage(formData: FormData) {
-  const roomId = formData.get("room") as string
-  const message = formData.get("message") as string
+  const roomId = z.string().parse(formData.get("room"))
+  const message = z.string().parse(formData.get("message"))
   const room = new Room(roomId, client)
   return await room.sendMessage({ msgtype: "m.text", body: message })
 }
 
 export async function getAliases(formData: FormData) {
-  const roomId = formData.get("room") as string
+  const roomId = z.string().parse(formData.get("room"))
   const room = client.getRoom(roomId)
   const aliases = await room.getAliases()
   console.log("aliases", aliases)
@@ -138,15 +158,15 @@ export async function getAliases(formData: FormData) {
 }
 
 export async function getRoomIdFromAlias(formData: FormData) {
-  const alias = formData.get("alias") as string
+  const alias = z.string().parse(formData.get("alias"))
   const roomId = await client.getRoomIdFromAlias(alias)
   console.log("roomId", roomId)
   return roomId
 }
 
 export async function setAlias(formData: FormData) {
-  const roomId = formData.get("room") as string
-  const alias = formData.get("alias") as string
+  const roomId = z.string().parse(formData.get("room"))
+  const alias = z.string().parse(formData.get("alias"))
   return await client.getRoom(roomId).setAlias(alias)
 }
 

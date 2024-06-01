@@ -6,6 +6,7 @@ import { IconEdit, IconPhoto } from "@tabler/icons-react"
 import { useRoom } from "@/hooks/useRoom"
 import { getMxcUrl } from "@/lib/utils"
 import { useEffect, useState } from "react"
+import { ErrorSchema, is } from "simple-matrix-sdk"
 
 export function UploadOrShowAvatar({
   slug,
@@ -21,7 +22,8 @@ export function UploadOrShowAvatar({
   const room = useRoom(slug)
   useEffect(() => {
     if (!room) return
-    room.getAvatarMxc().then((url): void => {
+    room.getAvatarMxc().then(url => {
+      if (is(ErrorSchema, url)) return console.error("error getting avatar")
       console.log("url", url)
       setImageUri(url)
       setIsLoading(false)

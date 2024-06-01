@@ -28,6 +28,8 @@ import { Pre } from "@/components/styled/Pre"
 import { Progress } from "@/components/ui/progress"
 
 import { useFormState, useFormStatus } from "react-dom"
+import { ErrorSchema, is } from "simple-matrix-sdk"
+import { z } from "zod"
 
 export type RoomDebug = {
   room_id: string
@@ -48,6 +50,10 @@ export function GetRooms() {
     <form
       action={async (formData: FormData) => {
         const rooms = await getRooms(formData)
+        if (is(ErrorSchema, rooms)) {
+          console.error(rooms)
+          return
+        }
         console.log("rooms", rooms)
         setRooms(rooms)
       }}>
@@ -117,7 +123,7 @@ export function Register() {
   return (
     <form
       action={async (formData: FormData) => {
-        const user = formData.get("user") as string
+        const user = z.string().parse(formData.get("user"))
         const result = await register(user)
         setResult(result)
       }}>
@@ -141,8 +147,8 @@ export function CreateMailbox() {
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await getOrCreateMailboxId(
-          formData.get("email") as string,
-          formData.get("user") as string
+          z.string().parse(formData.get("email")),
+          z.string().parse(formData.get("user"))
         )
         setResult(result)
       }}>
@@ -175,9 +181,9 @@ export function SetSecret() {
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await storeSecretInRoom(
-          formData.get("room") as string,
-          formData.get("key") as string,
-          formData.get("value") as string
+          z.string().parse(formData.get("room")),
+          z.string().parse(formData.get("key")),
+          z.string().parse(formData.get("value"))
         )
         setResult(result)
       }}>
@@ -213,8 +219,8 @@ export function GetSecret() {
       action={async (formData: FormData) => {
         console.log("formData", formData)
         const result = await getSecretFromRoom(
-          formData.get("room") as string,
-          formData.get("key") as string
+          z.string().parse(formData.get("room")),
+          z.string().parse(formData.get("key"))
         )
         setResult({ result })
       }}>

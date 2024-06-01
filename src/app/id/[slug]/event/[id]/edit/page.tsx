@@ -17,6 +17,7 @@ import { useRoom } from "@/hooks/useRoom"
 import { IfModerator } from "@/components/IfModerator"
 import Redirect from "@/components/Redirect"
 import { OrganCalEventMetaSchema } from "@/types/event"
+import { ErrorSchema, is } from "simple-matrix-sdk"
 
 export default function EditEventPage({
   params,
@@ -106,6 +107,7 @@ export default function EditEventPage({
       },
     }
     const newPostId = await room?.sendMessage(messageEvent)
+    if (is(ErrorSchema, newPostId)) return setError("Error sending message")
     // console.log("newPostId", newPostId)
     setIsLoading(false)
     router.push(`/id/${params.slug}/event/${newPostId?.event_id.split("$")[1]}`)

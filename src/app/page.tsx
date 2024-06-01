@@ -13,6 +13,9 @@ import { getChild } from "../lib/getChild"
 import { props } from "@/lib/utils"
 import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 import { OrganPostMetaSchema } from "@/types/post"
+import { ClientEventOutput, ErrorSchema, is } from "simple-matrix-sdk"
+
+import { z } from "zod"
 
 const { SERVER_NAME } = process.env
 
@@ -20,9 +23,12 @@ export default async function Home() {
   const tagIndex = await getTagIndex(client)
   if (typeof tagIndex === "object" && "errcode" in tagIndex) return tagIndex
   const hierarchy = await tagIndex.getHierarchy({ max_depth: 1 })
+  if (is(ErrorSchema, hierarchy)) return hierarchy
   const children = hierarchy?.filter(
     room =>
-      "canonical_alias" in room && room.canonical_alias.includes("#relay_tag_")
+      "canonical_alias" in room &&
+      typeof room.canonical_alias === "string" &&
+      room.canonical_alias.includes("#relay_tag_")
   )
 
   console.log("children", hierarchy)
@@ -47,12 +53,14 @@ export default async function Home() {
   const postBusEvents = await postsBus.getMessages({ limit: 30, dir: "b" })
   if ("errcode" in postBusEvents) return postBusEvents
   const postIdsAndAliases = postBusEvents.chunk
-    .map(event => props(event, "content", "id"))
+    .map((event: ClientEventOutput) =>
+      z.string().default("").parse(props(event, "content", "id"))
+    )
     .filter(Boolean)
 
   const posts = (
     await Promise.all(
-      postIdsAndAliases.map(async id => await getChild(id as string))
+      postIdsAndAliases.map(async (id: string) => await getChild(id))
     )
   )
     .filter(post => {

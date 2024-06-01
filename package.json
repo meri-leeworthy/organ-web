@@ -30,7 +30,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-textarea-autosize": "^8.5.3",
-    "simple-matrix-sdk": "^0.5.1",
+    "simple-matrix-sdk": "^0.5.2",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.0"

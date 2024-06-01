@@ -1,5 +1,5 @@
 import { IconTag } from "@tabler/icons-react"
-import { Room, is } from "simple-matrix-sdk"
+import { ErrorSchema, Room, is } from "simple-matrix-sdk"
 import * as z from "zod"
 
 export async function Tag({
@@ -12,14 +12,14 @@ export async function Tag({
   count: number
 }) {
   const state = await room.getState()
-  if ("errcode" in state) return
+  if (is(ErrorSchema, state)) return
   const topic = state.get("m.room.topic")
   // console.log("topic", topic)
   return (
     <div className="py-2 my-2 border-[#1D170C33] rounded overflow-clip">
       <h2 className="text-base flex w-full items-center gap-1 font-bold">
         <IconTag size={16} />
-        {name || room.name?.name}
+        {name || room.name}
         <span className="ml-auto font-normal text-xs mr-2 text-stone-500">
           {count}
         </span>
