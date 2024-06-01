@@ -9,6 +9,7 @@ import { Avatar } from "@/components/ui/Avatar"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
 import { Client, Room } from "simple-matrix-sdk"
 import { IfModerator } from "../IfModerator"
+import { z } from "zod"
 
 export async function EventPost({
   content,
@@ -37,7 +38,10 @@ export async function EventPost({
   return (
     <article className="flex flex-col items-start pb-4">
       <div className="flex items-center w-full gap-2">
-        <Avatar url={avatarUrl} name={content?.host?.name} />
+        <Avatar
+          url={z.string().default("").parse(avatarUrl)}
+          name={content?.host?.name}
+        />
         <Link
           className="flex flex-wrap items-baseline gap-x-1"
           href={`/id/${slug}` || ""}>

@@ -1,26 +1,25 @@
 const { NODE_ENV } = process.env
 
-const { MATRIX_BASE_URL, AS_TOKEN, TAG_INDEX, SERVER_NAME } = process.env
+const { TAG_INDEX, SERVER_NAME } = process.env
 
 import { noCacheFetch, props } from "@/lib/utils"
 import Link from "next/link"
 import {
   Client,
   ClientEventOutput,
+  ErrorSchema,
   EventContentOutput,
   Room,
+  is,
 } from "simple-matrix-sdk"
 import { Item } from "./Item"
+import { noCacheClient as client, getTagIndex } from "@/lib/client"
 
 export default async function ListTags() {
   console.log("NODE_ENV", NODE_ENV)
 
-  const client = new Client(MATRIX_BASE_URL!, AS_TOKEN!, {
-    fetch: noCacheFetch,
-    params: { user_id: `@_relay_bot:${SERVER_NAME}` },
-  })
-
-  const index = new Room(TAG_INDEX!, client)
+  const index = await getTagIndex(client)
+  if (is(ErrorSchema, index)) return null
   const state = await index.getState()
   if ("errcode" in state) return null
   const children = state.getAll("m.space.child")
