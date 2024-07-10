@@ -5,8 +5,8 @@ import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 // import { FlexGridList } from "@/components/ui/FlexGridList"
 // import { Item } from "@/components/ui/Item"
 import { Posts } from "@/components/ui/Posts"
-import { getChild } from "@/lib/getChild"
-import { OrganEntity } from "@/types/schema"
+import { getOrganEntity } from "@/lib/getEntity"
+import { OrganEntity, OrganEntityBase, OrganEntitySchema } from "@/types/schema"
 import { ErrorSchema, is } from "simple-matrix-sdk"
 
 export default async function TagPage({ params }: { params: { tag: string } }) {
@@ -14,19 +14,16 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
   if (!tag) return null
 
   const tagRoomId = await getTagRoomId(tag)
-  if (typeof tagRoomId === "object" && "errcode" in tagRoomId)
-    return JSON.stringify(tagRoomId)
-
-  console.log("tagRoomId", tagRoomId)
+  if (is(ErrorSchema, tagRoomId)) return JSON.stringify(tagRoomId)
 
   const tagRoom = client.getRoom(tagRoomId)
   const name = await tagRoom.getName()
-  if ("errcode" in name) return JSON.stringify(name)
+  if (is(ErrorSchema, name)) return JSON.stringify(name)
 
   const tagChildren = await tagRoom.getHierarchy({ max_depth: 1 })
   if (is(ErrorSchema, tagChildren)) return JSON.stringify(tagChildren)
 
-  tagChildren?.shift()
+  tagChildren.shift()
 
   console.log("tagChildren", tagChildren)
 
@@ -34,25 +31,26 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
     tagChildren
       ? await Promise.all(
           tagChildren.map(
-            async child => await getChild(child.room_id, child.canonical_alias)
+            async child =>
+              await getOrganEntity(child.room_id, child.canonical_alias)
           )
         )
       : []
-  ).filter(child => child !== null) as OrganEntity[]
+  ).filter(entity => entity !== undefined) as OrganEntityBase[]
 
   const events = allChildren.filter(
-    child =>
-      "roomType" in child &&
-      child["roomType"] === "event" &&
-      parseInt(child["eventMeta"]!.start) > Date.now()
+    entity =>
+      is(OrganEntitySchema("event"), entity) &&
+      entity.meta &&
+      parseInt(entity.meta.start) > Date.now()
   )
 
   const ids = allChildren.filter(
-    child => "pageType" in child && child["pageType"] === "id"
+    entity => "pageType" in entity && entity["pageType"] === "id"
   )
 
   const posts = allChildren.filter(
-    child => "roomType" in child && child["roomType"] === "post"
+    entity => "roomType" in entity && entity["roomType"] === "post"
   )
 
   console.log("posts", posts)
@@ -67,14 +65,16 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
       {events.length > 0 && (
         <>
           <h2 className="mt-6">Upcoming Events</h2>
-          <ChildrenCarousel spaceChildren={events as OrganEntity[]} />
+          <ChildrenCarousel spaceChildren={events as OrganEntity<"event">[]} />
         </>
       )}
 
       {ids.length > 0 && (
         <>
           <h2>Groups</h2>
-          <ChildrenCarousel spaceChildren={ids as OrganEntity[]} />
+          <ChildrenCarousel
+            spaceChildren={ids as OrganEntity<"page", "id">[]}
+          />
         </>
       )}
 

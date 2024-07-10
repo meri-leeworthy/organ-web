@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx"
 import { State } from "simple-matrix-sdk"
 import { twMerge } from "tailwind-merge"
 import { SubTypes } from "@/types/utils"
-import { RoomTypes } from "@/types/schema"
+import { EntityTypes } from "@/types/schema"
 import { BASE_URL } from "@/lib/constants"
 
 export function cn(...inputs: ClassValue[]) {
@@ -321,7 +321,7 @@ export function normaliseTagString(tag: string) {
     .replace(/[^a-z0-9]/g, "-")
 }
 
-export function isOrganRoomType<T extends RoomTypes>(
+export function isOrganRoomType<T extends EntityTypes>(
   state: State,
   type: T,
   subType?: SubTypes<T>

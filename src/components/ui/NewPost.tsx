@@ -12,42 +12,23 @@ import {
 } from "react"
 import { useClient } from "@/hooks/useClient"
 import {
-  // OrganCalEventUnstable,
-  // OrganPostUnstable,
-  // organCalEventUnstable,
-  organPostType,
-  // organPostTypeValue,
-  organRoomType,
+  OrganType,
+  organMeta,
   organRoomTypeTree,
   organRoomTypeValue,
-  organSpaceType,
   organSpaceTypeValue,
+  organType,
 } from "@/types/schema"
 
 import { TimePicker as AntDTimePicker, ConfigProvider } from "antd"
 import { Room } from "simple-matrix-sdk"
-import {
-  IconCalendarEvent,
-  IconClock,
-  IconNorthStar,
-  IconX,
-} from "@tabler/icons-react"
-// import { SelectAuthor } from "@/components/SelectAuthor"
-// import Link from "next/link"
+import { IconClock, IconNorthStar, IconX } from "@tabler/icons-react"
 import { toValidDateString } from "@/lib/utils"
-import { Input, Textarea, Button } from "../styled"
-import { Input as SCNInput } from "./input"
-import { OrganPostMetaState, organPostMeta } from "@/types/post"
-import { organCalEventMeta } from "@/types/event"
+import { Textarea, Button } from "../styled"
+import { Input } from "./input"
+import { OrganPostMetaState } from "@/types/post"
 import { UploadImageButton } from "./UploadImageButton"
 import { DatePicker } from "./DatePicker"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./select"
 import { StateEvent } from "@/types/utils"
 import { Dialog, DialogContent, DialogTrigger } from "./dialog"
 import { OrganEntity } from "@/types/schema"
@@ -76,16 +57,16 @@ export const PostForm = ({
   post,
 }: {
   slug: string
-  post?: OrganEntity
+  post?: OrganEntity<"post", "text">
 }) => {
   const authorRoomId =
-    post?.postMeta?.author && post.postMeta.author.type === "id"
-      ? post.postMeta.author.value
+    post?.meta?.author && post.meta.author.type === "id"
+      ? post.meta.author.value
       : null
   const authorRoom = useRoom(authorRoomId || "")
 
-  const [title, setTitle] = useState(post?.postMeta?.title || "")
-  const [content, setContent] = useState(post?.postMeta?.body || "")
+  const [title, setTitle] = useState(post?.meta?.title || "")
+  const [content, setContent] = useState(post?.meta?.body || "")
   const [imageSrcs, setImageSrcs] = useState<string[]>([])
   const [author, setAuthor] = useState<[Room, string] | null>(
     authorRoomId && authorRoom ? [authorRoom, authorRoomId] : null
@@ -124,22 +105,17 @@ export const PostForm = ({
 
     const postMetaState: (
       | OrganPostMetaState
-      | StateEvent<string, { value: string }>
+      | StateEvent<string, OrganType>
     )[] = [
       {
-        type: organRoomType,
+        type: organType,
         content: {
-          value: organRoomTypeValue.post,
+          type: organRoomTypeValue.post,
+          subtype: organRoomTypeTree.post.text,
         },
       },
       {
-        type: organPostType,
-        content: {
-          value: organRoomTypeTree.post.text,
-        },
-      },
-      {
-        type: organPostMeta,
+        type: organMeta,
         content: {
           title,
           body: content,
@@ -257,7 +233,7 @@ export const PostForm = ({
       )}
       <form onSubmit={handlePostSubmit} className="flex grow flex-col gap-2">
         <div className="flex flex-wrap gap-1 gap-y-2">
-          <SCNInput
+          <Input
             type="text"
             id="title"
             placeholder="Title"
@@ -338,13 +314,13 @@ export const NewEventForm = ({ slug }: { slug: string }) => {
 
     const eventMetaState = [
       {
-        type: organSpaceType,
+        type: organType,
         content: {
-          value: organSpaceTypeValue.event,
+          type: organSpaceTypeValue.event,
         },
       },
       {
-        type: organCalEventMeta,
+        type: organMeta,
         content: {
           start: startDate,
           end: endDate,
@@ -459,7 +435,7 @@ export const NewEventForm = ({ slug }: { slug: string }) => {
       )}
       <form onSubmit={handlePostSubmit} className="flex grow flex-col gap-2">
         <div className="flex flex-wrap gap-1 gap-y-2">
-          <SCNInput
+          <Input
             type="text"
             id="title"
             placeholder="Title"
@@ -471,7 +447,7 @@ export const NewEventForm = ({ slug }: { slug: string }) => {
         <Description type={"event"} content={content} setContent={setContent} />
 
         <div className="flex flex-col gap-2">
-          <SCNInput
+          <Input
             type="text"
             id="location"
             placeholder="Location"

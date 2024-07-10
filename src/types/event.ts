@@ -1,13 +1,14 @@
 import { OrganLocationSchema } from "./properties"
+import { organMeta } from "./schema"
 import { StateEvent } from "./utils"
 import * as z from "zod"
 
 // Event
 
-export const organCalEventMeta = "organ.page.event.meta"
+// export const organCalEventMeta = "organ.page.event.meta"
 
 export type OrganCalEventMetaState = StateEvent<
-  typeof organCalEventMeta,
+  typeof organMeta,
   OrganCalEventMeta
 >
 

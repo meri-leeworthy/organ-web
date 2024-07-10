@@ -30,8 +30,8 @@ import { IfRoomMember } from "@/components/IfRoomMember"
 import { noCacheClient as client } from "@/lib/client"
 import { Events } from "@/components/ui/Events"
 import { AvatarFull } from "./AvatarFull"
-import { getChild } from "@/lib/getChild"
-import { OrganEntity } from "@/types/schema"
+import { getOrganEntity } from "@/lib/getEntity"
+import { OrganEntity, OrganEntityBase } from "@/types/schema"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/styled"
 import { ErrorSchema, is } from "simple-matrix-sdk"
@@ -80,15 +80,16 @@ export default async function OrgSlugPage({
     spaceChildren
       ? await Promise.all(
           spaceChildren.map(
-            async child => await getChild(child.room_id, child.canonical_alias)
+            async child =>
+              await getOrganEntity(child.room_id, child.canonical_alias)
           )
         )
       : []
-  ).filter(child => child !== null) as OrganEntity[]
+  ).filter(child => child !== null) as OrganEntityBase[]
 
   const posts = allChildren
     .filter(child => "roomType" in child && child["roomType"] === "post")
-    .sort((a, b) => b?.postMeta?.timestamp! - a?.postMeta?.timestamp!)
+    .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))
 
   console.log("allChildren", allChildren)
 

@@ -1,10 +1,10 @@
-import { getChild } from "@/lib/getChild"
-import { OrganEntity } from "@/types/schema"
+import { getOrganEntity } from "@/lib/getEntity"
+import { OrganEntity, OrganEntityBase, OrganEntitySchema } from "@/types/schema"
 import { Posts } from "@/components/ui/Posts"
 import { client } from "@/lib/client"
 import { getContextualDate, isOrganRoomType, props } from "@/lib/utils"
 import { IconCalendarEvent, IconMapPin } from "@tabler/icons-react"
-import { State } from "simple-matrix-sdk"
+import { State, is } from "simple-matrix-sdk"
 
 const { SERVER_NAME } = process.env
 
@@ -50,11 +50,13 @@ export default async function EventPage({
   const posts = (await Promise.all(
     [...(children ? children.keys() : [])]
       .map(
-        async childId => await getChild(childId)
+        async childId => await getOrganEntity(childId)
         // async childId => await client.getRoom(childId).getState()
       )
-      .filter(Boolean)
-  )) as OrganEntity[]
+      .filter(post => {
+        is(OrganEntitySchema("post"), post)
+      })
+  )) as OrganEntityBase[]
 
   // const postsState = (
   //   childrenState.filter(childState => !("errcode" in childState)) as State[]

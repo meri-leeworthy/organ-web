@@ -1,6 +1,6 @@
 // General Utility Types
 
-import { RoomTypes, organRoomTypeTree } from "./schema"
+import { EntityTypes, organRoomTypeTree } from "./schema"
 
 export type StateEvent<EventTypeString, StateEventContent> = {
   type: EventTypeString
@@ -14,7 +14,7 @@ export type Chunk = {
 }[] &
   Event[]
 
-export type SubTypes<T> = T extends RoomTypes
+export type SubTypes<T> = T extends EntityTypes
   ? (typeof organRoomTypeTree)[T] extends string
     ? never
     : keyof (typeof organRoomTypeTree)[T]

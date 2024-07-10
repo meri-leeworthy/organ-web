@@ -4,10 +4,11 @@ import * as z from "zod"
 
 import { OrganAuthorSchema } from "./properties"
 import { StateEvent } from "./utils"
+import { organMeta } from "./schema"
 
-export const organPostMeta = "organ.post.meta"
+// export const organPostMeta = "organ.post.meta"
 
-export type OrganPostMetaState = StateEvent<typeof organPostMeta, OrganPostMeta>
+export type OrganPostMetaState = StateEvent<typeof organMeta, OrganPostMeta>
 
 export const OrganPostMetaSchema = z.object(
   {

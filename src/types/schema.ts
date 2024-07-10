@@ -1,7 +1,7 @@
 // Main Organ Rooms/Spaces Schema
 
-import { OrganCalEventMeta } from "./event"
-import { OrganPostMeta } from "./post"
+import { OrganCalEventMeta, OrganCalEventMetaSchema } from "./event"
+import { OrganPostMeta, OrganPostMetaSchema } from "./post"
 import { SubTypes } from "./utils"
 
 import * as z from "zod"
@@ -18,11 +18,13 @@ import * as z from "zod"
 //
 // PAGE
 // organ.space.type: "page"
-// organ.page.type: "tag" | "id" | "event"
+// organ.page.type: "tag" | "id"
 // organ.event.meta: OrganEventMeta
 // pages?: string[] //linked pages (roomID)
 // tags?: string[] //parents (roomID)
 // pinned: string[] //pinned posts or events (roomID)
+//
+// EVENT
 //
 // TAG
 // organ.space.type = "tag"
@@ -39,11 +41,11 @@ import * as z from "zod"
 // - should 'event' be a subtype of page or its own type? given that
 //   events may be children of ID pages?
 
-export const organRoomType = "organ.room.type"
-export const organSpaceType = "organ.space.type"
-export const organPostType = "organ.post.type"
-export const organPageType = "organ.page.type"
-export const organIndexType = "organ.index.type"
+// export const organRoomType = "organ.room.type"
+// export const organSpaceType = "organ.space.type"
+// export const organPostType = "organ.post.type"
+// export const organPageType = "organ.page.type"
+// export const organIndexType = "organ.index.type"
 
 export const organRoomTypeValue = {
   id: "id", // deprecated
@@ -96,11 +98,33 @@ export const organRoomTypeTree = {
   bus: "bus",
 } as const
 
-export type RoomTypes = keyof typeof organRoomTypeTree
+export const RoomTypesSchema = z.union([
+  z.literal("index"),
+  z.literal("tag"),
+  z.literal("page"),
+  z.literal("event"),
+  z.literal("post"),
+  z.literal("bus"),
+])
 
-// export const RoomTypesSchema = z.union(
-//   ""
-// )
+export type EntityTypes = z.infer<typeof RoomTypesSchema>
+
+export function SubTypesSchema(entityType: EntityTypes) {
+  switch (entityType) {
+    case "index":
+      return z.union([z.literal("tag"), z.literal("user")])
+    case "page":
+      return z.union([z.literal("tag"), z.literal("id")])
+    case "post":
+      return z.union([
+        z.literal("text"),
+        z.literal("image"),
+        z.literal("event"),
+      ])
+    default:
+      return z.undefined()
+  }
+}
 
 // Other Event Types
 
@@ -109,22 +133,98 @@ export const organRoomSecretEmail = "organ.room.secret.email"
 export const organBusPost = "organ.bus.post"
 export type OrganBusPostContent = { id: string }
 
-export type OrganEntity = {
-  roomId: string
-  name: string
-  topic: string
-  roomType: RoomTypes
-  pageType?: SubTypes<"page">
-  postType?: SubTypes<"post">
-  alias?: string
-  eventMeta?: OrganCalEventMeta
-  postMeta?: OrganPostMeta
-  timestamp?: number
-}
-
-export const OrganEntitySchema = z.object({
+export const OrganEntityBaseSchema = z.object({
   roomId: z.string({ invalid_type_error: "roomId must be a string" }),
   name: z.string({ invalid_type_error: "name must be a string" }),
   topic: z.string({ invalid_type_error: "topic must be a string" }),
-  roomType: z.string({ invalid_type_error: "roomType must be a string" }),
+  alias: z.string({ invalid_type_error: "alias must be a string" }).optional(),
+  timestamp: z
+    .number({ invalid_type_error: "timestamp must be a number" })
+    .optional(),
+  entityType: z.string({ invalid_type_error: "room type must be a string" }),
+  subType: z
+    .string({ invalid_type_error: "sub type must be a string" })
+    .optional(),
+  meta: z.unknown(),
 })
+
+export type OrganEntityBase = z.infer<typeof OrganEntityBaseSchema>
+export type OrganEntity<
+  TEntityType extends EntityTypes,
+  TSubType extends SubTypes<TEntityType> = never
+> = OrganEntityBase & {
+  entityType: TEntityType
+  subType?: TSubType
+  meta?: TEntityType extends "event"
+    ? OrganCalEventMeta
+    : TEntityType extends "post"
+    ? OrganPostMeta
+    : unknown
+}
+
+// returns a schema for a specific entity type
+export function OrganEntitySchema<
+  TEntityType extends EntityTypes,
+  TSubType extends SubTypes<TEntityType>
+>(
+  entityType: TEntityType,
+  subType?: TSubType
+): z.ZodType<OrganEntity<TEntityType, TSubType>> {
+  // to help TS infer the correct type, omit fields that will be replaced and narrowed
+  const baseSchema = OrganEntityBaseSchema.omit({
+    entityType: true,
+    subType: true,
+    meta: true,
+  })
+
+  const entityTypeSchema = z.object({ entityType: z.literal(entityType) })
+  const subTypeSchema = subType
+    ? z.object({ subType: z.literal(subType) })
+    : z.object({ subType: z.undefined() })
+
+  let metaSchema: z.AnyZodObject | null = null
+  if (entityType === "event") {
+    metaSchema = z.object({ meta: OrganCalEventMetaSchema })
+  } else if (entityType === "post") {
+    metaSchema = z.object({ meta: OrganPostMetaSchema })
+  }
+
+  let mergedSchema = baseSchema.merge(entityTypeSchema).merge(subTypeSchema)
+
+  if (metaSchema !== null) {
+    mergedSchema = mergedSchema.merge(metaSchema)
+  }
+
+  return mergedSchema as unknown as z.ZodType<
+    OrganEntity<TEntityType, TSubType>
+  >
+}
+
+export const organType = "organ.type"
+export const OrganTypeBase = z.object({
+  type: RoomTypesSchema,
+  subtype: z.string().optional(),
+})
+
+export function OrganType(entityType: EntityTypes) {
+  const subType = SubTypesSchema(entityType)
+  return OrganTypeBase.merge(
+    z.object({
+      type: z.literal(entityType),
+      subtype: subType,
+    })
+  )
+}
+export type OrganType = z.infer<typeof OrganTypeBase>
+
+export const organMeta = "organ.meta"
+export function OrganMeta<TEntityType extends EntityTypes>(
+  entityType: TEntityType,
+  subType?: SubTypes<TEntityType>
+) {
+  return entityType === "event"
+    ? OrganCalEventMetaSchema
+    : entityType === "post"
+    ? OrganPostMetaSchema
+    : z.undefined()
+}

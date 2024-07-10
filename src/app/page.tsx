@@ -7,23 +7,29 @@ import { WelcomeEmailSignup } from "./WelcomeEmailSignup"
 import { client, getTagIndex } from "@/lib/client"
 import { FlexGridList, FlexGridListItem } from "@/components/ui/FlexGridList"
 import { Tag } from "@/components/ui/Tag"
-import { OrganEntity } from "@/types/schema"
+import { OrganEntity, OrganEntityBase, OrganEntitySchema } from "@/types/schema"
 import { getEventsMap, getIdsMap } from "./as/getMaps"
-import { getChild } from "../lib/getChild"
+import { getOrganEntity } from "../lib/getEntity"
 import { props } from "@/lib/utils"
 import { ChildrenCarousel } from "@/components/ui/ChildrenCarousel"
 import { OrganPostMetaSchema } from "@/types/post"
-import { ClientEventOutput, ErrorSchema, is } from "simple-matrix-sdk"
+import { ClientEventOutput, ErrorSchema, is, isError } from "simple-matrix-sdk"
 
 import { z } from "zod"
+import { ErrorModal } from "@/components/ui/ErrorModal"
+import {} from "util"
 
 const { SERVER_NAME } = process.env
 
 export default async function Home() {
   const tagIndex = await getTagIndex(client)
-  if (typeof tagIndex === "object" && "errcode" in tagIndex) return tagIndex
+  if (isError(tagIndex))
+    return <ErrorModal error={tagIndex} message="No tag index" />
+
   const hierarchy = await tagIndex.getHierarchy({ max_depth: 1 })
-  if (is(ErrorSchema, hierarchy)) return hierarchy
+  if (isError(hierarchy))
+    return <ErrorModal error={hierarchy} message="No hierarchy" />
+
   const children = hierarchy?.filter(
     room =>
       "canonical_alias" in room &&
@@ -39,36 +45,33 @@ export default async function Home() {
 
   const tags = (
     await Promise.all(
-      sortedChildren!.map(async child => await getChild(child.room_id))
+      sortedChildren!.map(async child => await getOrganEntity(child.room_id))
     )
-  ).filter(Boolean) as OrganEntity[]
+  ).filter(x => x !== undefined)
 
   const postsBusId = await client.getRoomIdFromAlias(
     "#relay_bus_posts:" + SERVER_NAME
   )
-  if (typeof postsBusId === "object" && "errcode" in postsBusId)
-    return postsBusId
-  const postsBus = client.getRoom(postsBusId)
+  if (isError(postsBusId))
+    return <ErrorModal error={postsBusId} message="No posts bus ID" />
 
+  const postsBus = client.getRoom(postsBusId)
   const postBusEvents = await postsBus.getMessages({ limit: 30, dir: "b" })
-  if ("errcode" in postBusEvents) return postBusEvents
+  if ("errcode" in postBusEvents) return null
   const postIdsAndAliases = postBusEvents.chunk
     .map((event: ClientEventOutput) =>
       z.string().default("").parse(props(event, "content", "id"))
     )
-    .filter(Boolean)
-
+    .filter(x => x !== undefined)
   const posts = (
     await Promise.all(
-      postIdsAndAliases.map(async (id: string) => await getChild(id))
+      postIdsAndAliases.map(async (id: string) => await getOrganEntity(id))
     )
   )
     .filter(post => {
-      console.log(OrganPostMetaSchema.safeParse(post))
-      console.log("post", post)
-      return true
+      is(OrganEntitySchema("post"), post)
     })
-    .sort((a, b) => b?.postMeta?.timestamp! - a?.postMeta?.timestamp!)
+    .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))
 
   // console.log("posts", posts)
   // const idsMap = await getIdsMap()
@@ -112,7 +115,7 @@ export default async function Home() {
       <h1 className="font-black mb-2 z-10 self-start">organ</h1>
       <ChildrenCarousel spaceChildren={tags} />
       <h3 className="text-xl font-bold">recent..</h3>
-      <Posts posts={posts as OrganEntity[]} />
+      <Posts posts={posts as OrganEntityBase[]} />
       {/* <FlexGridList>
         {sortedChildren?.map((child, i) => (
           <FlexGridListItem key={i}>
