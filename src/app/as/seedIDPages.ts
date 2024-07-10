@@ -1,13 +1,12 @@
 "use server"
 import {
-  organPageType,
   organRoomTypeTree,
-  organSpaceType,
   organSpaceTypeValue,
+  organType,
 } from "@/types/schema"
 import ids from "./seed/ids.json"
 import { noCacheClient as client } from "@/lib/client"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { ErrorSchema, is, isError } from "simple-matrix-sdk"
 
 const { SERVER_NAME } = process.env
 
@@ -23,7 +22,7 @@ export async function seedIDPages() {
   const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
 
   // console.log("tagIndexChildren", tagIndexChildren)
-  if (!tagIndexChildren || is(ErrorSchema, tagIndexChildren))
+  if (!tagIndexChildren || isError(tagIndexChildren))
     return { errcode: "No tag rooms found" }
 
   // remove first item, which is the tag index room
@@ -66,15 +65,10 @@ export async function seedIDPages() {
         room_alias_name: `relay_id_${id.alias}`,
         initial_state: [
           {
-            type: organSpaceType,
+            type: organType,
             content: {
-              value: organSpaceTypeValue.page,
-            },
-          },
-          {
-            type: organPageType,
-            content: {
-              value: organRoomTypeTree.page.id,
+              type: organSpaceTypeValue.page,
+              subtype: organRoomTypeTree.page.id,
             },
           },
           ...parentEvents,

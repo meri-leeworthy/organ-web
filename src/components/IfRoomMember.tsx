@@ -3,7 +3,7 @@
 import { useClient } from "@/hooks/useClient"
 import { xor } from "@/lib/utils"
 import { useState, useEffect } from "react"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { isError } from "simple-matrix-sdk"
 
 export function IfRoomMember({
   slug,
@@ -23,7 +23,7 @@ export function IfRoomMember({
       .getJoinedRooms()
       .then(result => {
         // console.log("joined rooms result", result)
-        if (is(ErrorSchema, result)) return console.error("error getting rooms")
+        if (isError(result)) return console.error("error getting rooms")
         const isMember = result.joined_rooms.some(roomId => {
           return (
             roomId === `!${slug}:${process.env.NEXT_PUBLIC_MATRIX_BASE_URL}`

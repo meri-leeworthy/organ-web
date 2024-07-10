@@ -1,4 +1,4 @@
-import { Client, ErrorSchema, is } from "simple-matrix-sdk"
+import { Client, isError } from "simple-matrix-sdk"
 import { noCacheFetch } from "./utils"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
@@ -18,7 +18,7 @@ export async function getTagIndex(client: Client) {
     "#relay_tagindex:" + SERVER_NAME
   )
 
-  if (is(ErrorSchema, tagIndexRoomId)) return tagIndexRoomId
+  if (isError(tagIndexRoomId)) return tagIndexRoomId
 
   return client.getRoom(tagIndexRoomId)
 }

@@ -34,7 +34,7 @@ import { getOrganEntity } from "@/lib/getEntity"
 import { OrganEntity, OrganEntityBase } from "@/types/schema"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/styled"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { ErrorSchema, is, isError } from "simple-matrix-sdk"
 import * as z from "zod"
 
 export default async function OrgSlugPage({
@@ -68,7 +68,7 @@ export default async function OrgSlugPage({
   const topic = state.get("m.room.topic")
 
   const spaceChildren = await room.getHierarchy({ max_depth: 1 })
-  if (is(ErrorSchema, spaceChildren)) return JSON.stringify(spaceChildren)
+  if (isError(spaceChildren)) return JSON.stringify(spaceChildren)
   console.log("spaceChildren", spaceChildren)
   // console.log("sc", spaceChildren?[0].children_state)
 

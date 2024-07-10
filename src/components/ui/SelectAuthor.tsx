@@ -3,7 +3,7 @@
 import { useClient } from "@/hooks/useClient"
 import { useRoom } from "@/hooks/useRoom"
 import { useState, useEffect } from "react"
-import { ErrorSchema, Room, is } from "simple-matrix-sdk"
+import { Room, isError } from "simple-matrix-sdk"
 
 export function SelectAuthor({
   slug,
@@ -27,7 +27,7 @@ export function SelectAuthor({
   useEffect(() => {
     client &&
       client.getJoinedRooms().then(rooms => {
-        if (is(ErrorSchema, rooms)) return console.error("error getting rooms")
+        if (isError(rooms)) return console.error("error getting rooms")
         setJoinedRooms(rooms.joined_rooms)
       })
   }, [client])
@@ -40,7 +40,7 @@ export function SelectAuthor({
     Promise.all(promises).then(powerLevels => {
       const adminRooms = powerLevels
         .filter(([_, room]) => {
-          if (is(ErrorSchema, room)) return false
+          if (isError(room)) return false
           return room.users[client.userId] === 100
         })
         .map(([roomId, _]) => roomId)

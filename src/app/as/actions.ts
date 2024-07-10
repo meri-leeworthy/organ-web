@@ -4,23 +4,20 @@ import {
   Client,
   CreateRoomOptsOutput,
   ErrorOutput,
-  ErrorSchema,
   Room,
   is,
+  isError,
   schemaError,
 } from "simple-matrix-sdk"
-import { RoomDebug } from "./Forms"
 import { joinRoom } from "../api/join/action"
 import { noCacheFetch } from "@/lib/utils"
 import {
-  organRoomType,
   organRoomTypeTree,
-  organSpaceType,
   organSpaceTypeValue,
+  organType,
 } from "@/types/schema"
 import { noCacheClient as client } from "@/lib/client"
 import { z } from "zod"
-import { access } from "fs"
 
 const { MATRIX_BASE_URL, AS_TOKEN, SERVER_NAME } = process.env
 
@@ -33,7 +30,7 @@ export async function register(user: string) {
     access_token: z.string(),
     user_id: z.string(),
   })
-  if (is(ErrorSchema, register)) return register
+  if (isError(register)) return register
   if (is(successSchema, register)) return register
   return schemaError
 }
@@ -75,7 +72,7 @@ export async function getRooms(
   //   user_id: `@_relay_${user}:${SERVER_NAME}`,
   // })
   const res = await client.getJoinedRooms()
-  if (is(ErrorSchema, res)) return res
+  if (isError(res)) return res
   const { joined_rooms: roomIds } = res
 
   console.log("roomIds", roomIds)
@@ -177,9 +174,9 @@ export async function createTagIndexSpace() {
     room_alias_name: "relay_tagindex",
     initial_state: [
       {
-        type: organSpaceType,
+        type: organType,
         content: {
-          value: organSpaceTypeValue.index,
+          type: organSpaceTypeValue.index,
         },
       },
     ],
@@ -212,9 +209,9 @@ export async function createPostsBus() {
     room_alias_name: "relay_bus_posts",
     initial_state: [
       {
-        type: organRoomType,
+        type: organType,
         content: {
-          value: organRoomTypeTree.bus,
+          type: organRoomTypeTree.bus,
         },
       },
     ],

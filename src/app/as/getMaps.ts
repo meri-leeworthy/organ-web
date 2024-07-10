@@ -1,11 +1,9 @@
 "use server"
 
-import { ClientEventOutput, ErrorSchema, is } from "simple-matrix-sdk"
+import { isError } from "simple-matrix-sdk"
 import { noCacheClient as client, getTagIndex } from "@/lib/client"
 import { props } from "@/lib/utils"
 import { organRoomTypeTree } from "@/types/schema"
-
-const { SERVER_NAME } = process.env
 
 export async function getTagIndexChildren() {
   const tagIndex = await getTagIndex(client)
@@ -14,7 +12,7 @@ export async function getTagIndexChildren() {
   // get a list of all the tag rooms from tag index
   const tagIndexChildren = await tagIndex.getHierarchy({ max_depth: 1 })
 
-  if (!tagIndexChildren || is(ErrorSchema, tagIndexChildren))
+  if (!tagIndexChildren || isError(tagIndexChildren))
     return { errcode: "No tag rooms found" }
   // console.log("tagIndexChildren", tagIndexChildren)
   // remove tag index room
@@ -25,7 +23,7 @@ export async function getTagIndexChildren() {
 
 export async function getTagsMap() {
   const tagIndexChildren = await getTagIndexChildren()
-  if (is(ErrorSchema, tagIndexChildren)) return tagIndexChildren
+  if (isError(tagIndexChildren)) return tagIndexChildren
 
   // get the canonical alias for each tag and map to roomID
   const tagsMap = new Map<string, string>()
@@ -45,7 +43,7 @@ export async function getIdsMap() {
   // this is done by searching each tag in the tag-index and making a map
   // i.e. if a page doesn't have a tag it's not discoverable
   const tagIndexChildren = await getTagIndexChildren()
-  if (is(ErrorSchema, tagIndexChildren)) return tagIndexChildren
+  if (isError(tagIndexChildren)) return tagIndexChildren
 
   // create a set of ID Page room IDs
   const idsSet = new Set<string>()
@@ -83,7 +81,7 @@ export async function getEventsMap() {
       const tagSpace = client.getRoom(tag)
 
       const tagChildren = await tagSpace.getHierarchy({ max_depth: 1 })
-      if (is(ErrorSchema, tagChildren)) return
+      if (isError(tagChildren)) return
       console.log("tagChildren lenght", tagChildren?.length)
       tagChildren?.shift()
 

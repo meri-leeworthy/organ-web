@@ -1,5 +1,5 @@
 import { IconTag } from "@tabler/icons-react"
-import { ErrorSchema, Room, is } from "simple-matrix-sdk"
+import { Room, is, isError } from "simple-matrix-sdk"
 import * as z from "zod"
 
 export async function Tag({
@@ -12,7 +12,7 @@ export async function Tag({
   count: number
 }) {
   const state = await room.getState()
-  if (is(ErrorSchema, state)) return
+  if (isError(state)) return
   const topic = state.get("m.room.topic")
   // console.log("topic", topic)
   return (

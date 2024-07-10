@@ -28,7 +28,7 @@ import { Pre } from "@/components/styled/Pre"
 import { Progress } from "@/components/ui/progress"
 
 import { useFormState, useFormStatus } from "react-dom"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { isError } from "simple-matrix-sdk"
 import { z } from "zod"
 
 export type RoomDebug = {
@@ -50,7 +50,7 @@ export function GetRooms() {
     <form
       action={async (formData: FormData) => {
         const rooms = await getRooms(formData)
-        if (is(ErrorSchema, rooms)) {
+        if (isError(rooms)) {
           console.error(rooms)
           return
         }

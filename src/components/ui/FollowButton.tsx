@@ -4,7 +4,7 @@ import { useClient } from "@/hooks/useClient"
 import { IconCheck, IconPlus, IconReload } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import { Button } from "./button"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { isError } from "simple-matrix-sdk"
 
 export function FollowButton({ slug }: { slug: string }) {
   const [isFollowing, setIsFollowing] = useState(false)
@@ -17,7 +17,7 @@ export function FollowButton({ slug }: { slug: string }) {
     client
       .getJoinedRooms()
       .then(result => {
-        if (is(ErrorSchema, result)) return console.error("error getting rooms")
+        if (isError(result)) return console.error("error getting rooms")
         console.log("joined rooms result", result)
         const isMember = result.joined_rooms.some(
           roomId => roomId === `!${slug}:${process.env.NEXT_PUBLIC_SERVER_NAME}`

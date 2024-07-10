@@ -1,17 +1,8 @@
 const { NODE_ENV } = process.env
 
-const { TAG_INDEX, SERVER_NAME } = process.env
-
-import { noCacheFetch, props } from "@/lib/utils"
+import { props } from "@/lib/utils"
 import Link from "next/link"
-import {
-  Client,
-  ClientEventOutput,
-  ErrorSchema,
-  EventContentOutput,
-  Room,
-  is,
-} from "simple-matrix-sdk"
+import { ClientEventOutput, isError } from "simple-matrix-sdk"
 import { Item } from "./Item"
 import { noCacheClient as client, getTagIndex } from "@/lib/client"
 
@@ -19,7 +10,7 @@ export default async function ListTags() {
   console.log("NODE_ENV", NODE_ENV)
 
   const index = await getTagIndex(client)
-  if (is(ErrorSchema, index)) return null
+  if (isError(index)) return null
   const state = await index.getState()
   if ("errcode" in state) return null
   const children = state.getAll("m.space.child")

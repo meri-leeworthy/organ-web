@@ -3,8 +3,8 @@
 const { TAG_INDEX, SERVER_NAME } = process.env
 
 import { normaliseTagString } from "@/lib/utils"
-import { organSpaceType, organSpaceTypeValue } from "@/types/schema"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { organSpaceTypeValue, organType } from "@/types/schema"
+import { ErrorSchema, is, isError } from "simple-matrix-sdk"
 import { noCacheClient as client } from "@/lib/client"
 
 async function getTagIndex() {
@@ -37,7 +37,7 @@ export async function createTag(opts: {
         },
       },
       {
-        type: organSpaceType,
+        type: organType,
         content: {
           type: organSpaceTypeValue.tag,
         },
@@ -52,10 +52,10 @@ export async function createTag(opts: {
     ],
   })
 
-  if (is(ErrorSchema, tagSpace)) return tagSpace
+  if (isError(tagSpace)) return tagSpace
 
   const tagIndex = await getTagIndex()
-  if (is(ErrorSchema, tagIndex)) return tagIndex
+  if (isError(tagIndex)) return tagIndex
   await tagIndex.sendStateEvent(
     "m.space.child",
     {
@@ -86,7 +86,7 @@ export async function addTag(formData: FormData) {
     },
     initial_state: [
       {
-        type: organSpaceType,
+        type: organType,
         content: {
           type: organSpaceTypeValue.tag,
         },
@@ -108,13 +108,13 @@ export async function addTag(formData: FormData) {
 
 export async function removeTag(tagEventId: string) {
   const tagIndex = await getTagIndex()
-  if (is(ErrorSchema, tagIndex)) return tagIndex
+  if (isError(tagIndex)) return tagIndex
   return await tagIndex.redactEvent(tagEventId)
 }
 
 export async function bilateralAdoptTag(tagRoomId: string) {
   const tagIndex = await getTagIndex()
-  if (is(ErrorSchema, tagIndex)) return tagIndex
+  if (isError(tagIndex)) return tagIndex
   const tagRoom = client.getRoom(tagRoomId)
   const tagName = await tagRoom.getName()
 

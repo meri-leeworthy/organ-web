@@ -19,6 +19,7 @@ import {
   ErrorOutput,
   ErrorSchema,
   is,
+  isError,
 } from "simple-matrix-sdk"
 import { HOME_SPACE } from "@/lib/constants"
 
@@ -82,11 +83,11 @@ function UserRoles(props: { slug: string }) {
     room
       ?.getPowerLevels()
       .then((powerLevels: { users: Record<string, number> } | ErrorOutput) => {
-        if (is(ErrorSchema, powerLevels)) return
+        if (isError(powerLevels)) return
         console.log("powerLevels", Object.entries(powerLevels.users)[0])
         const roles = new Map(Object.entries(powerLevels.users))
         room?.getMembers().then(res => {
-          if (is(ErrorSchema, res)) return
+          if (isError(res)) return
           const members = res.chunk.map(
             (event: ClientEventOutput) => event.state_key
           )
@@ -166,7 +167,7 @@ function RequestPublication({ slug }: { slug: string }) {
   const homeSpace = HOME_SPACE.split(":")[0].slice(1)
   const room = useRoom(homeSpace)
   room?.getHierarchy().then(res => {
-    if (!res || is(ErrorSchema, res)) return
+    if (!res || isError(res)) return
     const roomIds = res[0].children_state.map(event => event.state_key)
     console.log("rooms", roomIds)
     const isPublished = roomIds.some(

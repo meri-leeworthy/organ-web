@@ -6,16 +6,14 @@ import { Input, Button, Textarea } from "@/components/styled"
 // import { EditableContacts } from "../[slug]/edit/EditableContactSection"
 
 import { useRouter } from "next/navigation"
-import { ErrorSchema, is } from "simple-matrix-sdk"
+import { ErrorSchema, is, isError } from "simple-matrix-sdk"
 import { ErrorBox } from "@/components/ui/ErrorBox"
 import { IconNorthStar } from "@tabler/icons-react"
 import { joinRoom } from "@/app/api/join/action"
 import {
-  organPageType,
-  organRoomType,
   organRoomTypeTree,
-  organSpaceType,
   organSpaceTypeValue,
+  organType,
 } from "@/types/schema"
 import { normalizeName } from "@/app/as/utils"
 
@@ -86,15 +84,10 @@ const NewRoomPage = () => {
             },
           },
           {
-            type: organSpaceType,
+            type: organType,
             content: {
-              value: organSpaceTypeValue.page,
-            },
-          },
-          {
-            type: organPageType,
-            content: {
-              value: organRoomTypeTree.page.id,
+              type: organSpaceTypeValue.page,
+              subtype: organRoomTypeTree.page.id,
             },
           },
         ],
@@ -102,7 +95,7 @@ const NewRoomPage = () => {
       })
       if (!room) throw new Error("Failed to create room")
       console.log("Room creation result:", room)
-      if (is(ErrorSchema, room)) throw new Error(room.error)
+      if (isError(room)) throw new Error(room.error)
 
       const join = await fetch(`/api/join?roomId=${room.roomId}`)
         .then(res => res.json())

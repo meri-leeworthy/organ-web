@@ -8,7 +8,7 @@ import { ACCESSTOKEN_STORAGE_KEY, USERID_STORAGE_KEY } from "@/lib/constants"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
-import { Client, ErrorSchema, is } from "simple-matrix-sdk"
+import { Client, ErrorSchema, is, isError } from "simple-matrix-sdk"
 
 const SignupForm = () => {
   const [email, setEmail] = useState("")
@@ -59,7 +59,7 @@ const SignupForm = () => {
         password,
         process.env.NEXT_PUBLIC_MATRIX_BASE_URL!
       )
-      if (is(ErrorSchema, user)) throw new Error(user.error)
+      if (isError(user)) throw new Error(user.error)
 
       console.log(user, "User registered successfully!")
 
@@ -85,7 +85,7 @@ const SignupForm = () => {
 
       const emailValidate = await client.requestTokenEmail(email, clientSecret)
 
-      if (is(ErrorSchema, emailValidate)) throw new Error(emailValidate.error)
+      if (isError(emailValidate)) throw new Error(emailValidate.error)
 
       console.log(emailValidate, "emailValidate")
 
